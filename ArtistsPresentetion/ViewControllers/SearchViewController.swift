@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class SearchViewController: UIViewController, UISearchBarDelegate {
 
@@ -23,17 +24,37 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet weak var searchResultsLabel: UILabel!
     @IBOutlet weak var searchSpinner: UIActivityIndicatorView!
     @IBOutlet weak var presentationView: UIView!
+    @IBOutlet weak var artistImage: UIImageView!{
+        didSet{
+            artistImage.clipsToBounds = true
+        }
+    }
+    @IBOutlet weak var artistNameLabel: UILabel!
     
-    //MARK: - Search Bar & Keyboard
+    // MARK: - Actions
+    @IBAction func loadFacebookPage(_ sender: UIButton) {
+        if let artist = currentArtist{
+            if let url = URL(string: artist.getFacebookPage()){
+                let safari = SFSafariViewController(url: url)
+                safari.preferredBarTintColor = #colorLiteral(red: 0.1660079956, green: 0.1598443687, blue: 0.1949053109, alpha: 1)
+                present(safari, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    // MARK: - Search Bar & Keyboard
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchSpinner.startAnimating()
-        searchResultsLabel.isHidden = true
         searchAndPresentArtist()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count == 0{
+            if !presentationView.isHidden{
+                presentationView.isHidden = true
+                presentationView.alpha = 0.0
+            }
             if searchSpinner.isAnimating{
                 searchSpinner.stopAnimating()
             }
@@ -42,6 +63,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             }
             searchResultsLabel.text = "Search"
         }else if (1..<3).contains(searchText.count){
+            if !presentationView.isHidden{
+                presentationView.isHidden = true
+                presentationView.alpha = 0.0
+            }
             if searchSpinner.isAnimating{
                 searchSpinner.stopAnimating()
             }
@@ -59,11 +84,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 }
                 task.resume()
             }
+            currentSearchText = searchText
         }else{
             searchSpinner.startAnimating()
             if currentSearchText != searchText {
                 currentSearchText = searchText
-                searchResultsLabel.isHidden = true
                 searchAndPresentArtist()
             }
         }
@@ -99,6 +124,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     func searchAndPresentArtist(){
+        presentationView.isHidden = true
+        presentationView.alpha = 0.0
+        if !searchResultsLabel.isHidden{
+            searchResultsLabel.isHidden = true
+        }
         if let codedSearchText = currentSearchText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed){
             if let url = URL(string: "https://rest.bandsintown.com/artists/\(codedSearchText)?app_id=ArtEve"){
                 let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
@@ -111,8 +141,21 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                         if let data = artistData{
                             if let artist = try? JSONDecoder().decode(Artist.self, from: data){
                                 self.currentArtist = artist
-                                DispatchQueue.main.async {
-                                    self.searchSpinner.stopAnimating()
+                                if let imageUrl = URL(string: artist.getImageUrl()){
+                                    if let imageData = try? Data(contentsOf: imageUrl){
+                                        DispatchQueue.main.async {
+                                            if let image = UIImage(data: imageData){
+                                                self.artistImage.image = image
+                                            }
+                                            self.artistNameLabel.text = artist.getName()
+                                            self.searchSpinner.stopAnimating()
+                                            self.presentationView.isHidden = false
+                                            self.searchResultsLabel.isHidden = true
+                                            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0.0, options: .allowUserInteraction, animations: {
+                                                self.presentationView.alpha = 1.0
+                                            }, completion: nil)
+                                        }
+                                    }
                                 }
                             }else{
                                 DispatchQueue.main.async {
@@ -120,6 +163,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                                         self.searchSpinner.stopAnimating()
                                     }
                                     self.searchResultsLabel.text = "No results"
+                                    self.searchResultsLabel.isHidden = false
                                 }
                             }
                         }

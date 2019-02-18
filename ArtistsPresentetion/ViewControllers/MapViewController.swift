@@ -15,7 +15,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: - Vars
     var locationManager: CLLocationManager?
     var currentLocation: MKUserLocation?
-    var needSetCenterValue = 0
+    var needSetCenterValue = true
     
     // MARK: - Outlets
     
@@ -62,8 +62,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate
         userLocation: MKUserLocation) {
         currentLocation = userLocation
-        if needSetCenterValue == 0{
-            needSetCenterValue += 1
+        if needSetCenterValue{
+            needSetCenterValue = false
             if let userLocation = mapView.userLocation.location?.coordinate {
                 mapView.setCenter(userLocation, animated: true)
             }
