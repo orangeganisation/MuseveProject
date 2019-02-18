@@ -82,6 +82,50 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                 <color key="backgroundColor" red="0.16494458910000001" green="0.1600388288" blue="0.1921610534" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Wl6-8N-0gl">
+                                <rect key="frame" x="169" y="290.5" width="37" height="37"/>
+                                <color key="color" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </activityIndicatorView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rio-lK-gAT">
+                                <rect key="frame" x="0.0" y="76" width="375" height="542"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="962a17d0d08318f0a6fd5b66f8229939" translatesAutoresizingMaskIntoConstraints="NO" id="07g-AG-1Nc">
+                                        <rect key="frame" x="20" y="10" width="335" height="335"/>
+                                        <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="07g-AG-1Nc" secondAttribute="height" multiplier="1:1" id="nGM-FJ-69g"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="15"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lil Peep" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Bo-5w-odk">
+                                        <rect key="frame" x="152" y="353" width="71.5" height="25.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view alpha="0.050000000000000003" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mDX-kN-Vge">
+                                        <rect key="frame" x="40" y="382.5" width="295" height="153.5"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="10"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="mDX-kN-Vge" firstAttribute="leading" secondItem="07g-AG-1Nc" secondAttribute="leading" constant="20" id="1Dd-Gn-g0y"/>
+                                    <constraint firstItem="4Bo-5w-odk" firstAttribute="centerX" secondItem="Rio-lK-gAT" secondAttribute="centerX" id="2Jo-8T-8Km"/>
+                                    <constraint firstItem="mDX-kN-Vge" firstAttribute="top" secondItem="4Bo-5w-odk" secondAttribute="bottom" constant="4" id="8XS-SV-0ka"/>
+                                    <constraint firstAttribute="bottom" secondItem="mDX-kN-Vge" secondAttribute="bottom" constant="6" id="8lc-37-hha"/>
+                                    <constraint firstItem="07g-AG-1Nc" firstAttribute="top" secondItem="Rio-lK-gAT" secondAttribute="top" constant="10" id="F4q-AS-H2c"/>
+                                    <constraint firstItem="4Bo-5w-odk" firstAttribute="top" secondItem="07g-AG-1Nc" secondAttribute="bottom" constant="8" id="Gnt-2b-ILK"/>
+                                    <constraint firstItem="mDX-kN-Vge" firstAttribute="centerX" secondItem="Rio-lK-gAT" secondAttribute="centerX" id="JAF-mt-JA9"/>
+                                    <constraint firstItem="07g-AG-1Nc" firstAttribute="leading" secondItem="Rio-lK-gAT" secondAttribute="leading" constant="20" id="iNc-Hr-KQy"/>
+                                    <constraint firstAttribute="trailing" secondItem="07g-AG-1Nc" secondAttribute="trailing" constant="20" id="z0B-qS-t67"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.16494458910000001" green="0.1600388288" blue="0.1921610534" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <gestureRecognizers/>
@@ -89,11 +133,17 @@
                             <constraint firstAttribute="trailing" secondItem="zNd-cp-Jyc" secondAttribute="trailing" id="1Qb-D5-GBg"/>
                             <constraint firstItem="ABk-ap-Py2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="2kC-Ag-MjE"/>
                             <constraint firstItem="txo-OY-s4Z" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="70Y-Qi-O3K"/>
+                            <constraint firstItem="Rio-lK-gAT" firstAttribute="top" secondItem="txo-OY-s4Z" secondAttribute="bottom" id="AlN-V6-FHD"/>
                             <constraint firstItem="txo-OY-s4Z" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="FDK-F9-EGy"/>
                             <constraint firstItem="zNd-cp-Jyc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Fcw-qu-bdZ"/>
                             <constraint firstItem="ABk-ap-Py2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Tpl-K8-G6L"/>
                             <constraint firstItem="txo-OY-s4Z" firstAttribute="top" secondItem="zNd-cp-Jyc" secondAttribute="bottom" id="VFb-RE-uC7"/>
+                            <constraint firstItem="Rio-lK-gAT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="WA7-7V-mTm"/>
+                            <constraint firstItem="Wl6-8N-0gl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bQ4-4n-ibx"/>
                             <constraint firstItem="zNd-cp-Jyc" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="bnb-8h-nZS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Rio-lK-gAT" secondAttribute="trailing" id="cFU-vL-MtA"/>
+                            <constraint firstItem="Wl6-8N-0gl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="eId-6w-aqF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Rio-lK-gAT" secondAttribute="bottom" id="lOV-ib-Pck"/>
                             <constraint firstItem="txo-OY-s4Z" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="qfh-8y-SYb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -104,7 +154,10 @@
                     </view>
                     <tabBarItem key="tabBarItem" systemItem="search" id="HMO-zw-u6v"/>
                     <connections>
+                        <outlet property="presentationView" destination="Rio-lK-gAT" id="R2e-bC-OkB"/>
                         <outlet property="searchBar" destination="txo-OY-s4Z" id="iQh-LX-8YT"/>
+                        <outlet property="searchResultsLabel" destination="ABk-ap-Py2" id="qdv-VQ-Zt7"/>
+                        <outlet property="searchSpinner" destination="Wl6-8N-0gl" id="ALj-zv-iO6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -231,6 +284,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="962a17d0d08318f0a6fd5b66f8229939" width="550" height="734"/>
         <image name="buttonEmpty" width="480" height="480"/>
         <image name="tabBarMapIcon" width="48" height="48"/>
     </resources>
