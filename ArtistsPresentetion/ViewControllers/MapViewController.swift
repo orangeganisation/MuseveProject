@@ -27,7 +27,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     
-    // MARK: - Actions
+    // MARK: - MapActions
     @IBAction func finduserLocation(_ sender: Any) {
         if let location = currentLocation{
             let region = MKCoordinateRegion(
@@ -38,8 +38,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }else{
             let alert = UIAlertController(title: "Location Services", message: "Turn On Location Services to allow \"ArtEve\" to determine Your location:\nSettings->Privacy->Location Services", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: StringConstants().cancel, style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: StringConstants().settings, style: .default, handler: { (action) in
                 UIApplication.shared.open(URL(string: "App-Prefs:")!)
             }))
             present(alert, animated: true, completion: nil)
@@ -58,7 +58,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    // MARK: - Map
+    
+    // MARK: - ViewController
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        locationManager = CLLocationManager()
+        locationManager?.requestWhenInUseAuthorization()
+    }
+}
+
+
+
+
+// MARK: - MapViewControllerExtension
+extension MapViewController{
     func mapView(_ mapView: MKMapView, didUpdate
         userLocation: MKUserLocation) {
         currentLocation = userLocation
@@ -77,29 +94,4 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    
-    
-    // MARK: - ViewController
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        locationManager = CLLocationManager()
-        locationManager?.requestWhenInUseAuthorization()
-    }
-
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

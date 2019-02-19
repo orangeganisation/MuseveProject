@@ -12,6 +12,7 @@ import SafariServices
 class SearchViewController: UIViewController, UISearchBarDelegate {
 
     // MARK: - Vars
+    var internetDataManager = InternetDataManager()
     var currentArtist:Artist?
     var currentSearchText = String()
     
@@ -30,6 +31,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         }
     }
     @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var facebookButton: UIButton!
     
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
@@ -49,50 +51,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         searchAndPresentArtist()
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count == 0{
-            if !presentationView.isHidden{
-                presentationView.isHidden = true
-                presentationView.alpha = 0.0
-            }
-            if searchSpinner.isAnimating{
-                searchSpinner.stopAnimating()
-            }
-            if searchResultsLabel.isHidden{
-                searchResultsLabel.isHidden = false
-            }
-            searchResultsLabel.text = "Search"
-        }else if (1..<3).contains(searchText.count){
-            if !presentationView.isHidden{
-                presentationView.isHidden = true
-                presentationView.alpha = 0.0
-            }
-            if searchSpinner.isAnimating{
-                searchSpinner.stopAnimating()
-            }
-            if searchResultsLabel.isHidden{
-                searchResultsLabel.isHidden = false
-            }
-            searchResultsLabel.text = "Enter name"
-            if let url = URL(string: "https://google.com"){
-                let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                    if error != nil{
-                        DispatchQueue.main.async {
-                            self.presentConnectionAlert()
-                        }
-                    }
-                }
-                task.resume()
-            }
-            currentSearchText = searchText
-        }else{
-            searchSpinner.startAnimating()
-            if currentSearchText != searchText {
-                currentSearchText = searchText
-                searchAndPresentArtist()
-            }
-        }
-    }
     
     // MARK: - View Controller
     override func viewDidLoad() {
@@ -114,14 +72,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     // MARK: - MyTools
-    func presentConnectionAlert(){
-        let alert = UIAlertController(title: "Internet Connection", message: "There is a problem with internet connection. Please, turn ON cellular or connect to WiFi", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) in
-            UIApplication.shared.open(URL(string: "App-Prefs:")!)
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
     
     func searchAndPresentArtist(){
         presentationView.isHidden = true
@@ -130,11 +80,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             searchResultsLabel.isHidden = true
         }
         if let codedSearchText = currentSearchText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed){
-            if let url = URL(string: "https://rest.bandsintown.com/artists/\(codedSearchText)?app_id=ArtEve"){
+            if let url = URL(string: StringConstants().getArtistUrl + codedSearchText + StringConstants().appId){
                 let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
                     if error != nil{
                         DispatchQueue.main.async {
-                            self.presentConnectionAlert()
+                            self.internetDataManager.presentConnectionAlert(viewController: self)
                             self.searchSpinner.stopAnimating()
                         }
                     }else{
@@ -144,6 +94,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                                 if let imageUrl = URL(string: artist.getImageUrl()){
                                     if let imageData = try? Data(contentsOf: imageUrl){
                                         DispatchQueue.main.async {
+                                            if URL(string: artist.getFacebookPage()) != nil{
+                                                self.facebookButton.isEnabled = true
+                                            }else{
+                                                self.facebookButton.isEnabled = false
+                                            }
                                             if let image = UIImage(data: imageData){
                                                 self.artistImage.image = image
                                             }
@@ -162,7 +117,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                                     if self.searchSpinner.isAnimating{
                                         self.searchSpinner.stopAnimating()
                                     }
-                                    self.searchResultsLabel.text = "No results"
+                                    self.searchResultsLabel.text = StringConstants().noResults
                                     self.searchResultsLabel.isHidden = false
                                 }
                             }
@@ -184,4 +139,53 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     */
 
+}
+
+
+
+extension SearchViewController{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.count == 0{
+            if !presentationView.isHidden{
+                presentationView.isHidden = true
+                presentationView.alpha = 0.0
+            }
+            if searchSpinner.isAnimating{
+                searchSpinner.stopAnimating()
+            }
+            if searchResultsLabel.isHidden{
+                searchResultsLabel.isHidden = false
+            }
+            searchResultsLabel.text = StringConstants().search
+        }else if (1..<3).contains(searchText.count){
+            if !presentationView.isHidden{
+                presentationView.isHidden = true
+                presentationView.alpha = 0.0
+            }
+            if searchSpinner.isAnimating{
+                searchSpinner.stopAnimating()
+            }
+            if searchResultsLabel.isHidden{
+                searchResultsLabel.isHidden = false
+            }
+            searchResultsLabel.text = StringConstants().enterName
+            if let url = URL(string: "https://google.com"){
+                let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                    if error != nil{
+                        DispatchQueue.main.async {
+                            self.internetDataManager.presentConnectionAlert(viewController: self)
+                        }
+                    }
+                }
+                task.resume()
+            }
+            currentSearchText = searchText
+        }else{
+            searchSpinner.startAnimating()
+            if currentSearchText != searchText {
+                currentSearchText = searchText
+                searchAndPresentArtist()
+            }
+        }
+    }
 }
