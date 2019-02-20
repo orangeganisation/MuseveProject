@@ -38,8 +38,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }else{
             let alert = UIAlertController(title: "Location Services", message: "Turn On Location Services to allow \"ArtEve\" to determine Your location:\nSettings->Privacy->Location Services", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: StringConstants().cancel, style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: StringConstants().settings, style: .default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: StringConstants.cancel, style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: StringConstants.settings, style: .default, handler: { (action) in
                 UIApplication.shared.open(URL(string: "App-Prefs:")!)
             }))
             present(alert, animated: true, completion: nil)

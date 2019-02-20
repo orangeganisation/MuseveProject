@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D1AF6045221DC39B00404808 /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */; };
 		D1AF6EF4221C7A3B00FD8033 /* InternetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6EF3221C7A3B00FD8033 /* InternetManager.swift */; };
 		D1B4E944221C4D1500BE0DF3 /* StringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */; };
 		D1B6DF4322172BB700A0C910 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B6DF4222172BB700A0C910 /* AppDelegate.swift */; };
@@ -19,12 +20,14 @@
 		D1B6DF5D221745F100A0C910 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B6DF5C221745F100A0C910 /* SearchViewController.swift */; };
 		D1B6DF5F2217461100A0C910 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */; };
 		D1C94A4B221ACC3F000B9236 /* ArtistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */; };
+		D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CEE8CE221DD43200634BF9 /* CoreDataManager.swift */; };
 		D1D78421221C301D0094D64D /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D7841F221C301D0094D64D /* Favorites.storyboard */; };
 		D1D78424221C30680094D64D /* SearchSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78422221C30680094D64D /* SearchSystem.storyboard */; };
 		D1D78427221C309B0094D64D /* EventsMap.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78425221C309B0094D64D /* EventsMap.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		D1AF6EF3221C7A3B00FD8033 /* InternetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetManager.swift; sourceTree = "<group>"; };
 		D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringConstants.swift; sourceTree = "<group>"; };
 		D1B6DF3F22172BB700A0C910 /* ArtistsPresentetion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtistsPresentetion.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,6 +42,7 @@
 		D1B6DF5C221745F100A0C910 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistModel.swift; sourceTree = "<group>"; };
+		D1CEE8CE221DD43200634BF9 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		D1D78420221C301D0094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/Base.lproj/Favorites.storyboard; sourceTree = "<group>"; };
 		D1D78423221C30680094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/ArtistsPresentetion/Storyboards/Base.lproj/SearchSystem.storyboard; sourceTree = "<group>"; };
 		D1D78426221C309B0094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/Base.lproj/EventsMap.storyboard; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				D1B6DF4922172BB700A0C910 /* ArtistsPresentetion.xcdatamodeld */,
+				D1CEE8CE221DD43200634BF9 /* CoreDataManager.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 			children = (
 				D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */,
 				D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */,
+				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -225,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1AF6EF4221C7A3B00FD8033 /* InternetManager.swift in Sources */,
+				D1AF6045221DC39B00404808 /* CustomCollectionViewCell.swift in Sources */,
 				D1B6DF5D221745F100A0C910 /* SearchViewController.swift in Sources */,
 				D1B6DF582217450C00A0C910 /* CustomMapView.swift in Sources */,
 				D1C94A4B221ACC3F000B9236 /* ArtistModel.swift in Sources */,
@@ -233,6 +240,7 @@
 				D1B6DF4322172BB700A0C910 /* AppDelegate.swift in Sources */,
 				D1B6DF5F2217461100A0C910 /* FavoritesViewController.swift in Sources */,
 				D1B6DF5A2217456000A0C910 /* MapViewController.swift in Sources */,
+				D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

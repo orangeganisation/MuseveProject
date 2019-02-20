@@ -1,0 +1,16 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "icons8-Ð¾Ð±Ð»Ð°ÐºÐ¾-Ñ-ÐºÑÐµÑÑÐ¾Ð¼-filled-100.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "preserves-vector-representation" : true,
+    "auto-scaling" : "auto"
+  }
+}

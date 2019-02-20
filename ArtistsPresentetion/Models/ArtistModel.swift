@@ -19,19 +19,26 @@ class Artist: Codable{
     private var upcoming_event_count = Int()
     private var url = String()
     
-    func getName()->String{
+    func getName() -> String {
         return self.name
     }
-    func getImageUrl()->String{
+    func getImageUrl() -> String {
         return self.image_url
     }
-    func getFacebookPage()->String{
-        return self.facebook_page_url
+    func getThumbUrl() -> String {
+        return self.thumb_url
     }
-    func getUpcomingEventCount()->Int{
+    func getFacebookPage() -> String? {
+        if self.facebook_page_url.isEmpty{
+            return nil
+        } else {
+            return self.facebook_page_url
+        }
+    }
+    func getUpcomingEventCount() -> Int {
         return self.upcoming_event_count
     }
-    func getURL()->String{
+    func getURL() -> String {
         return self.url
     }
 }
