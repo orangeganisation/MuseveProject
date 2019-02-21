@@ -63,7 +63,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                     self.addAndRemoveButton.setImage(image, for: .normal)
                 }
                 isInDataBase = false
-                if let image = UIImage(named: "deleted.svg") {
+                if let image = UIImage(named: "removed.svg") {
                     self.resultButton.setImage(image, for: .normal)
                 }
                 resultLabel.text = "Deleted"
@@ -168,6 +168,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                         self.searchSpinner.stopAnimating()
                         self.presentationView.isHidden = false
                         self.searchResultsLabel.isHidden = true
+                        self.isInDataBase = false
                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
                         do {
                             let results = try self.context.fetch(fetchRequest)
@@ -205,14 +206,15 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     func animateResult() {
+        self.resultView.isHidden = false
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4, delay: 0.0, options: .allowUserInteraction, animations: {
-            self.resultView.isHidden = false
             self.resultView.alpha = 1.0
         }) { (position) in
             UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4, delay: 1.0, options: .allowUserInteraction, animations: {
                 self.resultView.alpha = 0.0
+            }){ (position) in
                 self.resultView.isHidden = true
-            })
+            }
         }
     }
     
