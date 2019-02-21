@@ -57,6 +57,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 for result in results as! [NSManagedObject] {
                     if (result.value(forKey: "name") as! String) == artistNameLabel.text {
                         context.delete(result)
+                        CoreDataManager.instance.saveContext()
                     }
                 }
                 if let image = UIImage(named: "addStar.svg") {
