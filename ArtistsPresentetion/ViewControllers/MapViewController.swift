@@ -18,7 +18,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var needSetCenterValue = true
     
     // MARK: - Outlets
-    
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var myMapView: CustomMapView!{
         didSet{

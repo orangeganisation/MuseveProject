@@ -14,7 +14,7 @@
         <!--Search View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="SearchViewController" customModule="ArtistsPresentetion" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="searchViewController" id="BYZ-38-t0r" customClass="SearchViewController" customModule="ArtistsPresentetion" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -61,17 +61,17 @@
                                         <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleAspectFit" distribution="equalCentering" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ush-i1-s2h">
-                                        <rect key="frame" x="16" y="349.5" width="343" height="225.5"/>
+                                    <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillEqually" alignment="top" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ush-i1-s2h">
+                                        <rect key="frame" x="16" y="349.5" width="343" height="109"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="999" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1El-fO-u3K">
-                                                <rect key="frame" x="0.0" y="63" width="100" height="100"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="109" height="109"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="100" id="1p0-zh-LRe"/>
-                                                    <constraint firstAttribute="height" constant="100" id="u4V-uL-mF7"/>
+                                                    <constraint firstAttribute="width" secondItem="1El-fO-u3K" secondAttribute="height" multiplier="1:1" id="uVB-uE-gA4"/>
                                                 </constraints>
-                                                <state key="normal" title="Button" image="facebookIcon"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="facebookIcon"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="8"/>
                                                 </userDefinedRuntimeAttributes>
@@ -80,11 +80,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="ASp-HX-ozZ">
-                                                <rect key="frame" x="136.5" y="73" width="80" height="80"/>
+                                                <rect key="frame" x="117" y="0.0" width="109" height="109"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="80" id="6x5-de-H7T"/>
-                                                    <constraint firstAttribute="width" constant="80" id="X0Y-Gd-UMx"/>
+                                                    <constraint firstAttribute="width" secondItem="ASp-HX-ozZ" secondAttribute="height" multiplier="1:1" id="leQ-Sk-20i"/>
                                                 </constraints>
                                                 <color key="tintColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <state key="normal" image="addStar"/>
@@ -96,14 +95,13 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rXG-bs-yIi">
-                                                <rect key="frame" x="263" y="73" width="80" height="80"/>
+                                                <rect key="frame" x="234" y="0.0" width="109" height="109"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="80" id="QC8-6L-DAF"/>
-                                                    <constraint firstAttribute="width" constant="80" id="R56-Qp-uIT"/>
+                                                    <constraint firstAttribute="width" secondItem="rXG-bs-yIi" secondAttribute="height" multiplier="1:1" id="EF7-Bm-38A"/>
                                                 </constraints>
                                                 <color key="tintColor" red="0.76127950609999995" green="0.74327172969999999" blue="0.88967373699999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <state key="normal" title="Button" image="eventsIcon"/>
+                                                <state key="normal" image="eventsIcon"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="8"/>
                                                 </userDefinedRuntimeAttributes>
@@ -152,7 +150,6 @@
                                     <constraint firstItem="Ush-i1-s2h" firstAttribute="top" secondItem="4Bo-5w-odk" secondAttribute="bottom" constant="16" id="9tK-Zd-DmW"/>
                                     <constraint firstItem="07g-AG-1Nc" firstAttribute="top" secondItem="Rio-lK-gAT" secondAttribute="top" constant="10" id="F4q-AS-H2c"/>
                                     <constraint firstItem="4Bo-5w-odk" firstAttribute="top" secondItem="07g-AG-1Nc" secondAttribute="bottom" constant="8" id="Gnt-2b-ILK"/>
-                                    <constraint firstAttribute="bottom" secondItem="Ush-i1-s2h" secondAttribute="bottom" constant="16" id="e9z-Sa-aA0"/>
                                     <constraint firstItem="07g-AG-1Nc" firstAttribute="leading" secondItem="Rio-lK-gAT" secondAttribute="leading" constant="40" id="iNc-Hr-KQy"/>
                                     <constraint firstItem="Ush-i1-s2h" firstAttribute="leading" secondItem="Rio-lK-gAT" secondAttribute="leading" constant="16" id="pCr-lI-coS"/>
                                     <constraint firstItem="4Bo-5w-odk" firstAttribute="top" secondItem="n65-DW-OxQ" secondAttribute="bottom" constant="30" id="pdg-go-XMn"/>
@@ -221,6 +218,6 @@
         <image name="addStar" width="367" height="367"/>
         <image name="added" width="60" height="60"/>
         <image name="eventsIcon" width="500" height="500"/>
-        <image name="facebookIcon" width="480" height="480"/>
+        <image name="facebookIcon" width="765" height="757"/>
     </resources>
 </document>

@@ -13,11 +13,11 @@ import CoreData
 class SearchViewController: UIViewController, UISearchBarDelegate {
 
     // MARK: - Vars
-    var internetDataManager = InternetDataManager()
-    var currentArtist:Artist?
+    static var internetDataManager = InternetDataManager()
+    static var currentArtist:Artist?
     static var currentSearchText = String()
     let context = CoreDataManager.instance.persistentContainer.viewContext
-    var isInDataBase = false
+    static var isInDataBase = false
     
     // MARK: - Outlets
     @IBOutlet weak var searchBar: UISearchBar!{
@@ -42,7 +42,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
-        if let artist = currentArtist, let facebook = artist.getFacebookPage(){
+        if let artist = SearchViewController.currentArtist, let facebook = artist.getFacebookPage(){
             if let url = URL(string: facebook){
                 InternetDataManager.openSafariPage(withUrl: url, byController: self)
             }
@@ -50,7 +50,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     @IBAction func addToFavorites(_ sender: UIButton) {
-        if isInDataBase {
+        if SearchViewController.isInDataBase {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
             do {
                 let results = try context.fetch(fetchRequest)
@@ -63,7 +63,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 if let image = UIImage(named: "addStar.svg") {
                     self.addAndRemoveButton.setImage(image, for: .normal)
                 }
-                isInDataBase = false
+                SearchViewController.isInDataBase = false
                 if let image = UIImage(named: "removed.svg") {
                     self.resultButton.setImage(image, for: .normal)
                 }
@@ -73,28 +73,32 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 print(error)
             }
         } else {
-            if let entityDescription = NSEntityDescription.entity(forEntityName: "FavoriteArtist", in: context) {
-                let managedObject = NSManagedObject(entity: entityDescription, insertInto: context)
-                managedObject.setValue(currentArtist!.getName(), forKey: "name")
-                if let facebook = currentArtist!.getFacebookPage() {
-                    let facebookUrl = URL(string: facebook)
-                    managedObject.setValue(facebookUrl, forKey: "facebook")
-                }
-                if let imageUrl = URL(string: currentArtist!.getThumbUrl()) {
-                    if let data = try? Data(contentsOf: imageUrl) as NSData {
-                        managedObject.setValue(data, forKey: "image_data")
+            if SearchViewController.internetDataManager.isConnectedToNetwork(){
+                if let entityDescription = NSEntityDescription.entity(forEntityName: "FavoriteArtist", in: context) {
+                    let managedObject = NSManagedObject(entity: entityDescription, insertInto: context)
+                    managedObject.setValue(SearchViewController.currentArtist!.getName(), forKey: "name")
+                    if let facebook = SearchViewController.currentArtist!.getFacebookPage() {
+                        let facebookUrl = URL(string: facebook)
+                        managedObject.setValue(facebookUrl, forKey: "facebook")
                     }
+                    if let imageUrl = URL(string: SearchViewController.currentArtist!.getThumbUrl()) {
+                        if let data = try? Data(contentsOf: imageUrl) as NSData {
+                            managedObject.setValue(data, forKey: "image_data")
+                        }
+                    }
+                    CoreDataManager.instance.saveContext()
+                    if let image = UIImage(named: "remove.svg") {
+                        self.addAndRemoveButton.setImage(image, for: .normal)
+                    }
+                    SearchViewController.isInDataBase = true
+                    if let image = UIImage(named: "added.svg") {
+                        self.resultButton.setImage(image, for: .normal)
+                    }
+                    resultLabel.text = "Added"
+                    animateResult()
                 }
-                CoreDataManager.instance.saveContext()
-                if let image = UIImage(named: "remove.svg") {
-                    self.addAndRemoveButton.setImage(image, for: .normal)
-                }
-                isInDataBase = true
-                if let image = UIImage(named: "added.svg") {
-                    self.resultButton.setImage(image, for: .normal)
-                }
-                resultLabel.text = "Added"
-                animateResult()
+            } else {
+                SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
             }
         }
     }
@@ -110,14 +114,15 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        /*if loading {
-            return
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        if !SearchViewController.isInDataBase {
+            if let image = UIImage(named: "addStar.svg") {
+                self.addAndRemoveButton.setImage(image, for: .normal)
+            }
         }
-        isLoading = true
-        internetDataManager.getArtist(searchText: currentSearchText) { (error, artist) in
-            isloading = false
-            
-        }*/
     }
     
 
@@ -142,16 +147,16 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             searchResultsLabel.isHidden = true
         }
         if let codedSearchText = SearchViewController.currentSearchText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed){
-            internetDataManager.getArtist(viewController: self, searchText: codedSearchText) { (error, artist) in
+            SearchViewController.internetDataManager.getArtist(viewController: self, searchText: codedSearchText) { (error, artist) in
                 
                 if error != nil {
                     DispatchQueue.main.async {
-                        self.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                        SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
                         self.searchSpinner.stopAnimating()
                     }
                     
                 } else if let gotArtist = artist {
-                    self.currentArtist = artist
+                    SearchViewController.currentArtist = artist
                     if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl){
                         if let image = UIImage(data: imageData){
                             DispatchQueue.main.async {
@@ -160,7 +165,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                         }
                     }
                     DispatchQueue.main.async {
-                        if (self.currentArtist?.getFacebookPage()) != nil{
+                        if (gotArtist.getFacebookPage()) != nil{
                             self.facebookButton.isEnabled = true
                         } else {
                             self.facebookButton.isEnabled = false
@@ -169,19 +174,19 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                         self.searchSpinner.stopAnimating()
                         self.presentationView.isHidden = false
                         self.searchResultsLabel.isHidden = true
-                        self.isInDataBase = false
+                        SearchViewController.isInDataBase = false
                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
                         do {
                             let results = try self.context.fetch(fetchRequest)
                             for result in results as! [NSManagedObject] {
                                 if (result.value(forKey: "name") as! String) == self.artistNameLabel.text {
-                                    self.isInDataBase = true
+                                    SearchViewController.isInDataBase = true
                                 }
                             }
                         } catch {
                             print(error)
                         }
-                        if self.isInDataBase {
+                        if SearchViewController.isInDataBase {
                             if let image = UIImage(named: "remove.svg") {
                                 self.addAndRemoveButton.setImage(image, for: .normal)
                             }
@@ -236,6 +241,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
 extension SearchViewController{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count == 0{
+            SearchViewController.currentArtist = nil
             if !presentationView.isHidden{
                 presentationView.isHidden = true
                 presentationView.alpha = 0.0
@@ -248,6 +254,7 @@ extension SearchViewController{
             }
             searchResultsLabel.text = StringConstants.search
         }else if (1..<3).contains(searchText.count){
+            SearchViewController.currentArtist = nil
             if !presentationView.isHidden{
                 presentationView.isHidden = true
                 presentationView.alpha = 0.0
@@ -259,8 +266,8 @@ extension SearchViewController{
                 searchResultsLabel.isHidden = false
             }
             searchResultsLabel.text = StringConstants.enterName
-            if !internetDataManager.isConnectedToNetwork() {
-                self.internetDataManager.presentConnectionAlert(viewController: self)
+            if !SearchViewController.internetDataManager.isConnectedToNetwork() {
+                SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
             }
             SearchViewController.currentSearchText = searchText
         }else{
