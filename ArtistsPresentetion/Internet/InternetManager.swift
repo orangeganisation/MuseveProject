@@ -54,7 +54,7 @@ class InternetDataManager{
     
     
     func presentFailedDataLoadingAlert(viewController:UIViewController){
-        let alert = UIAlertController(title: "Data Loading", message: "Failed to load data. Please, try later.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Data Loading", message: "Failed to load data. Please, try again later.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: StringConstants.ok, style: .cancel, handler: nil))
         viewController.present(alert, animated: true, completion: nil)
     }
@@ -71,6 +71,36 @@ class InternetDataManager{
                             if let artist = try? JSONDecoder().decode(Artist.self, from: data){
                                 completion(nil, artist)
                             }else{
+                                completion(nil, nil)
+                            }
+                        }
+                    }
+                }
+                task.resume()
+            }
+        }else{
+            self.presentConnectionAlert(viewController: viewController)
+        }
+    }
+    
+    func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?,_ events: [Event]?) -> Void) {
+        let searchName = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        if self.isConnectedToNetwork(){
+            var dateString = ""
+            if let dateNonOptional = date {
+                dateString = "&date=\(dateNonOptional)"
+            }
+            if let url = URL(string: StringConstants.getArtistUrl + searchName! + "/events" + StringConstants.appId + dateString){
+                let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                    if error != nil{
+                        completion(error, nil)
+                    }else{
+                        if let eventsData = data {
+                            do {
+                                let events = try JSONDecoder().decode([Event].self, from: eventsData)
+                                completion(nil, events)
+                            } catch {
+                                print(error)
                                 completion(nil, nil)
                             }
                         }

@@ -18,12 +18,14 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     static var currentSearchText = String()
     let context = CoreDataManager.instance.persistentContainer.viewContext
     static var isInDataBase = false
+
     
     // MARK: - Outlets
     @IBOutlet weak var searchBar: UISearchBar!{
         didSet{
             searchBar.delegate = self
         }
+        
     }
     @IBOutlet weak var searchResultsLabel: UILabel!
     @IBOutlet weak var searchSpinner: UIActivityIndicatorView!
@@ -35,7 +37,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var facebookButton: UIButton!
-    @IBOutlet weak var addAndRemoveButton: UIButton!
+    @IBOutlet weak var addAndRemoveButton: UIButton! {
+        didSet {
+            addAndRemoveButton.clipsToBounds = true
+        }
+    }
     @IBOutlet weak var resultButton: UIButton!
     @IBOutlet weak var resultLabel: UILabel!
     @IBOutlet weak var resultView: UIView!
@@ -60,7 +66,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                         CoreDataManager.instance.saveContext()
                     }
                 }
-                if let image = UIImage(named: "addStar.svg") {
+                if let image = UIImage(named: "addButton.svg") {
                     self.addAndRemoveButton.setImage(image, for: .normal)
                 }
                 SearchViewController.isInDataBase = false
@@ -77,10 +83,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 if let entityDescription = NSEntityDescription.entity(forEntityName: "FavoriteArtist", in: context) {
                     let managedObject = NSManagedObject(entity: entityDescription, insertInto: context)
                     managedObject.setValue(SearchViewController.currentArtist!.getName(), forKey: "name")
-                    if let facebook = SearchViewController.currentArtist!.getFacebookPage() {
-                        let facebookUrl = URL(string: facebook)
-                        managedObject.setValue(facebookUrl, forKey: "facebook")
-                    }
+                    managedObject.setValue(SearchViewController.currentArtist!.getID(), forKey: "id")
+                    managedObject.setValue(SearchViewController.currentArtist!.getUpcomingEventCount(), forKey: "upcoming_events_count")
                     if let imageUrl = URL(string: SearchViewController.currentArtist!.getThumbUrl()) {
                         if let data = try? Data(contentsOf: imageUrl) as NSData {
                             managedObject.setValue(data, forKey: "image_data")
@@ -103,6 +107,17 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+    @IBAction func showEvents(_ sender: UIButton) {
+        if SearchViewController.internetDataManager.isConnectedToNetwork() {
+            let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
+            let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController")
+            self.navigationController?.pushViewController(eventsViewController, animated: true)
+            EventsViewController.artist = (SearchViewController.currentArtist!.getName(), SearchViewController.currentArtist!.getUpcomingEventCount())
+        } else {
+            SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
+        }
+    }
+    
     // MARK: - Search Bar & Keyboard
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
@@ -114,17 +129,19 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.titleView = searchBar
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if !SearchViewController.isInDataBase {
-            if let image = UIImage(named: "addStar.svg") {
+            if let image = UIImage(named: "addButton.svg") {
                 self.addAndRemoveButton.setImage(image, for: .normal)
             }
         }
+        navigationController?.view.layoutSubviews()
+
     }
-    
 
     //MARK: - Gestures
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
@@ -191,7 +208,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                                 self.addAndRemoveButton.setImage(image, for: .normal)
                             }
                         } else {
-                            if let image = UIImage(named: "addStar.svg") {
+                            if let image = UIImage(named: "addButton.svg") {
                                 self.addAndRemoveButton.setImage(image, for: .normal)
                             }
                         }

@@ -10,7 +10,7 @@ import Foundation
 
 struct StringConstants {
     static let appName = "Museve"
-    static let appId = "?app_id=ArtEve"
+    static let appId = "?app_id=\(appName)"
     static let getArtistUrl = "https://rest.bandsintown.com/artists/"
     static let cancel = "Cancel"
     static let settings = "Settings"

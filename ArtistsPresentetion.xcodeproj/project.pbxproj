@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D16851AC221FFD6100B2AD4F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AB221FFD6100B2AD4F /* Event.swift */; };
+		D16851AE222087EF00B2AD4F /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */; };
 		D1AF6045221DC39B00404808 /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */; };
 		D1AF6EF4221C7A3B00FD8033 /* InternetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6EF3221C7A3B00FD8033 /* InternetManager.swift */; };
-		D1B4E944221C4D1500BE0DF3 /* StringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */; };
+		D1B4E944221C4D1500BE0DF3 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B4E943221C4D1500BE0DF3 /* AppConstants.swift */; };
 		D1B6DF4322172BB700A0C910 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B6DF4222172BB700A0C910 /* AppDelegate.swift */; };
 		D1B6DF4822172BB700A0C910 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1B6DF4622172BB700A0C910 /* Main.storyboard */; };
 		D1B6DF4B22172BB700A0C910 /* ArtistsPresentetion.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D1B6DF4922172BB700A0C910 /* ArtistsPresentetion.xcdatamodeld */; };
@@ -30,9 +32,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D16851AB221FFD6100B2AD4F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
 		D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		D1AF6EF3221C7A3B00FD8033 /* InternetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetManager.swift; sourceTree = "<group>"; };
-		D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringConstants.swift; sourceTree = "<group>"; };
+		D1B4E943221C4D1500BE0DF3 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		D1B6DF3F22172BB700A0C910 /* ArtistsPresentetion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtistsPresentetion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1B6DF4222172BB700A0C910 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D1B6DF4722172BB700A0C910 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -159,8 +163,10 @@
 			isa = PBXGroup;
 			children = (
 				D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */,
-				D1B4E943221C4D1500BE0DF3 /* StringConstants.swift */,
+				D1B4E943221C4D1500BE0DF3 /* AppConstants.swift */,
 				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
+				D16851AB221FFD6100B2AD4F /* Event.swift */,
+				D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -246,9 +252,11 @@
 				D1B6DF582217450C00A0C910 /* CustomMapView.swift in Sources */,
 				D1C94A4B221ACC3F000B9236 /* ArtistModel.swift in Sources */,
 				D1B6DF4B22172BB700A0C910 /* ArtistsPresentetion.xcdatamodeld in Sources */,
-				D1B4E944221C4D1500BE0DF3 /* StringConstants.swift in Sources */,
+				D1B4E944221C4D1500BE0DF3 /* AppConstants.swift in Sources */,
+				D16851AE222087EF00B2AD4F /* EventsTableViewCell.swift in Sources */,
 				D1B6DF4322172BB700A0C910 /* AppDelegate.swift in Sources */,
 				D1B6DF5F2217461100A0C910 /* FavoritesViewController.swift in Sources */,
+				D16851AC221FFD6100B2AD4F /* Event.swift in Sources */,
 				D1B6DF5A2217456000A0C910 /* MapViewController.swift in Sources */,
 				D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */,
 				D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */,

@@ -38,7 +38,7 @@ class Artist: Codable{
     func getUpcomingEventCount() -> Int {
         return self.upcoming_event_count
     }
-    func getURL() -> String {
-        return self.url
+    func getID() -> String {
+        return self.id
     }
 }

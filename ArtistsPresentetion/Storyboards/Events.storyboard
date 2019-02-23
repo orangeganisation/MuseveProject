@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,41 +19,161 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This artist has no events" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kta-Mq-eNB">
-                                <rect key="frame" x="82.5" y="321.5" width="210" height="24"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kta-Mq-eNB">
+                                <rect key="frame" x="161.5" y="321.5" width="52" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j5Z-NI-QMv">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="o8n-Bh-URe">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <color key="color" red="0.76404935119999995" green="0.59835982320000003" blue="0.6745172143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </activityIndicatorView>
+                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j5Z-NI-QMv">
+                                <rect key="frame" x="0.0" y="95" width="375" height="572"/>
+                                <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="separatorColor" white="0.66666666666666663" alpha="0.26632063356164382" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="l69-eA-csu">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="eventCell" rowHeight="114" id="l69-eA-csu" customClass="EventsTableViewCell" customModule="ArtistsPresentetion" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="114"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l69-eA-csu" id="tkd-be-EcA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="113.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="6su-Yn-F90">
+                                                    <rect key="frame" x="4" y="0.0" width="367" height="113.5"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="hVF-om-Exw">
+                                                            <rect key="frame" x="0.0" y="0.0" width="58.5" height="111.5"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iez-bh-7Wb">
+                                                                    <rect key="frame" x="10" y="0.0" width="39" height="25"/>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="23"/>
+                                                                    <color key="textColor" red="0.61022180318832397" green="0.2527790367603302" blue="0.3490222692489624" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="12" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IJT-ar-WKy">
+                                                                    <rect key="frame" x="0.0" y="33" width="58.5" height="52"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="58.5" id="rmB-Gm-tYV"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="45"/>
+                                                                    <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2019" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1GX-bV-M8V">
+                                                                    <rect key="frame" x="10" y="93" width="39" height="18.5"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="39" id="S2m-sP-zFj"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="17"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Participants" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Exn-3N-jx5">
+                                                            <rect key="frame" x="119.5" y="0.0" width="122.5" height="113.5"/>
+                                                            <fontDescription key="fontDescription" name="Noteworthy-Light" family="Noteworthy" pointSize="19"/>
+                                                            <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="bottom" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="T9F-hg-IBf">
+                                                            <rect key="frame" x="298" y="0.0" width="69" height="113.5"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pjz-zE-FTS">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="69" height="32.5"/>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="20"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="City" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWl-av-d6E">
+                                                                    <rect key="frame" x="37" y="40.5" width="32" height="32.5"/>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yiX-8y-WBA">
+                                                                    <rect key="frame" x="35.5" y="81" width="33.5" height="32.5"/>
+                                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="16"/>
+                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="Exn-3N-jx5" firstAttribute="top" secondItem="6su-Yn-F90" secondAttribute="top" id="68g-8G-gyU"/>
+                                                        <constraint firstItem="hVF-om-Exw" firstAttribute="top" secondItem="6su-Yn-F90" secondAttribute="top" id="6fo-Eb-VbW"/>
+                                                        <constraint firstAttribute="bottom" secondItem="T9F-hg-IBf" secondAttribute="bottom" id="Jmt-6J-ERI"/>
+                                                        <constraint firstAttribute="bottom" secondItem="hVF-om-Exw" secondAttribute="bottom" constant="2" id="Nzd-6O-dlK"/>
+                                                        <constraint firstItem="T9F-hg-IBf" firstAttribute="top" secondItem="6su-Yn-F90" secondAttribute="top" id="kiH-tT-B1I"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Exn-3N-jx5" secondAttribute="bottom" id="xEh-j5-Clb"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="6su-Yn-F90" secondAttribute="bottom" id="C3b-Ft-jGm"/>
+                                                <constraint firstItem="6su-Yn-F90" firstAttribute="top" secondItem="tkd-be-EcA" secondAttribute="top" id="N0e-eG-MVw"/>
+                                                <constraint firstItem="6su-Yn-F90" firstAttribute="leading" secondItem="tkd-be-EcA" secondAttribute="leading" constant="4" id="RgP-UC-udL"/>
+                                                <constraint firstAttribute="trailing" secondItem="6su-Yn-F90" secondAttribute="trailing" constant="4" id="cuv-Zp-5sg"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="0.050000000000000003" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <inset key="separatorInset" minX="11" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="cityLabel" destination="kWl-av-d6E" id="FsE-Gv-akO"/>
+                                            <outlet property="countryLabel" destination="Pjz-zE-FTS" id="17k-8j-QQv"/>
+                                            <outlet property="dayLabel" destination="IJT-ar-WKy" id="zyS-q4-lqh"/>
+                                            <outlet property="monthLabel" destination="Iez-bh-7Wb" id="MpI-D4-CW5"/>
+                                            <outlet property="participantsLabel" destination="Exn-3N-jx5" id="r6d-eJ-blt"/>
+                                            <outlet property="placeNameLabel" destination="yiX-8y-WBA" id="UeF-YW-2nt"/>
+                                            <outlet property="yearLabel" destination="1GX-bV-M8V" id="wiZ-0C-dUp"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Mxu-ok-YQF" id="p1G-PA-AES"/>
+                                    <outlet property="delegate" destination="Mxu-ok-YQF" id="EAY-YK-1Ka"/>
+                                </connections>
                             </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yg7-7n-oqo">
+                                <rect key="frame" x="0.0" y="64" width="375" height="29"/>
+                                <color key="backgroundColor" red="0.15307435393333435" green="0.15258249640464783" blue="0.16862979531288147" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <segments>
+                                    <segment title="Upcoming"/>
+                                    <segment title="Past"/>
+                                    <segment title="All"/>
+                                </segments>
+                                <color key="tintColor" red="0.61022180318832397" green="0.2527790367603302" blue="0.3490222692489624" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <connections>
+                                    <action selector="changeFilterInSegment:" destination="Mxu-ok-YQF" eventType="valueChanged" id="B1r-vb-1F0"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="0.16494458913803101" green="0.16003882884979248" blue="0.19216105341911316" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
+                            <constraint firstItem="yg7-7n-oqo" firstAttribute="leading" secondItem="7dX-h4-25C" secondAttribute="leading" id="3cF-PM-5qh"/>
                             <constraint firstItem="Kta-Mq-eNB" firstAttribute="centerY" secondItem="mYw-d6-crM" secondAttribute="centerY" id="9ZF-QT-A0i"/>
+                            <constraint firstItem="j5Z-NI-QMv" firstAttribute="top" secondItem="yg7-7n-oqo" secondAttribute="bottom" constant="3" id="QjC-fr-epA"/>
                             <constraint firstItem="j5Z-NI-QMv" firstAttribute="leading" secondItem="7dX-h4-25C" secondAttribute="leading" id="aIw-2R-hqw"/>
+                            <constraint firstItem="yg7-7n-oqo" firstAttribute="top" secondItem="7dX-h4-25C" secondAttribute="top" id="dtu-r9-w8N"/>
                             <constraint firstItem="7dX-h4-25C" firstAttribute="trailing" secondItem="j5Z-NI-QMv" secondAttribute="trailing" id="emA-nr-LQA"/>
-                            <constraint firstItem="j5Z-NI-QMv" firstAttribute="top" secondItem="7dX-h4-25C" secondAttribute="top" id="f6E-yf-kjl"/>
+                            <constraint firstItem="7dX-h4-25C" firstAttribute="trailing" secondItem="yg7-7n-oqo" secondAttribute="trailing" id="fHB-CF-e3f"/>
                             <constraint firstItem="Kta-Mq-eNB" firstAttribute="centerX" secondItem="mYw-d6-crM" secondAttribute="centerX" id="g5k-vp-Mul"/>
+                            <constraint firstItem="o8n-Bh-URe" firstAttribute="centerY" secondItem="mYw-d6-crM" secondAttribute="centerY" id="pnz-8H-lcV"/>
+                            <constraint firstItem="o8n-Bh-URe" firstAttribute="centerX" secondItem="mYw-d6-crM" secondAttribute="centerX" id="rtU-cW-5nR"/>
                             <constraint firstItem="7dX-h4-25C" firstAttribute="bottom" secondItem="j5Z-NI-QMv" secondAttribute="bottom" id="vJr-wl-Jiz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7dX-h4-25C"/>
                     </view>
                     <navigationItem key="navigationItem" title="Events" id="ZnX-4g-fk3"/>
                     <connections>
+                        <outlet property="eventsTableView" destination="j5Z-NI-QMv" id="bNV-Lz-AtL"/>
                         <outlet property="haveNoEventsLabel" destination="Kta-Mq-eNB" id="H6V-ig-5s6"/>
+                        <outlet property="iventsFilterSegment" destination="yg7-7n-oqo" id="HQi-y4-mjd"/>
+                        <outlet property="loadingDataSpinner" destination="o8n-Bh-URe" id="afY-Df-bfe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8OZ-Dp-Jy3" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -50,7 +50,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         switch sender.selectedSegmentIndex {
         case 0:
             myMapView.mapType = .mutedStandard
-            locationButton.tintColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
+            locationButton.tintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
         default:
             myMapView.mapType = .hybrid
             locationButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

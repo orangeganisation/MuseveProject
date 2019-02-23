@@ -48,7 +48,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
     // MARK: - Actions
     @IBAction func cancelAction(_ sender: UIBarButtonItem) {
         self.navigationItem.leftBarButtonItem = nil
-        self.navigationItem.rightBarButtonItem = editButton
+        self.navigationItem.setRightBarButton(editButton, animated: true)
         navigationBarTitle.title = "Favorites"
         deselectAllArtists()
         favoriteCollectionView.allowsMultipleSelection = false
@@ -84,7 +84,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
                     CoreDataManager.instance.saveContext()
                     self.trashButton.isEnabled = false
                     self.navigationItem.leftBarButtonItem = nil
-                    self.navigationItem.rightBarButtonItem = self.editButton
+                    self.navigationItem.setRightBarButton(self.editButton, animated: true)
                     self.navigationBarTitle.title = "Favorites"
                     self.favoriteCollectionView.allowsMultipleSelection = false
                     if self.favoriteCollectionView.numberOfItems(inSection: 0) == 0 {
@@ -103,8 +103,8 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBAction func editAction(_ sender: UIBarButtonItem) {
         navigationBarTitle.title = "Select artists"
-        self.navigationItem.leftBarButtonItem = cancelButton
-        self.navigationItem.rightBarButtonItem = trashButton
+        self.navigationItem.setLeftBarButton(cancelButton, animated: true)
+        self.navigationItem.setRightBarButton(trashButton, animated: true)
         favoriteCollectionView.allowsMultipleSelection = true
     }
     
@@ -117,7 +117,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
         let layout = favoriteCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize.width = width
         layout.itemSize.height = height
-        self.navigationItem.rightBarButtonItem = editButton
+        self.navigationItem.setRightBarButton(editButton, animated: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -205,6 +205,7 @@ extension FavoritesViewController {
             let artist = fetchedResultsController.object(at: indexPath) as! FavoriteArtist
             if let name = artist.name {
                 FavoritesViewController.selectedArtistName = name
+                EventsViewController.artist = (name, Int(artist.upcoming_events_count))
             }
             let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
             let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController")
