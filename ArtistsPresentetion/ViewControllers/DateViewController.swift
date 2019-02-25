@@ -16,29 +16,11 @@ class DateViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func doneAction(_ sender: UIButton) {
-        let fromDay = Calendar.current.component(.day, from: fromDatePicker.date)
-        let fromMonth = Calendar.current.component(.month, from: fromDatePicker.date)
-        let fromYear = Calendar.current.component(.year, from: fromDatePicker.date)
-        let toDay = Calendar.current.component(.day, from: toDatePicker.date)
-        let toMonth = Calendar.current.component(.month, from: toDatePicker.date)
-        let toYear = Calendar.current.component(.year, from: toDatePicker.date)
-        var fromDayString = "\(fromDay)"
-        var toDayString = "\(toDay)"
-        var fromMonthString = "\(fromMonth)"
-        var toMonthString = "\(toMonth)"
-        if fromDay / 10 < 1 {
-            fromDayString = "0\(fromDay)"
-        }
-        if toDay / 10 < 1 {
-            toDayString = "0\(toDay)"
-        }
-        if fromMonth / 10 < 1 {
-            fromMonthString = "0\(fromMonth)"
-        }
-        if toMonth / 10 < 1 {
-            toMonthString = "0\(toMonth)"
-        }
-        EventsViewController.eventsFilter = "\(fromYear)-\(fromMonthString)-\(fromDayString),\(toYear)-\(toMonthString)-\(toDayString)".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let fromDate = dateFormatter.string(from: fromDatePicker.date)
+        let toDate = dateFormatter.string(from: toDatePicker.date)
+        EventsViewController.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
         EventsViewController.shouldUpdateEvents = true
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }

@@ -133,7 +133,7 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 }
 
 
-// MARK: - Extension
+// MARK: - Extensions
 extension EventsViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

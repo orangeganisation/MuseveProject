@@ -110,9 +110,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                 dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
                 if let dateString = event.getDatetime() {
                     let date = dateFormatterGet.date(from: dateString)!
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.dateFormat = "MMM dd, yyyy"
-                    mark.date = dateFormatterPrint.string(from: date)
+                    let calendar = Calendar.current
+                    let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
+                    mark.date = "\(date.monthAsString()) \(components.day!), \(components.year!)"
                 }
                 mark.location = ""
                 if let country = event.getVenue()?.getCountry(), !country.isEmpty {
