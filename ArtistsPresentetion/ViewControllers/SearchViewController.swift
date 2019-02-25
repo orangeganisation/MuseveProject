@@ -265,22 +265,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             }
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 
-
-extension SearchViewController{
+// MARK: - Extension
+extension SearchViewController {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count == 0{
             SearchViewController.currentArtist = nil

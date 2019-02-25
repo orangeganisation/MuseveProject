@@ -156,6 +156,7 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
     }
 }
 
+// MARK: - Extension
 extension FavoritesViewController {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

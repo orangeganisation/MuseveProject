@@ -10,6 +10,7 @@ import UIKit
 
 class customCollectionView: UICollectionView {
     
+    // MARK: - Vars
     override var allowsMultipleSelection: Bool {
         didSet {
             FavoritesViewController.multiplySelectionIsAllowed = allowsMultipleSelection

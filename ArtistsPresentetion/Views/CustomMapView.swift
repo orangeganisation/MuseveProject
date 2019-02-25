@@ -18,4 +18,5 @@ class CustomMapView: MKMapView {
             compassView.frame.origin.x -= CGFloat(2.0)
         }
     }
+    
 }

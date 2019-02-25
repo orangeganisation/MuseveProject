@@ -10,6 +10,7 @@ import UIKit
 
 class CustomCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Vars
     override var isSelected: Bool {
         didSet{
             if FavoritesViewController.multiplySelectionIsAllowed {

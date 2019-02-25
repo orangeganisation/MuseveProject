@@ -99,7 +99,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     
     // MARK: - MyTools
-    
     func setMarkersForEvents(completion: (_ latitude: Double?,_ longtitude: Double?) -> Void) {
         for event in MapViewController.presentingEvents {
             if let latitude = event.getVenue()?.getLatitude(), let longtitude = event.getVenue()?.getLongtitude() {
