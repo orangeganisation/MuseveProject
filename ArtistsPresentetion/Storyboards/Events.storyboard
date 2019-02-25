@@ -30,7 +30,7 @@
                                 <color key="color" red="0.76404935119999995" green="0.59835982320000003" blue="0.6745172143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </activityIndicatorView>
                             <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j5Z-NI-QMv">
-                                <rect key="frame" x="0.0" y="95" width="375" height="572"/>
+                                <rect key="frame" x="0.0" y="51" width="375" height="616"/>
                                 <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="0.26632063356164382" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -139,7 +139,7 @@
                                 </connections>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yg7-7n-oqo">
-                                <rect key="frame" x="0.0" y="64" width="375" height="29"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="29"/>
                                 <color key="backgroundColor" red="0.15307435393333435" green="0.15258249640464783" blue="0.16862979531288147" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <segments>
                                     <segment title="Upcoming"/>
@@ -168,17 +168,128 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7dX-h4-25C"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Events" id="ZnX-4g-fk3"/>
+                    <navigationItem key="navigationItem" title="Events" id="ZnX-4g-fk3">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="sorting" id="ydU-wH-E2P">
+                            <inset key="imageInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
+                            <connections>
+                                <action selector="sortEventsByDate:" destination="Mxu-ok-YQF" id="0Z8-mf-t27"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="eventsFilterSegment" destination="yg7-7n-oqo" id="3l8-D0-jcV"/>
                         <outlet property="eventsTableView" destination="j5Z-NI-QMv" id="bNV-Lz-AtL"/>
                         <outlet property="haveNoEventsLabel" destination="Kta-Mq-eNB" id="H6V-ig-5s6"/>
-                        <outlet property="iventsFilterSegment" destination="yg7-7n-oqo" id="HQi-y4-mjd"/>
                         <outlet property="loadingDataSpinner" destination="o8n-Bh-URe" id="afY-Df-bfe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8OZ-Dp-Jy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4176.8000000000002" y="-798.35082458770626"/>
+        </scene>
+        <!--Date View Controller-->
+        <scene sceneID="iUW-Rk-Xfe">
+            <objects>
+                <viewController storyboardIdentifier="datePickerViewController" id="zJM-mn-6YD" customClass="DateViewController" customModule="ArtistsPresentetion" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tZ0-b0-Fwo">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="PL4-7g-hDB">
+                                <rect key="frame" x="0.0" y="36" width="375" height="615"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K8p-1O-OgL">
+                                        <rect key="frame" x="153" y="0.0" width="69" height="33.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                        <color key="textColor" red="0.76404935119999995" green="0.59835982320000003" blue="0.6745172143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="7vg-OV-Q9t">
+                                        <rect key="frame" x="27.5" y="52.5" width="320" height="216"/>
+                                        <color key="tintColor" red="0.76404935119999995" green="0.59835982320000003" blue="0.6745172143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="572751792.82644403">
+                                            <!--2019-02-25 1:43:12 AM +0000-->
+                                        </date>
+                                        <date key="minimumDate" timeIntervalSinceReferenceDate="-978267600">
+                                            <!--1970-01-01 11:00:00 AM +0000-->
+                                        </date>
+                                        <date key="maximumDate" timeIntervalSinceReferenceDate="1044010800">
+                                            <!--2034-01-31 11:00:00 AM +0000-->
+                                        </date>
+                                    </datePicker>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDW-pX-ahx">
+                                        <rect key="frame" x="169.5" y="287.5" width="36" height="33.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                        <color key="textColor" red="0.76404935119999995" green="0.59835982320000003" blue="0.6745172143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="fZ6-dB-BSr">
+                                        <rect key="frame" x="27.5" y="340" width="320" height="216"/>
+                                        <color key="tintColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="572752483.88539302">
+                                            <!--2019-02-25 1:54:43 AM +0000-->
+                                        </date>
+                                        <date key="minimumDate" timeIntervalSinceReferenceDate="-978267600">
+                                            <!--1970-01-01 11:00:00 AM +0000-->
+                                        </date>
+                                        <date key="maximumDate" timeIntervalSinceReferenceDate="1072868400">
+                                            <!--2034-12-31 11:00:00 AM +0000-->
+                                        </date>
+                                    </datePicker>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="LaL-8s-yhx">
+                                        <rect key="frame" x="16" y="569" width="343" height="46"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HMp-U6-DaJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="194.5" height="46"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="cancelAction:" destination="zJM-mn-6YD" eventType="touchUpInside" id="LkC-dL-yce"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y3v-4C-81k">
+                                                <rect key="frame" x="202.5" y="0.0" width="140.5" height="46"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                <state key="normal" title="Done">
+                                                    <color key="titleColor" red="0.69745399746192893" green="0.29073513866157785" blue="0.4033080084791561" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="doneAction:" destination="zJM-mn-6YD" eventType="touchUpInside" id="SlO-im-dWb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="LaL-8s-yhx" firstAttribute="leading" secondItem="PL4-7g-hDB" secondAttribute="leading" constant="16" id="J6w-Y8-VB2"/>
+                                    <constraint firstAttribute="trailing" secondItem="LaL-8s-yhx" secondAttribute="trailing" constant="16" id="cXQ-E2-FVf"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.16494458913803101" green="0.16003882884979248" blue="0.19216105341911316" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="PL4-7g-hDB" firstAttribute="leading" secondItem="oWG-sR-MD6" secondAttribute="leading" id="7qm-nu-6qW"/>
+                            <constraint firstItem="oWG-sR-MD6" firstAttribute="bottom" secondItem="PL4-7g-hDB" secondAttribute="bottom" constant="16" id="A8A-8j-o0G"/>
+                            <constraint firstItem="PL4-7g-hDB" firstAttribute="top" secondItem="oWG-sR-MD6" secondAttribute="top" constant="16" id="EVG-0e-e48"/>
+                            <constraint firstItem="oWG-sR-MD6" firstAttribute="trailing" secondItem="PL4-7g-hDB" secondAttribute="trailing" id="NJa-fY-aPj"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="oWG-sR-MD6"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ei0-8N-OXI">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="xkm-Bk-n58"/>
+                    </navigationItem>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="fromDatePicker" destination="7vg-OV-Q9t" id="HTz-8K-qEf"/>
+                        <outlet property="toDatePicker" destination="fZ6-dB-BSr" id="qUe-cX-noI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a5t-FX-Obh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5141.6000000000004" y="-798.35082458770626"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FgB-BV-yql">
@@ -192,7 +303,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Mxu-ok-YQF" kind="relationship" relationship="rootViewController" id="Yhn-yk-S4i"/>
+                        <segue destination="zJM-mn-6YD" kind="relationship" relationship="rootViewController" id="Vjh-T3-tl9"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rWm-XG-21I" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -200,4 +311,7 @@
             <point key="canvasLocation" x="3237.5999999999999" y="-798.35082458770626"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="sorting" width="24" height="30"/>
+    </resources>
 </document>

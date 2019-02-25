@@ -12,45 +12,65 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     // MARK: - Vars
     static var artist: (name: String, upcominIvents: Int)?
-    var iventsFilter: String?
+    static var eventsFilter: String?
+    static var shouldUpdateEvents = false
     var events = [Event]()
     
     // MARK: - Outlets
     @IBOutlet weak var haveNoEventsLabel: UILabel!
     @IBOutlet weak var eventsTableView: UITableView!
     @IBOutlet weak var loadingDataSpinner: UIActivityIndicatorView!
-    @IBOutlet weak var iventsFilterSegment: UISegmentedControl!
+    @IBOutlet weak var eventsFilterSegment: UISegmentedControl!
+    
+    
     
     // MARK: - Actions
     @IBAction func changeFilterInSegment(_ sender: UISegmentedControl) {
-        switch iventsFilterSegment.selectedSegmentIndex {
+        eventsFilterSegment.alpha = 1
+        switch eventsFilterSegment.selectedSegmentIndex {
         case 0:
-            iventsFilter = "upcoming"
+            EventsViewController.eventsFilter = "upcoming"
             loadEvents()
         case 1:
-            iventsFilter = "past"
+            EventsViewController.eventsFilter = "past"
             loadEvents()
         default:
-            iventsFilter = "all"
+            EventsViewController.eventsFilter = "all"
             loadEvents()
         }
     }
     
+    @IBAction func sortEventsByDate(_ sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard(name: "Events", bundle: nil)
+        let dateViewController = storyboard.instantiateViewController(withIdentifier: "datePickerViewController") as! DateViewController
+        self.navigationController?.present(dateViewController, animated: true, completion: nil)
+        eventsFilterSegment.alpha = 0.4
+    }
     
     // MARK: - ViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.view.layoutSubviews()
+        if EventsViewController.shouldUpdateEvents {
+            loadEvents()
+        } else {
+            eventsFilterSegment.alpha = 1.0
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        EventsViewController.shouldUpdateEvents = false
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        iventsFilter = nil
+        EventsViewController.eventsFilter = nil
         if EventsViewController.artist!.upcominIvents == 0 {
-            iventsFilter = "all"
-            iventsFilterSegment.selectedSegmentIndex = 2
+            EventsViewController.eventsFilter = "all"
+            eventsFilterSegment.selectedSegmentIndex = 2
         } else {
-            iventsFilterSegment.selectedSegmentIndex = 0
+            eventsFilterSegment.selectedSegmentIndex = 0
         }
         loadEvents()
     }
@@ -65,7 +85,7 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         loadingDataSpinner.startAnimating()
         if let artistName = EventsViewController.artist {
             if let named = artistName.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                SearchViewController.internetDataManager.getEvents(forArtist: named, forDate: iventsFilter, viewController: self) { (error, artEvents) in
+                SearchViewController.internetDataManager.getEvents(forArtist: named, forDate: EventsViewController.eventsFilter, viewController: self) { (error, artEvents) in
                     DispatchQueue.main.async {
                         self.loadingDataSpinner.stopAnimating()
                     }
@@ -77,7 +97,7 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                             self.haveNoEventsLabel.isHidden = false
                         }
                     } else if artEvents != nil, artEvents?.count != 0 {
-                        if self.iventsFilter != "upcoming", self.iventsFilter != nil {
+                        if EventsViewController.eventsFilter != "upcoming", EventsViewController.eventsFilter != nil {
                             self.events = artEvents!.reversed()
                         } else {
                             self.events = artEvents!
@@ -166,9 +186,10 @@ extension EventsViewController {
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let action = UITableViewRowAction(style: .normal, title: "Show on map") { (rowAction, indexPath) in
-//            let eventsMapStoryboard = UIStoryboard(name: "EventsMap", bundle: nil)
-//            let mapViewController = eventsMapStoryboard.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
-            //switch the controller and add a marker
+            MapViewController.presentingEvents.append(self.events[indexPath.row])
+            MapViewController.currentArtistName = EventsViewController.artist?.name
+            MapViewController.needSetCenterValue = false
+            self.tabBarController?.selectedIndex = 2
         }
         action.backgroundColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
         return [action]

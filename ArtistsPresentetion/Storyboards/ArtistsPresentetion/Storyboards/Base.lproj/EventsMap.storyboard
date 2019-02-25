@@ -63,6 +63,29 @@
                                     <action selector="finduserLocation:" destination="z2g-HB-YlE" eventType="touchUpInside" id="2Hq-gm-zHZ"/>
                                 </connections>
                             </button>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="uTT-v6-iVo">
+                                <rect key="frame" x="150.5" y="332" width="74.5" height="67.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JwL-m4-VL0">
+                                        <rect key="frame" x="0.0" y="0.0" width="45" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location: " textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qcw-Hx-YQz">
+                                        <rect key="frame" x="0.0" y="23.5" width="74.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Line-up: " textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLH-dD-WxN">
+                                        <rect key="frame" x="0.0" y="47" width="68.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.16494458910000001" green="0.1600388288" blue="0.1921610534" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
@@ -74,16 +97,19 @@
                             <constraint firstItem="S5L-ru-DvF" firstAttribute="top" secondItem="N7U-dq-jQa" secondAttribute="bottom" id="Qqx-qN-khZ"/>
                             <constraint firstItem="N7U-dq-jQa" firstAttribute="trailing" secondItem="c83-R4-SZJ" secondAttribute="trailing" id="bUJ-rB-Y1t"/>
                             <constraint firstItem="S5L-ru-DvF" firstAttribute="leading" secondItem="c83-R4-SZJ" secondAttribute="leading" id="cJt-PF-QE3"/>
+                            <constraint firstItem="uTT-v6-iVo" firstAttribute="centerY" secondItem="5W6-F2-2ko" secondAttribute="centerY" constant="32.25" id="gWo-jn-3Me"/>
                             <constraint firstItem="N7U-dq-jQa" firstAttribute="top" secondItem="wk6-k8-GPi" secondAttribute="bottom" id="nDw-WO-eEl"/>
                             <constraint firstItem="wk6-k8-GPi" firstAttribute="top" secondItem="5W6-F2-2ko" secondAttribute="top" id="q27-4g-U48"/>
                             <constraint firstAttribute="trailing" secondItem="wk6-k8-GPi" secondAttribute="trailing" id="qfz-JH-mIB"/>
                             <constraint firstItem="N7U-dq-jQa" firstAttribute="top" secondItem="c83-R4-SZJ" secondAttribute="top" id="qn9-Wf-ln5"/>
                             <constraint firstItem="c83-R4-SZJ" firstAttribute="trailing" secondItem="G6S-ob-mWR" secondAttribute="trailing" constant="8" id="qyi-ip-i1D"/>
+                            <constraint firstItem="uTT-v6-iVo" firstAttribute="centerX" secondItem="5W6-F2-2ko" secondAttribute="centerX" id="uko-GK-JXy"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c83-R4-SZJ"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Events" image="tabBarMapIcon" id="I1Y-hg-0VR"/>
                     <connections>
+                        <outlet property="annotationView" destination="uTT-v6-iVo" id="hjK-iY-3rH"/>
                         <outlet property="locationButton" destination="G6S-ob-mWR" id="fRI-Rd-rRQ"/>
                         <outlet property="myMapView" destination="S5L-ru-DvF" id="Mes-Wk-nmZ"/>
                     </connections>

@@ -85,12 +85,12 @@ class InternetDataManager{
     
     func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?,_ events: [Event]?) -> Void) {
         let searchName = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
-        if self.isConnectedToNetwork(){
+        if self.isConnectedToNetwork() {
             var dateString = ""
             if let dateNonOptional = date {
                 dateString = "&date=\(dateNonOptional)"
             }
-            if let url = URL(string: StringConstants.getArtistUrl + searchName! + "/events" + StringConstants.appId + dateString){
+            if let url = URL(string: StringConstants.getArtistUrl + searchName! + "/events" + StringConstants.appId + dateString) {
                 let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
                     if error != nil{
                         completion(error, nil)

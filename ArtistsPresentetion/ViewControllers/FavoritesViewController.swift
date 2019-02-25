@@ -49,9 +49,9 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBAction func cancelAction(_ sender: UIBarButtonItem) {
         self.navigationItem.leftBarButtonItem = nil
         self.navigationItem.setRightBarButton(editButton, animated: true)
-        navigationBarTitle.title = "Favorites"
         deselectAllArtists()
         favoriteCollectionView.allowsMultipleSelection = false
+        navigationBarTitle.title = "Favorites"
     }
     
     @IBAction func trashAction(_ sender: UIBarButtonItem) {
@@ -154,17 +154,6 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
         }
         removingList.removeAll()
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension FavoritesViewController {

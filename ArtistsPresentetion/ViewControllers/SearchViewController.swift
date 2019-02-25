@@ -118,6 +118,31 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+    @IBAction func presentEventsOnMap(_ sender: UIButton) {
+        SearchViewController.internetDataManager.getEvents(forArtist: (SearchViewController.currentArtist?.getName())!, forDate: nil, viewController: self) { (error, events) in
+            if error != nil{
+                SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+            } else if events != nil, events?.count != 0 {
+                MapViewController.currentArtistName = SearchViewController.currentArtist?.getName()
+                DispatchQueue.main.async {
+                    MapViewController.needSetCenterValue = false
+                    MapViewController.presentingEvents = events!
+                    MapViewController.currentArtistId = SearchViewController.currentArtist?.getID()
+                    self.tabBarController?.selectedIndex = 2
+                }
+            } else if events != nil {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Events", message: "This artist has no events", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+            }
+        }
+    }
+    
+    
     // MARK: - Search Bar & Keyboard
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
