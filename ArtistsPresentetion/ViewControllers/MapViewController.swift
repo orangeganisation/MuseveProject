@@ -170,21 +170,25 @@ extension MapViewController{
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
-        annotationView.canShowCallout = true
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
-        annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)
-        do {
-            let results = try CoreDataManager.instance.persistentContainer.viewContext.fetch(fetchRequest)
-            for result in results as! [NSManagedObject] {
-                if (result.value(forKey: "name") as! String) == MapViewController.currentArtistName {
-                    annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
+        if !annotation.isEqual(mapView.userLocation) {
+            let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
+            annotationView.canShowCallout = true
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
+            annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)
+            do {
+                let results = try CoreDataManager.instance.persistentContainer.viewContext.fetch(fetchRequest)
+                for result in results as! [NSManagedObject] {
+                    if (result.value(forKey: "name") as! String) == MapViewController.currentArtistName {
+                        annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
+                    }
                 }
+            } catch {
+                print(error)
             }
-        } catch {
-            print(error)
+            return annotationView
+        } else {
+            return nil
         }
-        return annotationView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
