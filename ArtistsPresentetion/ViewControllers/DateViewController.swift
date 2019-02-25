@@ -11,16 +11,8 @@ import UIKit
 class DateViewController: UIViewController {
 
     // MARK: - Outlets
-    @IBOutlet weak var fromDatePicker: UIDatePicker! {
-        didSet {
-            fromDatePicker.setValue(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), forKey: "textColor")
-        }
-    }
-    @IBOutlet weak var toDatePicker: UIDatePicker! {
-        didSet {
-            toDatePicker.setValue(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), forKey: "textColor")
-        }
-    }
+    @IBOutlet weak var fromDatePicker: UIDatePicker!
+    @IBOutlet weak var toDatePicker: UIDatePicker!
     
     // MARK: - Actions
     @IBAction func doneAction(_ sender: UIButton) {
