@@ -54,7 +54,9 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if EventsViewController.shouldUpdateEvents {
             loadEvents()
         } else {
-            eventsFilterSegment.alpha = 1.0
+            if EventsViewController.eventsFilter == "upcomimg" || EventsViewController.eventsFilter == "past" || EventsViewController.eventsFilter == "all" || EventsViewController.eventsFilter == nil {
+                eventsFilterSegment.alpha = 1.0
+            }
         }
     }
     
@@ -150,12 +152,12 @@ extension EventsViewController {
             cell.placeNameLabel.text = place
         }
         var participants = ""
-        var participantIndex = 0
+        var shouldEnter = true
         if let lineUp = events[indexPath.row].getLineup() {
             for participant in lineUp {
-                if participantIndex == 0 {
+                if shouldEnter {
                     participants.append(participant)
-                    participantIndex += 1
+                    shouldEnter = false
                 } else {
                     participants.append("\n\(participant)")
                 }
