@@ -8,19 +8,31 @@
 
 import UIKit
 
-class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class EventsViewController: UIViewController, UITableViewDataSource {
 
     // MARK: - Vars
-    static var artist: (name: String, upcominIvents: Int)?
-    static var eventsFilter: String?
-    static var shouldUpdateEvents = false
+    static let shared = EventsViewController()
+    var artist: (name: String, upcominIvents: Int)?
+    var eventsFilter: String?
+    var shouldUpdateEvents = false
     var events = [Event]()
     
     // MARK: - Outlets
     @IBOutlet weak var haveNoEventsLabel: UILabel!
     @IBOutlet weak var eventsTableView: UITableView!
     @IBOutlet weak var loadingDataSpinner: UIActivityIndicatorView!
-    @IBOutlet weak var eventsFilterSegment: UISegmentedControl!
+    @IBOutlet weak var eventsFilterSegment: UISegmentedControl! {
+        didSet {
+            for index in eventsFilterSegment.subviews.indices {
+                eventsFilterSegment.setTitle(NSLocalizedString(eventsFilterSegment.titleForSegment(at: index)!, comment: ""), forSegmentAt: index)
+            }
+        }
+    }
+    @IBOutlet weak var navigationBar: UINavigationItem! {
+        didSet {
+            navigationBar.title = NSLocalizedString(navigationBar.title!, comment: "")
+        }
+    }
     
     
     
@@ -29,13 +41,13 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         eventsFilterSegment.alpha = 1
         switch eventsFilterSegment.selectedSegmentIndex {
         case 0:
-            EventsViewController.eventsFilter = "upcoming"
+            EventsViewController.shared.eventsFilter = "upcoming"
             loadEvents()
         case 1:
-            EventsViewController.eventsFilter = "past"
+            EventsViewController.shared.eventsFilter = "past"
             loadEvents()
         default:
-            EventsViewController.eventsFilter = "all"
+            EventsViewController.shared.eventsFilter = "all"
             loadEvents()
         }
     }
@@ -51,10 +63,10 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.view.layoutSubviews()
-        if EventsViewController.shouldUpdateEvents {
+        if EventsViewController.shared.shouldUpdateEvents {
             loadEvents()
         } else {
-            if EventsViewController.eventsFilter == "upcomimg" || EventsViewController.eventsFilter == "past" || EventsViewController.eventsFilter == "all" || EventsViewController.eventsFilter == nil {
+            if EventsViewController.shared.eventsFilter == "upcomimg" || EventsViewController.shared.eventsFilter == "past" || EventsViewController.shared.eventsFilter == "all" || EventsViewController.shared.eventsFilter == nil {
                 eventsFilterSegment.alpha = 1.0
             }
         }
@@ -62,14 +74,14 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        EventsViewController.shouldUpdateEvents = false
+        EventsViewController.shared.shouldUpdateEvents = false
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        EventsViewController.eventsFilter = nil
-        if EventsViewController.artist!.upcominIvents == 0 {
-            EventsViewController.eventsFilter = "all"
+        EventsViewController.shared.eventsFilter = nil
+        if EventsViewController.shared.artist!.upcominIvents == 0 {
+            EventsViewController.shared.eventsFilter = "all"
             eventsFilterSegment.selectedSegmentIndex = 2
         } else {
             eventsFilterSegment.selectedSegmentIndex = 0
@@ -85,24 +97,24 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         haveNoEventsLabel.isHidden = true
         eventsTableView.isHidden = true
         loadingDataSpinner.startAnimating()
-        if let artistName = EventsViewController.artist {
+        if let artistName = EventsViewController.shared.artist {
             if let named = artistName.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                SearchViewController.internetDataManager.getEvents(forArtist: named, forDate: EventsViewController.eventsFilter, viewController: self) { (error, artEvents) in
+                InternetDataManager.shared.getEvents(forArtist: named, forDate: EventsViewController.shared.eventsFilter, viewController: self) { (error, artEvents) in
                     DispatchQueue.main.async {
                         self.loadingDataSpinner.stopAnimating()
                     }
                     if error != nil {
                         DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = "Failed"
+                            self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
                             self.eventsTableView.isHidden = true
-                            SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                            Alerts.presentFailedDataLoadingAlert(viewController: self)
                             self.haveNoEventsLabel.isHidden = false
                         }
                     } else if artEvents != nil, artEvents?.count != 0 {
-                        if EventsViewController.eventsFilter != "upcoming", EventsViewController.eventsFilter != nil {
-                            self.events = artEvents!.reversed()
+                        if EventsViewController.shared.eventsFilter != "upcoming", EventsViewController.shared.eventsFilter != nil {
+                            EventsViewController.shared.events = artEvents!.reversed()
                         } else {
-                            self.events = artEvents!
+                            EventsViewController.shared.events = artEvents!
                         }
                         DispatchQueue.main.async {
                             self.eventsTableView.isHidden = false
@@ -114,16 +126,16 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         }
                     } else if artEvents != nil {
                         DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = "No events"
+                            self.haveNoEventsLabel.text = NSLocalizedString("No events", comment: "")
                             self.eventsTableView.isHidden = true
                             self.haveNoEventsLabel.isHidden = false
                         }
                     } else {
                         DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = "Failed"
+                            self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
                             self.eventsTableView.isHidden = true
                             self.haveNoEventsLabel.isHidden = false
-                            SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                            Alerts.presentFailedDataLoadingAlert(viewController: self)
                         }
                     }
                 }
@@ -134,52 +146,18 @@ class EventsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
 
 // MARK: - Extensions
-extension EventsViewController {
+extension EventsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return events.count
+        return EventsViewController.shared.events.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventsTableViewCell
-        if let city = events[indexPath.row].getVenue()?.getCity() {
-            cell.cityLabel.text = city
-        }
-        if let country = events[indexPath.row].getVenue()?.getCountry() {
-            cell.countryLabel.text = country
-        }
-        if let place = events[indexPath.row].getVenue()?.getName() {
-            cell.placeNameLabel.text = place
-        }
-        var participants = ""
-        var shouldEnter = true
-        if let lineUp = events[indexPath.row].getLineup() {
-            for participant in lineUp {
-                if shouldEnter {
-                    participants.append(participant)
-                    shouldEnter = false
-                } else {
-                    participants.append("\n\(participant)")
-                }
-            }
-        }
-        cell.participantsLabel.text = participants
-        let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = dateFormat
-        if let dateTime = events[indexPath.row].getDatetime() {
-            let date = dateFormatter.date(from: dateTime)!
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
-            cell.dayLabel.text = String(components.day!)
-            cell.yearLabel.text = String(components.year!)
-            cell.monthLabel.text = date.monthAsString()
-        }
-        return cell
+        return EventsTableViewCell.configuredCell(of: tableView, for: indexPath)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let eventUrl = events[indexPath.row].getUrl() {
+        if let eventUrl = EventsViewController.shared.events[indexPath.row].getUrl() {
             if let url = URL(string: eventUrl) {
                 InternetDataManager.openSafariPage(withUrl: url, byController: self)
             }
@@ -187,10 +165,10 @@ extension EventsViewController {
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let action = UITableViewRowAction(style: .normal, title: "Show on map") { (rowAction, indexPath) in
-            MapViewController.presentingEvents.append(self.events[indexPath.row])
-            MapViewController.currentArtistName = EventsViewController.artist?.name
-            MapViewController.needSetCenterValue = false
+        let action = UITableViewRowAction(style: .normal, title: NSLocalizedString("Show on map", comment: "")) { (rowAction, indexPath) in
+            MapViewController.shared.presentingEvents.append(EventsViewController.shared.events[indexPath.row])
+            MapViewController.shared.currentArtistName = EventsViewController.shared.artist?.name
+            MapViewController.shared.needSetCenterValue = false
             self.tabBarController?.selectedIndex = 2
         }
         action.backgroundColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)

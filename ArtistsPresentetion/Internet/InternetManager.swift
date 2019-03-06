@@ -11,7 +11,10 @@ import UIKit
 import SystemConfiguration
 import SafariServices
 
-class InternetDataManager{
+class InternetDataManager {
+    
+    private var sessionTaskIsLoading = false
+    static let shared = InternetDataManager()
     
     public func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
@@ -42,59 +45,60 @@ class InternetDataManager{
         viewController.present(safari, animated: true, completion: nil)
     }
     
-    
-    func presentConnectionAlert(viewController:UIViewController){
-        let alert = UIAlertController(title: "Internet Connection", message: "There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: StringConstants.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: StringConstants.settings, style: .default, handler: { (action) in
-            UIApplication.shared.open(URL(string: "App-Prefs:")!)
-        }))
-        viewController.present(alert, animated: true, completion: nil)
-    }
-    
-    
-    func presentFailedDataLoadingAlert(viewController:UIViewController){
-        let alert = UIAlertController(title: "Data Loading", message: "Failed to load data. Please, try again later.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: StringConstants.ok, style: .cancel, handler: nil))
-        viewController.present(alert, animated: true, completion: nil)
-    }
-    
-    
     func getArtist(viewController: UIViewController, searchText: String, completion: @escaping (_ error: Error?,_ artist: Artist?) -> Void) {
-        if self.isConnectedToNetwork(){
-            if let url = URL(string: StringConstants.getArtistUrl + searchText + StringConstants.appId){
-                let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
-                    if error != nil{
-                        completion(error, nil)
-                    }else{
-                        if let data = artistData{
-                            if let artist = try? JSONDecoder().decode(Artist.self, from: data){
-                                completion(nil, artist)
-                            }else{
-                                completion(nil, nil)
+        if !sessionTaskIsLoading {
+            sessionTaskIsLoading = true
+            if self.isConnectedToNetwork(){
+                var components = URLComponents()
+                components.scheme = StringConstants.Urls.scheme
+                components.host = StringConstants.Urls.getArtistUrl
+                components.path = StringConstants.Urls.path + searchText
+                let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
+                components.queryItems = [appID]
+                if let url = components.url {
+                    let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
+                        self.sessionTaskIsLoading = false
+                        if searchText != SearchViewController.shared.currentSearchText && SearchViewController.shared.currentSearchText.count > 2 {
+                            self.getArtist(viewController: viewController, searchText: SearchViewController.shared.currentSearchText, completion: completion)
+                        } else {
+                            if error != nil {
+                                completion(error, nil)
+                            } else {
+                                if let data = artistData{
+                                    if let artist = try? JSONDecoder().decode(Artist.self, from: data) {
+                                        completion(nil, artist)
+                                    } else {
+                                        completion(nil, nil)
+                                    }
+                                }
                             }
                         }
                     }
+                    task.resume()
                 }
-                task.resume()
+            }else{
+                Alerts.presentConnectionAlert(viewController: viewController)
             }
-        }else{
-            self.presentConnectionAlert(viewController: viewController)
         }
     }
     
     func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?,_ events: [Event]?) -> Void) {
-        let searchName = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
         if self.isConnectedToNetwork() {
-            var dateString = ""
-            if let dateNonOptional = date {
-                dateString = "&date=\(dateNonOptional)"
+            var components = URLComponents()
+            components.scheme = StringConstants.Urls.scheme
+            components.host = StringConstants.Urls.getArtistUrl
+            components.path = StringConstants.Urls.path + name + "/events"
+            let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
+            let sortingItem = URLQueryItem(name: "date", value: date)
+            components.queryItems = [appID, sortingItem]
+            if date == nil {
+                components.queryItems?.removeLast()
             }
-            if let url = URL(string: StringConstants.getArtistUrl + searchName! + "/events" + StringConstants.appId + dateString) {
+            if let url = components.url {
                 let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                    if error != nil{
+                    if error != nil {
                         completion(error, nil)
-                    }else{
+                    } else {
                         if let eventsData = data {
                             do {
                                 let events = try JSONDecoder().decode([Event].self, from: eventsData)
@@ -109,7 +113,7 @@ class InternetDataManager{
                 task.resume()
             }
         }else{
-            self.presentConnectionAlert(viewController: viewController)
+            Alerts.presentConnectionAlert(viewController: viewController)
         }
     }
 }

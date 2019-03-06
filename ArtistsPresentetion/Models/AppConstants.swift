@@ -9,13 +9,31 @@
 import Foundation
 
 struct StringConstants {
-    static let appName = "Museve"
-    static let appId = "?app_id=\(appName)"
-    static let getArtistUrl = "https://rest.bandsintown.com/artists/"
-    static let cancel = "Cancel"
-    static let settings = "Settings"
-    static let noResults = "No results"
-    static let search = "Search"
-    static let enterName = "Enter name"
-    static let ok = "Ok"
+    struct App {
+        static let appName = "Museve"
+    }
+    struct Urls {
+        static let scheme = "https"
+        static let getArtistUrl = "rest.bandsintown.com"
+        static let path = "/artists/"
+    }
+    struct AlertsStrings {
+        static let cancel = NSLocalizedString("Cancel", comment: "")
+        static let settings = NSLocalizedString("Settings", comment: "")
+        static let ok = "Ok"
+        static let internetProblems = NSLocalizedString("There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.", comment: "")
+        static let locationFailed = NSLocalizedString("Turn On Location Services to allow \"Museve\" to determine Your location:\nSettings->Privacy->Location Services", comment: "")
+        static let dataLoadingFailed = NSLocalizedString("Failed to load data. Please, try again later.", comment: "")
+    }
+    struct Search {
+        static let noResults = NSLocalizedString("No results", comment: "")
+        static let search = NSLocalizedString("Search", comment: "")
+        static let enterName = NSLocalizedString("Enter name", comment: "")
+        static let added = NSLocalizedString("Added", comment: "")
+        static let removed = NSLocalizedString("Deleted", comment: "")
+    }
+    struct ArtistEvents {
+        static let events = NSLocalizedString("Events", comment: "")
+        static let noEvents = NSLocalizedString("This artist has no events", comment: "")
+    }
 }

@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Events-->
+        <!--Map-->
         <scene sceneID="qCE-wy-eJ5">
             <objects>
-                <viewController storyboardIdentifier="mapViewController" id="z2g-HB-YlE" customClass="MapViewController" customModule="ArtistsPresentetion" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mapViewController" title="Map" id="z2g-HB-YlE" customClass="MapViewController" customModule="ArtistsPresentetion" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5W6-F2-2ko">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -28,7 +28,7 @@
                                             <rect key="frame" x="35.5" y="7" width="304" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <segments>
-                                                <segment title="Satellite"/>
+                                                <segment title="Scheme"/>
                                                 <segment title="Hybrid"/>
                                             </segments>
                                             <color key="tintColor" red="0.61022180319999997" green="0.25277903680000002" blue="0.34902226920000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -107,10 +107,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c83-R4-SZJ"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Events" image="tabBarMapIcon" id="I1Y-hg-0VR"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="tabBarMapIcon" id="I1Y-hg-0VR"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="annotationView" destination="uTT-v6-iVo" id="hjK-iY-3rH"/>
+                        <outlet property="dateLabel" destination="JwL-m4-VL0" id="DZJ-6e-eX5"/>
+                        <outlet property="lineupLabel" destination="aLH-dD-WxN" id="qVV-tW-Q1n"/>
                         <outlet property="locationButton" destination="G6S-ob-mWR" id="fRI-Rd-rRQ"/>
+                        <outlet property="locationLabel" destination="Qcw-Hx-YQz" id="ZC8-8y-3g3"/>
                         <outlet property="myMapView" destination="S5L-ru-DvF" id="Mes-Wk-nmZ"/>
                     </connections>
                 </viewController>

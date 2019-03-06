@@ -13,6 +13,26 @@ class DateViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var fromDatePicker: UIDatePicker!
     @IBOutlet weak var toDatePicker: UIDatePicker!
+    @IBOutlet weak var fromDateLabel: UILabel! {
+        didSet {
+            fromDateLabel.text = NSLocalizedString("From:", comment: "")
+        }
+    }
+    @IBOutlet weak var toDateLabel: UILabel! {
+        didSet {
+            toDateLabel.text = NSLocalizedString("To:", comment: "")
+        }
+    }
+    @IBOutlet weak var cancelButton: UIButton! {
+        didSet {
+            cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: .normal)
+        }
+    }
+    @IBOutlet weak var doneButton: UIButton! {
+        didSet {
+            doneButton.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
+        }
+    }
     
     // MARK: - Actions
     @IBAction func doneAction(_ sender: UIButton) {
@@ -20,13 +40,13 @@ class DateViewController: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let fromDate = dateFormatter.string(from: fromDatePicker.date)
         let toDate = dateFormatter.string(from: toDatePicker.date)
-        EventsViewController.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
-        EventsViewController.shouldUpdateEvents = true
+        EventsViewController.shared.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        EventsViewController.shared.shouldUpdateEvents = true
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func cancelAction(_ sender: UIButton) {
-        EventsViewController.shouldUpdateEvents = false
+        EventsViewController.shared.shouldUpdateEvents = false
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }

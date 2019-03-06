@@ -10,14 +10,14 @@ import UIKit
 import SafariServices
 import CoreData
 
-class SearchViewController: UIViewController, UISearchBarDelegate {
+class SearchViewController: UIViewController {
 
     // MARK: - Vars
-    static var internetDataManager = InternetDataManager()
-    static var currentArtist:Artist?
-    static var currentSearchText = String()
+    static let shared = SearchViewController()
+    var currentArtist:Artist?
+    var currentSearchText = String()
     let context = CoreDataManager.instance.persistentContainer.viewContext
-    static var isInDataBase = false
+    var isInDataBase = false
 
     
     // MARK: - Outlets
@@ -48,7 +48,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
-        if let artist = SearchViewController.currentArtist, let facebook = artist.getFacebookPage(){
+        if let artist = SearchViewController.shared.currentArtist, let facebook = artist.getFacebookPage(){
             if let url = URL(string: facebook){
                 InternetDataManager.openSafariPage(withUrl: url, byController: self)
             }
@@ -56,88 +56,68 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     @IBAction func addToFavorites(_ sender: UIButton) {
-        if SearchViewController.isInDataBase {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
-            do {
-                let results = try context.fetch(fetchRequest)
-                for result in results as! [NSManagedObject] {
-                    if (result.value(forKey: "name") as! String) == artistNameLabel.text {
-                        context.delete(result)
-                        CoreDataManager.instance.saveContext()
-                    }
-                }
+        if SearchViewController.shared.isInDataBase {
+            CoreDataManager.instance.deleteObject(withName: artistNameLabel.text!, forEntity: "FavoriteArtist") {
                 if let image = UIImage(named: "addButton.svg") {
                     self.addAndRemoveButton.setImage(image, for: .normal)
                 }
-                SearchViewController.isInDataBase = false
+                SearchViewController.shared.isInDataBase = false
                 if let image = UIImage(named: "removed.svg") {
                     self.resultButton.setImage(image, for: .normal)
                 }
-                resultLabel.text = "Deleted"
+                resultLabel.text = StringConstants.Search.removed
                 animateResult()
-            } catch {
-                print(error)
             }
         } else {
-            if SearchViewController.internetDataManager.isConnectedToNetwork(){
-                if let entityDescription = NSEntityDescription.entity(forEntityName: "FavoriteArtist", in: context) {
-                    let managedObject = NSManagedObject(entity: entityDescription, insertInto: context)
-                    managedObject.setValue(SearchViewController.currentArtist!.getName(), forKey: "name")
-                    managedObject.setValue(SearchViewController.currentArtist!.getID(), forKey: "id")
-                    managedObject.setValue(SearchViewController.currentArtist!.getUpcomingEventCount(), forKey: "upcoming_events_count")
-                    if let imageUrl = URL(string: SearchViewController.currentArtist!.getThumbUrl()) {
-                        if let data = try? Data(contentsOf: imageUrl) as NSData {
-                            managedObject.setValue(data, forKey: "image_data")
-                        }
-                    }
-                    CoreDataManager.instance.saveContext()
+            if InternetDataManager.shared.isConnectedToNetwork(){
+                CoreDataManager.instance.addFavoriteArtist(withName: (SearchViewController.shared.currentArtist?.getName())!, withID: (SearchViewController.shared.currentArtist?.getID())!, withEventsCount: (SearchViewController.shared.currentArtist?.getUpcomingEventCount())!, withImageDataURL: (SearchViewController.shared.currentArtist?.getThumbUrl())!) {
                     if let image = UIImage(named: "remove.svg") {
                         self.addAndRemoveButton.setImage(image, for: .normal)
                     }
-                    SearchViewController.isInDataBase = true
                     if let image = UIImage(named: "added.svg") {
                         self.resultButton.setImage(image, for: .normal)
                     }
-                    resultLabel.text = "Added"
+                    resultLabel.text = StringConstants.Search.added
                     animateResult()
+                    SearchViewController.shared.isInDataBase = true
                 }
             } else {
-                SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
+                Alerts.presentConnectionAlert(viewController: self)
             }
         }
     }
     
     @IBAction func showEvents(_ sender: UIButton) {
-        if SearchViewController.internetDataManager.isConnectedToNetwork() {
+        if InternetDataManager.shared.isConnectedToNetwork() {
             let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
             let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController")
             self.navigationController?.pushViewController(eventsViewController, animated: true)
-            EventsViewController.artist = (SearchViewController.currentArtist!.getName(), SearchViewController.currentArtist!.getUpcomingEventCount())
+            EventsViewController.shared.artist = (SearchViewController.shared.currentArtist!.getName(), SearchViewController.shared.currentArtist!.getUpcomingEventCount())
         } else {
-            SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
+            Alerts.presentConnectionAlert(viewController: self)
         }
     }
     
     @IBAction func presentEventsOnMap(_ sender: UIButton) {
-        SearchViewController.internetDataManager.getEvents(forArtist: (SearchViewController.currentArtist?.getName())!, forDate: nil, viewController: self) { (error, events) in
+        InternetDataManager.shared.getEvents(forArtist: (SearchViewController.shared.currentArtist?.getName())!, forDate: nil, viewController: self) { (error, events) in
             if error != nil{
-                SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                Alerts.presentFailedDataLoadingAlert(viewController: self)
             } else if events != nil, events?.count != 0 {
-                MapViewController.currentArtistName = SearchViewController.currentArtist?.getName()
+                MapViewController.shared.currentArtistName = SearchViewController.shared.currentArtist?.getName()
                 DispatchQueue.main.async {
-                    MapViewController.needSetCenterValue = false
-                    MapViewController.presentingEvents = events!
-                    MapViewController.currentArtistId = SearchViewController.currentArtist?.getID()
+                    MapViewController.shared.needSetCenterValue = false
+                    MapViewController.shared.presentingEvents = events!
+                    MapViewController.shared.currentArtistId = SearchViewController.shared.currentArtist?.getID()
                     self.tabBarController?.selectedIndex = 2
                 }
             } else if events != nil {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Events", message: "This artist has no events", preferredStyle: .alert)
+                    let alert = UIAlertController(title: StringConstants.ArtistEvents.events, message: StringConstants.ArtistEvents.noEvents, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
             } else {
-                SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                Alerts.presentFailedDataLoadingAlert(viewController: self)
             }
         }
     }
@@ -159,7 +139,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if !SearchViewController.isInDataBase {
+        if !SearchViewController.shared.isInDataBase {
             if let image = UIImage(named: "addButton.svg") {
                 self.addAndRemoveButton.setImage(image, for: .normal)
             }
@@ -182,23 +162,44 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
     
     // MARK: - MyTools
-    func searchAndPresentArtist(){
+    func hidePresentationView() {
         presentationView.isHidden = true
         presentationView.alpha = 0.0
-        if !searchResultsLabel.isHidden{
+        if !searchResultsLabel.isHidden {
             searchResultsLabel.isHidden = true
         }
-        if let codedSearchText = SearchViewController.currentSearchText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed){
-            SearchViewController.internetDataManager.getArtist(viewController: self, searchText: codedSearchText) { (error, artist) in
-                
+    }
+    
+    func configureAndShowPresentationView() {
+        self.searchSpinner.stopAnimating()
+        self.presentationView.isHidden = false
+        self.searchResultsLabel.isHidden = true
+        SearchViewController.shared.isInDataBase = CoreDataManager.instance.objectIsInDataBase(objectName: self.artistNameLabel.text!, forEntity: "FavoriteArtist")
+        if SearchViewController.shared.isInDataBase {
+            if let image = UIImage(named: "remove.svg") {
+                self.addAndRemoveButton.setImage(image, for: .normal)
+            }
+        } else {
+            if let image = UIImage(named: "addButton.svg") {
+                self.addAndRemoveButton.setImage(image, for: .normal)
+            }
+        }
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0.0, options: .allowUserInteraction, animations: {
+            self.presentationView.alpha = 1.0
+        }, completion: nil)
+    }
+    
+    func searchAndPresentArtist(){
+        hidePresentationView()
+        InternetDataManager.shared.getArtist(viewController: self, searchText: SearchViewController.shared.currentSearchText) { (error, artist) in
+            if SearchViewController.shared.currentSearchText.count > 2 {
                 if error != nil {
                     DispatchQueue.main.async {
-                        SearchViewController.internetDataManager.presentFailedDataLoadingAlert(viewController: self)
+                        Alerts.presentFailedDataLoadingAlert(viewController: self)
                         self.searchSpinner.stopAnimating()
                     }
-                    
                 } else if let gotArtist = artist {
-                    SearchViewController.currentArtist = artist
+                    SearchViewController.shared.currentArtist = artist
                     if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl){
                         if let image = UIImage(data: imageData){
                             DispatchQueue.main.async {
@@ -213,39 +214,13 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                             self.facebookButton.isEnabled = false
                         }
                         self.artistNameLabel.text = gotArtist.getName()
-                        self.searchSpinner.stopAnimating()
-                        self.presentationView.isHidden = false
-                        self.searchResultsLabel.isHidden = true
-                        SearchViewController.isInDataBase = false
-                        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
-                        do {
-                            let results = try self.context.fetch(fetchRequest)
-                            for result in results as! [NSManagedObject] {
-                                if (result.value(forKey: "name") as! String) == self.artistNameLabel.text {
-                                    SearchViewController.isInDataBase = true
-                                }
-                            }
-                        } catch {
-                            print(error)
-                        }
-                        if SearchViewController.isInDataBase {
-                            if let image = UIImage(named: "remove.svg") {
-                                self.addAndRemoveButton.setImage(image, for: .normal)
-                            }
-                        } else {
-                            if let image = UIImage(named: "addButton.svg") {
-                                self.addAndRemoveButton.setImage(image, for: .normal)
-                            }
-                        }
-                        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0.0, options: .allowUserInteraction, animations: {
-                            self.presentationView.alpha = 1.0
-                        }, completion: nil)
+                        self.configureAndShowPresentationView()
                     }
                     
                 } else {
                     DispatchQueue.main.async {
                         self.searchSpinner.stopAnimating()
-                        self.searchResultsLabel.text = StringConstants.noResults
+                        self.searchResultsLabel.text = StringConstants.Search.noResults
                         self.searchResultsLabel.isHidden = false
                     }
                 }
@@ -265,46 +240,35 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             }
         }
     }
+    
+    func showResultLabel() {
+        SearchViewController.shared.currentArtist = nil
+        presentationView.isHidden = true
+        presentationView.alpha = 0.0
+        searchSpinner.stopAnimating()
+        searchResultsLabel.isHidden = false
+    }
 }
 
 
 // MARK: - Extension
-extension SearchViewController {
+extension SearchViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count == 0{
-            SearchViewController.currentArtist = nil
-            if !presentationView.isHidden{
-                presentationView.isHidden = true
-                presentationView.alpha = 0.0
-            }
-            if searchSpinner.isAnimating{
-                searchSpinner.stopAnimating()
-            }
-            if searchResultsLabel.isHidden{
-                searchResultsLabel.isHidden = false
-            }
-            searchResultsLabel.text = StringConstants.search
+            showResultLabel()
+            searchResultsLabel.text = StringConstants.Search.search
         }else if (1..<3).contains(searchText.count){
-            SearchViewController.currentArtist = nil
-            if !presentationView.isHidden{
-                presentationView.isHidden = true
-                presentationView.alpha = 0.0
+            showResultLabel()
+            searchResultsLabel.text = StringConstants.Search.enterName
+            if !InternetDataManager.shared.isConnectedToNetwork() {
+                Alerts.presentConnectionAlert(viewController: self)
             }
-            if searchSpinner.isAnimating{
-                searchSpinner.stopAnimating()
-            }
-            if searchResultsLabel.isHidden{
-                searchResultsLabel.isHidden = false
-            }
-            searchResultsLabel.text = StringConstants.enterName
-            if !SearchViewController.internetDataManager.isConnectedToNetwork() {
-                SearchViewController.internetDataManager.presentConnectionAlert(viewController: self)
-            }
-            SearchViewController.currentSearchText = searchText
+            SearchViewController.shared.currentSearchText = searchText
         }else{
             searchSpinner.startAnimating()
-            if SearchViewController.currentSearchText != searchText {
-                SearchViewController.currentSearchText = searchText
+            if SearchViewController.shared.currentSearchText != searchText {
+                SearchViewController.shared.currentSearchText = searchText
                 searchAndPresentArtist()
             }
         }

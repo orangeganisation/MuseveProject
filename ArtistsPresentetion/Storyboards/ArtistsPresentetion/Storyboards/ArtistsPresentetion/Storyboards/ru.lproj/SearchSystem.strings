@@ -1,0 +1,18 @@
+
+/* Class = "UILabel"; text = "artist's name"; ObjectID = "4Bo-5w-odk"; */
+"4Bo-5w-odk.text" = "artist's name";
+
+/* Class = "UILabel"; text = "Search"; ObjectID = "ABk-ap-Py2"; */
+"ABk-ap-Py2.text" = "Поиск";
+
+/* Class = "UIButton"; normalTitle = "Icon"; ObjectID = "FJ7-XM-hX8"; */
+"FJ7-XM-hX8.normalTitle" = "Icon";
+
+/* Class = "UILabel"; text = "Added"; ObjectID = "sLs-AC-e0Z"; */
+"sLs-AC-e0Z.text" = "Добавлено";
+
+/* Class = "UISearchBar"; placeholder = "Enter artist's name"; ObjectID = "txo-OY-s4Z"; */
+"txo-OY-s4Z.placeholder" = "Введите имя артиста";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "wxZ-ks-FL0"; */
+"wxZ-ks-FL0.title" = "Поиск";

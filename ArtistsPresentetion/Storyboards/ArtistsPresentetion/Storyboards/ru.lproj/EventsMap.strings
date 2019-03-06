@@ -1,0 +1,18 @@
+
+/* Class = "UITabBarItem"; title = "Events"; ObjectID = "I1Y-hg-0VR"; */
+"I1Y-hg-0VR.title" = "Карта";
+
+/* Class = "UILabel"; text = "Date: "; ObjectID = "JwL-m4-VL0"; */
+"JwL-m4-VL0.text" = "Дата: ";
+
+/* Class = "UILabel"; text = "Location: "; ObjectID = "Qcw-Hx-YQz"; */
+"Qcw-Hx-YQz.text" = "Место: ";
+
+/* Class = "UISegmentedControl"; WHt-tn-2D5.segmentTitles[0] = "Scheme"; ObjectID = "WHt-tn-2D5"; */
+"WHt-tn-2D5.segmentTitles[0]" = "Схема";
+
+/* Class = "UISegmentedControl"; WHt-tn-2D5.segmentTitles[1] = "Hybrid"; ObjectID = "WHt-tn-2D5"; */
+"WHt-tn-2D5.segmentTitles[1]" = "Гибрид";
+
+/* Class = "UILabel"; text = "Line-up: "; ObjectID = "aLH-dD-WxN"; */
+"aLH-dD-WxN.text" = "Участники: ";

@@ -9,28 +9,22 @@
 import UIKit
 import CoreData
 
-class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class FavoritesViewController: UIViewController, UICollectionViewDataSource {
     
     // MARK: - Vars
-    var fetchedResultsController = {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchedResultsController
-        }() as NSFetchedResultsController<NSFetchRequestResult>
+    static let shared = FavoritesViewController()
     var isCellLayoutInNeed = true
     var removingList = [String]() {
         didSet {
-            if removingList.count != 0{
-                navigationBarTitle.title = "Selected artists: \(removingList.count)"
-            } else {
-                navigationBarTitle.title = "Select artists"
+            if removingList.count != 0 && FavoritesViewController.shared.multiplySelectionIsAllowed {
+                navigationBarTitle.title = "\(NSLocalizedString("Selected artists:", comment: "")) \(removingList.count)"
+            } else if FavoritesViewController.shared.multiplySelectionIsAllowed {
+                navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
             }
         }
     }
-    static var multiplySelectionIsAllowed = false
-    static var selectedArtistName = String()
+    var multiplySelectionIsAllowed = false
+    var selectedArtistName = String()
     
     // MARK: - Outlets
     @IBOutlet weak var favoriteCollectionView: UICollectionView!
@@ -51,58 +45,53 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
         self.navigationItem.setRightBarButton(editButton, animated: true)
         deselectAllArtists()
         favoriteCollectionView.allowsMultipleSelection = false
-        navigationBarTitle.title = "Favorites"
+        navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
     }
     
     @IBAction func trashAction(_ sender: UIBarButtonItem) {
         if self.favoriteCollectionView.indexPathsForSelectedItems != nil {
-            var removingArtistString = "artist"
-            if removingList.count > 1 {
-                removingArtistString = "artists"
+            var removingArtistString = NSLocalizedString("artist", comment: "")
+            if removingList.count > 1 && !(2...4).contains((removingList.count % 10)) {
+                removingArtistString = NSLocalizedString("artists", comment: "")
             }
-            let alert = UIAlertController(title: "Removing", message: "Remove \(removingList.count) \(removingArtistString)?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { (action) in
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
-                do {
-                    let results = try CoreDataManager.instance.persistentContainer.viewContext.fetch(fetchRequest)
-                    for artistName in self.removingList {
-                        for result in results as! [NSManagedObject] {
-                            if (result.value(forKey: "name") as! String) == artistName {
-                                CoreDataManager.instance.persistentContainer.viewContext.delete(result)
-                                try self.fetchedResultsController.performFetch()
-                            }
+            let alert = UIAlertController(title: NSLocalizedString("Removing", comment: ""), message: "\(NSLocalizedString("Remove", comment: "")) \(removingList.count) \(removingArtistString)?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Remove", comment: ""), style: .destructive, handler: { (action) in
+                for artistName in self.removingList {
+                    CoreDataManager.instance.deleteObject(withName: artistName, forEntity: "FavoriteArtist", completion: {
+                        do {
+                            try CoreDataManager.instance.fetchedResultsController.performFetch()
+                        } catch {
+                            print(error)
                         }
-                        if let currentArtist = SearchViewController.currentArtist {
+                        if let currentArtist = SearchViewController.shared.currentArtist {
                             if artistName == currentArtist.getName() {
-                                SearchViewController.isInDataBase = false
+                                SearchViewController.shared.isInDataBase = false
                             }
                         }
-                    }
-                    let selectedIndexes = self.favoriteCollectionView.indexPathsForSelectedItems!
-                    self.deselectAllArtists()
-                    self.favoriteCollectionView.deleteItems(at: selectedIndexes)
-                    CoreDataManager.instance.saveContext()
-                    self.trashButton.isEnabled = false
-                    self.navigationItem.leftBarButtonItem = nil
-                    self.navigationItem.setRightBarButton(self.editButton, animated: true)
-                    self.navigationBarTitle.title = "Favorites"
-                    self.favoriteCollectionView.allowsMultipleSelection = false
-                    if self.favoriteCollectionView.numberOfItems(inSection: 0) == 0 {
-                        self.editButton.isEnabled = false
-                        self.haveNoFavoritesLabel.isHidden = false
-                        self.favoriteCollectionView.isHidden = true
-                    }
-                } catch {
-                    print(error)
+                    })
+                }
+                let selectedIndeces = self.favoriteCollectionView.indexPathsForSelectedItems!
+                self.deselectAllArtists()
+                self.favoriteCollectionView.deleteItems(at: selectedIndeces)
+                CoreDataManager.instance.saveContext()
+                self.trashButton.isEnabled = false
+                self.navigationItem.leftBarButtonItem = nil
+                self.navigationItem.setRightBarButton(self.editButton, animated: true)
+                self.navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
+                self.favoriteCollectionView.allowsMultipleSelection = false
+                if self.favoriteCollectionView.numberOfItems(inSection: 0) == 0 {
+                    self.editButton.isEnabled = false
+                    self.haveNoFavoritesLabel.isHidden = false
+                    self.favoriteCollectionView.isHidden = true
                 }
             }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel))
             present(alert, animated: true)
         }
     }
     
     @IBAction func editAction(_ sender: UIBarButtonItem) {
-        navigationBarTitle.title = "Select artists"
+        navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
         self.navigationItem.setLeftBarButton(cancelButton, animated: true)
         self.navigationItem.setRightBarButton(trashButton, animated: true)
         favoriteCollectionView.allowsMultipleSelection = true
@@ -120,14 +109,23 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
         self.navigationItem.setRightBarButton(editButton, animated: true)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        self.navigationItem.setLeftBarButton(nil, animated: true)
+        self.navigationItem.setRightBarButton(editButton, animated: true)
+        deselectAllArtists()
+        navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
+        favoriteCollectionView.allowsMultipleSelection = false
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         do {
-            try fetchedResultsController.performFetch()
+            try CoreDataManager.instance.fetchedResultsController.performFetch()
+            favoriteCollectionView.reloadData()
         } catch {
             print(error)
         }
-        favoriteCollectionView.reloadData()
         if favoriteCollectionView.numberOfItems(inSection: 0) == 0 {
             if self.navigationItem.rightBarButtonItem == editButton {
                 editButton.isEnabled = false
@@ -157,10 +155,10 @@ class FavoritesViewController: UIViewController, UICollectionViewDelegate, UICol
 }
 
 // MARK: - Extension
-extension FavoritesViewController {
+extension FavoritesViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let sections = fetchedResultsController.sections {
+        if let sections = CoreDataManager.instance.fetchedResultsController.sections {
             return sections[section].numberOfObjects
         } else {
             return 0
@@ -168,34 +166,21 @@ extension FavoritesViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let artist = fetchedResultsController.object(at: indexPath) as! FavoriteArtist
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "favoriteArtistCell", for: indexPath) as! CustomCollectionViewCell
-        if let data = artist.image_data {
-            if let image = UIImage(data: data){
-                cell.imageView.image = image
-            }
-        }
-        cell.nameLabel.text = artist.name
-        if(cell.isSelected){
-            cell.backgroundColor = UIColor.red
-        }else{
-            cell.backgroundColor = UIColor.clear
-        }
-        return cell
+        return CustomCollectionViewCell.configuredCell(of: collectionView, for: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if favoriteCollectionView.allowsMultipleSelection {
             trashButton.isEnabled = true
-            let artist = fetchedResultsController.object(at: indexPath) as! FavoriteArtist
-            if let name = artist.name{
+            let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
+            if let name = artist.name {
                 removingList.append(name)
             }
         } else {
-            let artist = fetchedResultsController.object(at: indexPath) as! FavoriteArtist
+            let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
             if let name = artist.name {
-                FavoritesViewController.selectedArtistName = name
-                EventsViewController.artist = (name, Int(artist.upcoming_events_count))
+                FavoritesViewController.shared.selectedArtistName = name
+                EventsViewController.shared.artist = (name, Int(artist.upcoming_events_count))
             }
             let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
             let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController")
@@ -205,7 +190,7 @@ extension FavoritesViewController {
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if favoriteCollectionView.allowsMultipleSelection {
-            let artist = fetchedResultsController.object(at: indexPath) as! FavoriteArtist
+            let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
             if let name = artist.name {
                 var index = 0
                 for artistName in removingList {
@@ -218,7 +203,7 @@ extension FavoritesViewController {
                 }
             }
         } else {
-            FavoritesViewController.selectedArtistName = ""
+            FavoritesViewController.shared.selectedArtistName = ""
         }
     }
     

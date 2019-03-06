@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "You have no favorites"; ObjectID = "ZIi-8t-PyC"; */
+"ZIi-8t-PyC.text" = "Нет избранных артистов";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "atb-oq-0fE"; */
+"atb-oq-0fE.text" = "name";
+
+/* Class = "UINavigationItem"; title = "Favorites"; ObjectID = "nGC-v0-apn"; */
+"nGC-v0-apn.title" = "Избранное";

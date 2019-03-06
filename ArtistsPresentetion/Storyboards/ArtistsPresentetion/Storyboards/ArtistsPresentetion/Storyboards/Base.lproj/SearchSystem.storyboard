@@ -120,7 +120,7 @@
                                         <rect key="frame" x="148.5" y="283" width="78" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLs-AC-e0Z">
-                                                <rect key="frame" x="10" y="26" width="58" height="24"/>
+                                                <rect key="frame" x="3" y="26" width="72" height="24"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <color key="textColor" red="0.48894667629999999" green="0.2022580802" blue="0.27843347190000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
@@ -143,6 +143,7 @@
                                             <constraint firstItem="sLs-AC-e0Z" firstAttribute="centerX" secondItem="n65-DW-OxQ" secondAttribute="centerX" id="WdN-Fl-WlW"/>
                                             <constraint firstItem="sLs-AC-e0Z" firstAttribute="top" secondItem="FJ7-XM-hX8" secondAttribute="bottom" id="WtR-cA-usv"/>
                                             <constraint firstItem="FJ7-XM-hX8" firstAttribute="centerX" secondItem="sLs-AC-e0Z" secondAttribute="centerX" id="Yvg-5H-QO9"/>
+                                            <constraint firstAttribute="width" secondItem="sLs-AC-e0Z" secondAttribute="width" constant="6" id="ZQg-Mr-Pfg"/>
                                             <constraint firstAttribute="bottom" secondItem="sLs-AC-e0Z" secondAttribute="bottom" id="ulD-MV-YXg"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>

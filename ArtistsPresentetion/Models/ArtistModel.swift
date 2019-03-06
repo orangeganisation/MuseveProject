@@ -9,36 +9,49 @@
 import Foundation
 
 class Artist: Codable{
-    private var thumb_url = String()
-    private var mbid = String()
-    private var facebook_page_url = String()
-    private var image_url = String()
+    
+    private var thumbURL = String()
+    private var mbID = String()
+    private var facebookProfileURL = String()
+    private var imageURL = String()
     private var name = String()
     private var id = String()
-    private var tracker_count = Int()
-    private var upcoming_event_count = Int()
+    private var trackerCount = Int()
+    private var upcomingEventsCount = Int()
     private var url = String()
     
     func getName() -> String {
         return self.name
     }
     func getImageUrl() -> String {
-        return self.image_url
+        return self.imageURL
     }
     func getThumbUrl() -> String {
-        return self.thumb_url
+        return self.thumbURL
     }
     func getFacebookPage() -> String? {
-        if self.facebook_page_url.isEmpty{
+        if self.facebookProfileURL.isEmpty{
             return nil
         } else {
-            return self.facebook_page_url
+            return self.facebookProfileURL
         }
     }
     func getUpcomingEventCount() -> Int {
-        return self.upcoming_event_count
+        return self.upcomingEventsCount
     }
     func getID() -> String {
         return self.id
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case thumbURL = "thumb_url"
+        case mbID = "mbid"
+        case name = "name"
+        case facebookProfileURL = "facebook_page_url"
+        case imageURL = "image_url"
+        case trackerCount = "tracker_count"
+        case upcomingEventsCount = "upcoming_event_count"
+        case id = "id"
+        case url = "url"
     }
 }

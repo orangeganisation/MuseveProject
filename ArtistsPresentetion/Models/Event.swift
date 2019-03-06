@@ -11,26 +11,26 @@ import Foundation
 class Event: Codable {
     
     private var id: String?
-    private var artist_id: String?
+    private var artistID: String?
     private var url: String?
-    private var on_sale_datetime: String?
+    private var onSaleDatetime: String?
     private var datetime: String?
     private var description: String?
-    private var venue: VenueData?
-    private var lineup: [String]?
+    private var situation: VenueData?
+    private var lineUp: [String]?
     private var offers: [Offer]?
     
     func getID() -> String? {
         return self.id
     }
     func getArtistID() -> String? {
-        return self.artist_id
+        return self.artistID
     }
     func getUrl() -> String? {
         return self.url
     }
     func getOnSaleDatetime() -> String? {
-        return self.on_sale_datetime
+        return self.onSaleDatetime
     }
     func getDatetime() -> String? {
         return self.datetime
@@ -39,13 +39,25 @@ class Event: Codable {
         return self.description
     }
     func getVenue() -> VenueData? {
-        return self.venue
+        return self.situation
     }
     func getLineup() -> [String]? {
-        return self.lineup
+        return self.lineUp
     }
     func getOffers() -> [Offer]? {
         return self.offers
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case artistID = "artist_id"
+        case url = "url"
+        case onSaleDatetime = "on_sale_datetime"
+        case datetime = "datetime"
+        case description = "discription"
+        case situation = "venue"
+        case lineUp = "lineup"
+        case offers = "offers"
     }
 }
 
