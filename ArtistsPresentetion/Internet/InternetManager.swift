@@ -89,10 +89,10 @@ class InternetDataManager {
             components.host = StringConstants.Urls.getArtistUrl
             components.path = StringConstants.Urls.path + name + "/events"
             let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
-            let sortingItem = URLQueryItem(name: "date", value: date)
-            components.queryItems = [appID, sortingItem]
-            if date == nil {
-                components.queryItems?.removeLast()
+            components.queryItems = [appID]
+            if let sortingDate = date {
+               let sortingItem = URLQueryItem(name: "date", value: sortingDate)
+                components.queryItems?.append(sortingItem)
             }
             if let url = components.url {
                 let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
