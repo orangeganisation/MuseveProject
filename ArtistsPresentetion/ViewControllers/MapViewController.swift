@@ -115,8 +115,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                     mark.date = "\(date.monthAsString()) \(components.day!), \(components.year!)"
                 }
                 mark.location = ""
+                var noRegionAppend = ""
+                if event.getVenue()?.getRegion() != nil {
+                    noRegionAppend = ", "
+                }
                 mark.location?.append("\(event.getVenue()?.getCountry() ?? ""), ")
-                mark.location?.append("\(event.getVenue()?.getRegion() ?? ""), ")
+                mark.location?.append("\(event.getVenue()?.getRegion() ?? "")\(noRegionAppend)")
                 mark.location?.append("\(event.getVenue()?.getCity() ?? "")")
                 if let lineUp = event.getLineup() {
                     var lineUpString = String()
