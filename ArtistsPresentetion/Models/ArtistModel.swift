@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Artist: Codable{
+struct Artist: Codable{
     
     private var thumbURL = String()
     private var mbID = String()

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Event: Codable {
+struct Event: Codable {
     
     private var id: String?
     private var artistID: String?
@@ -61,7 +61,7 @@ class Event: Codable {
     }
 }
 
-class VenueData: Codable {
+struct VenueData: Codable {
     
     private var country: String?
     private var city: String?
@@ -90,7 +90,7 @@ class VenueData: Codable {
     }
 }
 
-class Offer: Codable {
+struct Offer: Codable {
     
     private var type: String?
     private var url: String?
