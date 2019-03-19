@@ -30,7 +30,7 @@ struct StringConstants {
         static let search = NSLocalizedString("Search", comment: "")
         static let enterName = NSLocalizedString("Enter name", comment: "")
         static let added = NSLocalizedString("Added", comment: "")
-        static let removed = NSLocalizedString("Deleted", comment: "")
+        static let removed = NSLocalizedString("Removed", comment: "")
     }
     struct ArtistEvents {
         static let events = NSLocalizedString("Events", comment: "")

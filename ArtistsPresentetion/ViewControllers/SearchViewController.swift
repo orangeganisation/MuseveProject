@@ -18,14 +18,32 @@ class SearchViewController: UIViewController {
     var currentSearchText = String()
     let context = CoreDataManager.instance.persistentContainer.viewContext
     var isInDataBase = false
-
+    enum addAndRemoveButtonImage {
+        case add
+        case remove
+        var image: UIImage {
+            switch self {
+                case .add: return UIImage(named: "addButton.svg")!
+                case .remove: return UIImage(named: "remove.svg")!
+            }
+        }
+    }
+    enum dbResultButtonImage {
+        case added
+        case removed
+        var image: UIImage {
+            switch self {
+                case .added: return UIImage(named: "removed.svg")!
+                case .removed: return UIImage(named: "added.svg")!
+            }
+        }
+    }
     
     // MARK: - Outlets
     @IBOutlet weak var searchBar: UISearchBar!{
         didSet{
             searchBar.delegate = self
         }
-        
     }
     @IBOutlet weak var searchResultsLabel: UILabel!
     @IBOutlet weak var searchSpinner: UIActivityIndicatorView!
@@ -58,25 +76,17 @@ class SearchViewController: UIViewController {
     @IBAction func addToFavorites(_ sender: UIButton) {
         if SearchViewController.shared.isInDataBase {
             CoreDataManager.instance.deleteObject(withName: artistNameLabel.text!, forEntity: "FavoriteArtist") {
-                if let image = UIImage(named: "addButton.svg") {
-                    self.addAndRemoveButton.setImage(image, for: .normal)
-                }
+                self.addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
                 SearchViewController.shared.isInDataBase = false
-                if let image = UIImage(named: "removed.svg") {
-                    self.resultButton.setImage(image, for: .normal)
-                }
+                self.resultButton.setImage(dbResultButtonImage.removed.image, for: .normal)
                 resultLabel.text = StringConstants.Search.removed
                 animateResult()
             }
         } else {
             if InternetDataManager.shared.isConnectedToNetwork(){
                 CoreDataManager.instance.addFavoriteArtist(withName: (SearchViewController.shared.currentArtist?.getName())!, withID: (SearchViewController.shared.currentArtist?.getID())!, withEventsCount: (SearchViewController.shared.currentArtist?.getUpcomingEventCount())!, withImageDataURL: (SearchViewController.shared.currentArtist?.getThumbUrl())!) {
-                    if let image = UIImage(named: "remove.svg") {
-                        self.addAndRemoveButton.setImage(image, for: .normal)
-                    }
-                    if let image = UIImage(named: "added.svg") {
-                        self.resultButton.setImage(image, for: .normal)
-                    }
+                    self.addAndRemoveButton.setImage(addAndRemoveButtonImage.remove.image, for: .normal)
+                    self.resultButton.setImage(dbResultButtonImage.added.image, for: .normal)
                     resultLabel.text = StringConstants.Search.added
                     animateResult()
                     SearchViewController.shared.isInDataBase = true
@@ -140,9 +150,7 @@ class SearchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if !SearchViewController.shared.isInDataBase {
-            if let image = UIImage(named: "addButton.svg") {
-                self.addAndRemoveButton.setImage(image, for: .normal)
-            }
+            self.addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
         }
         navigationController?.view.layoutSubviews()
 
@@ -176,13 +184,9 @@ class SearchViewController: UIViewController {
         self.searchResultsLabel.isHidden = true
         SearchViewController.shared.isInDataBase = CoreDataManager.instance.objectIsInDataBase(objectName: self.artistNameLabel.text!, forEntity: "FavoriteArtist")
         if SearchViewController.shared.isInDataBase {
-            if let image = UIImage(named: "remove.svg") {
-                self.addAndRemoveButton.setImage(image, for: .normal)
-            }
+            self.addAndRemoveButton.setImage(addAndRemoveButtonImage.remove.image, for: .normal)
         } else {
-            if let image = UIImage(named: "addButton.svg") {
-                self.addAndRemoveButton.setImage(image, for: .normal)
-            }
+            self.addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
         }
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0.0, options: .allowUserInteraction, animations: {
             self.presentationView.alpha = 1.0

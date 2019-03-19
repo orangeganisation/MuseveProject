@@ -24,7 +24,7 @@
 "Events" = "События";
 "This artist has no events" = "У этого артиста нет событий";
 "Added" = "Добавлено";
-"Deleted" = "Удалено";
+"Removed" = "Удалено";
 "Select artists" = "Выберите артистов";
 "Favorites" = "Избранное";
 "Remove" = "Удалить";
