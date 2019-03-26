@@ -40,16 +40,16 @@ class SearchViewController: UIViewController {
     }
     
     // MARK: - Outlets
-    @IBOutlet weak var searchBar: UISearchBar!{
-        didSet{
+    @IBOutlet weak var searchBar: UISearchBar! {
+        didSet {
             searchBar.delegate = self
         }
     }
     @IBOutlet weak var searchResultsLabel: UILabel!
     @IBOutlet weak var searchSpinner: UIActivityIndicatorView!
     @IBOutlet weak var presentationView: UIView!
-    @IBOutlet weak var artistImage: UIImageView!{
-        didSet{
+    @IBOutlet weak var artistImage: UIImageView! {
+        didSet {
             artistImage.clipsToBounds = true
         }
     }
@@ -67,7 +67,7 @@ class SearchViewController: UIViewController {
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
         if let artist = SearchViewController.shared.currentArtist, let facebook = artist.getFacebookPage(){
-            if let url = URL(string: facebook){
+            if let url = URL(string: facebook) {
                 InternetDataManager.openSafariPage(withUrl: url, byController: self)
             }
         }
@@ -110,7 +110,7 @@ class SearchViewController: UIViewController {
     
     @IBAction func presentEventsOnMap(_ sender: UIButton) {
         InternetDataManager.shared.getEvents(forArtist: (SearchViewController.shared.currentArtist?.getName())!, forDate: nil, viewController: self) { (error, events) in
-            if error != nil{
+            if error != nil {
                 Alerts.presentFailedDataLoadingAlert(viewController: self)
             } else if events != nil, events?.count != 0 {
                 MapViewController.shared.currentArtistName = SearchViewController.shared.currentArtist?.getName()
@@ -158,13 +158,13 @@ class SearchViewController: UIViewController {
 
     //MARK: - Gestures
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-        if searchBar.isFirstResponder{
+        if searchBar.isFirstResponder {
             searchBar.resignFirstResponder()
         }
     }
     
     @IBAction func swipeGesture(_ sender: UISwipeGestureRecognizer) {
-        if searchBar.isFirstResponder{
+        if searchBar.isFirstResponder {
             searchBar.resignFirstResponder()
         }
     }
@@ -193,7 +193,7 @@ class SearchViewController: UIViewController {
         }, completion: nil)
     }
     
-    func searchAndPresentArtist(){
+    func searchAndPresentArtist() {
         hidePresentationView()
         InternetDataManager.shared.getArtist(viewController: self, searchText: SearchViewController.shared.currentSearchText) { (error, artist) in
             if SearchViewController.shared.currentSearchText.count > 2 {
@@ -204,15 +204,15 @@ class SearchViewController: UIViewController {
                     }
                 } else if let gotArtist = artist {
                     SearchViewController.shared.currentArtist = artist
-                    if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl){
-                        if let image = UIImage(data: imageData){
+                    if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl) {
+                        if let image = UIImage(data: imageData) {
                             DispatchQueue.main.async {
                                 self.artistImage.image = image
                             }
                         }
                     }
                     DispatchQueue.main.async {
-                        if (gotArtist.getFacebookPage()) != nil{
+                        if (gotArtist.getFacebookPage()) != nil {
                             self.facebookButton.isEnabled = true
                         } else {
                             self.facebookButton.isEnabled = false
@@ -239,7 +239,7 @@ class SearchViewController: UIViewController {
         }) { (position) in
             UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4, delay: 1.0, options: .allowUserInteraction, animations: {
                 self.resultView.alpha = 0.0
-            }){ (position) in
+            }) { (position) in
                 self.resultView.isHidden = true
             }
         }
@@ -259,17 +259,17 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count == 0{
+        if searchText.count == 0 {
             showResultLabel()
             searchResultsLabel.text = StringConstants.Search.search
-        }else if (1..<3).contains(searchText.count){
+        } else if (1..<3).contains(searchText.count) {
             showResultLabel()
             searchResultsLabel.text = StringConstants.Search.enterName
             if !InternetDataManager.shared.isConnectedToNetwork() {
                 Alerts.presentConnectionAlert(viewController: self)
             }
             SearchViewController.shared.currentSearchText = searchText
-        }else{
+        } else {
             searchSpinner.startAnimating()
             if SearchViewController.shared.currentSearchText != searchText {
                 SearchViewController.shared.currentSearchText = searchText
