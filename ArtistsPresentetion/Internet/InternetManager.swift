@@ -76,7 +76,7 @@ class InternetDataManager {
                     }
                     task.resume()
                 }
-            }else{
+            } else {
                 Alerts.presentConnectionAlert(viewController: viewController)
             }
         }
@@ -112,7 +112,7 @@ class InternetDataManager {
                 }
                 task.resume()
             }
-        }else{
+        } else {
             Alerts.presentConnectionAlert(viewController: viewController)
         }
     }
