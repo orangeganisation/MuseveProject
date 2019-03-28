@@ -20,7 +20,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     // MARK: - Outlets
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var myMapView: CustomMapView! {
-        didSet{
+        didSet {
             myMapView.delegate = self
         }
     }
@@ -32,14 +32,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     // MARK: - MapActions
     @IBAction func finduserLocation(_ sender: Any) {
-        if let location = currentLocation{
-            let region = MKCoordinateRegion(
+        if let location = currentLocation {
+            let region = MKCoordinateRegion (
                 center: location.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
             myMapView.setRegion(region, animated: true)
-            if let imageFilled = UIImage(named: "buttonFilled.svg"){
+            if let imageFilled = UIImage(named: "buttonFilled.svg") {
                 locationButton.setImage(imageFilled, for: .normal)
             }
-        }else{
+        } else {
             Alerts.presentLocationServicesAlert(viewController: self)
         }
     }
@@ -62,21 +62,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         super.viewDidLoad()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
-        DataStore.Map.presentingEvents.removeAll()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if DataStore.Map.presentingEvents.count > 1 {
-            myMapView.removeAnnotations(myMapView.annotations)
-        } else if DataStore.Map.presentingEvents.count == 1 {
-            if DataStore.Map.presentingEvents[0].getArtistID() != DataStore.Map.currentEventsArtistId {
-                DataStore.Map.currentEventsArtistId = DataStore.Map.presentingEvents[0].getArtistID()
-                myMapView.removeAnnotations(myMapView.annotations)
-            }
-        }
+        myMapView.removeAnnotations(myMapView.annotations)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -95,7 +83,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     // MARK: - MyTools
     func setMarkersForEvents(completion: (_ latitude: Double?,_ longtitude: Double?) -> Void) {
-        for event in DataStore.Map.presentingEvents {
+        let presentingEvents = DataStore.shared.presentingEvents
+        for event in presentingEvents {
             if let latitude = event.getVenue()?.getLatitude(), let longtitude = event.getVenue()?.getLongtitude() {
                 let mark = CustomPointAnnotation()
                 mark.title = event.getVenue()?.getName()
@@ -129,7 +118,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                     mark.lineUp = lineUpString
                 }
                 myMapView.addAnnotation(mark)
-                if DataStore.Map.presentingEvents.count == 1 {
+                if presentingEvents.count == 1 {
                     completion(Double(latitude)!, Double(longtitude)!)
                 }
             }
@@ -142,8 +131,8 @@ extension MapViewController{
     func mapView(_ mapView: MKMapView, didUpdate
         userLocation: MKUserLocation) {
         currentLocation = userLocation
-        if DataStore.Map.needSetCenterMap {
-            DataStore.Map.needSetCenterMap = false
+        if DataStore.shared.needSetCenterMap {
+            DataStore.shared.needSetCenterMap = false
             if let userLocation = mapView.userLocation.location?.coordinate {
                 mapView.setCenter(userLocation, animated: true)
             }
@@ -162,7 +151,7 @@ extension MapViewController{
         if !annotation.isEqual(mapView.userLocation) {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
             annotationView.canShowCallout = true
-            if CoreDataManager.instance.objectIsInDataBase(objectName: DataStore.Map.currentEventsArtistName!, forEntity: "FavoriteArtist") {
+            if CoreDataManager.instance.objectIsInDataBase(objectName: (DataStore.shared.currentEventsArtist?.name)!, forEntity: "FavoriteArtist") {
                 annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
             } else {
                 annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)

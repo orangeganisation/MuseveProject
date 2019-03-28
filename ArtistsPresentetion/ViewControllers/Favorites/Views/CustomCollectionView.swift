@@ -8,12 +8,12 @@
 
 import UIKit
 
-class customCollectionView: UICollectionView {
+class CustomCollectionView: UICollectionView {
     
     // MARK: - Vars
     override var allowsMultipleSelection: Bool {
         didSet {
-            DataStore.Favorites.multiplySelectionIsAllowed = allowsMultipleSelection
+            DataStore.shared.multiplySelectionIsAllowed = allowsMultipleSelection
         }
     }
 

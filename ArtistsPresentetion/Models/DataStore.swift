@@ -8,24 +8,25 @@
 
 import Foundation
 
-struct DataStore {
-    struct Search {
-        static var currentFoundArtist: Artist?
-        static var artistIsInDataBase = false
-        static var currentSearchText = String()
-    }
-    struct Map {
-        static var currentEventsArtistName: String?
-        static var currentEventsArtistId: String?
-        static var needSetCenterMap = true
-        static var presentingEvents = [Event]()
-    }
-    struct Favorites {
-        static var multiplySelectionIsAllowed = false
-    }
-    struct Events {
-        static var events = [Event]()
-        static var eventsFilter: String?
-        static var shouldUpdateEvents = false
-    }
+class DataStore {
+    
+    static var shared = DataStore()
+    
+    // MARK: - Search
+    var currentFoundArtist: Artist?
+    var artistIsInDataBase = false
+    var currentSearchText = String()
+    
+    // MARK: - Map
+    var currentEventsArtist: (name: String, upcominIvents: Int, id: String)?
+    var needSetCenterMap = true
+    var presentingEvents = [Event]()
+
+    // MARK: - Favorites
+    var multiplySelectionIsAllowed = false
+    
+    // MARK: - Events
+    var events = [Event]()
+    var eventsFilter: String?
+    var shouldUpdateEvents = false
 }

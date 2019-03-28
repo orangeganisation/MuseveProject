@@ -15,9 +15,10 @@ class FavoritesViewController: UIViewController, UICollectionViewDataSource {
     var isCellLayoutInNeed = true
     var removingList = [String]() {
         didSet {
-            if removingList.count != 0 && DataStore.Favorites.multiplySelectionIsAllowed {
+            let multiplySelectionIsAllowed = DataStore.shared.multiplySelectionIsAllowed
+            if removingList.count != 0 && multiplySelectionIsAllowed {
                 navigationBarTitle.title = "\(NSLocalizedString("Selected artists:", comment: "")) \(removingList.count)"
-            } else if DataStore.Favorites.multiplySelectionIsAllowed {
+            } else if multiplySelectionIsAllowed {
                 navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
             }
         }
@@ -61,9 +62,9 @@ class FavoritesViewController: UIViewController, UICollectionViewDataSource {
                         } catch {
                             print(error)
                         }
-                        if let currentArtist = DataStore.Search.currentFoundArtist {
+                        if let currentArtist = DataStore.shared.currentFoundArtist {
                             if artistName == currentArtist.getName() {
-                                DataStore.Search.artistIsInDataBase = false
+                                DataStore.shared.artistIsInDataBase = false
                             }
                         }
                     })
@@ -180,7 +181,7 @@ extension FavoritesViewController: UICollectionViewDelegate {
             let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
             if let name = artist.name {
                 selectedArtistName = name
-                eventsViewController.artist = (name, Int(artist.upcoming_events_count))
+                DataStore.shared.currentEventsArtist = (name, Int(artist.upcoming_events_count), artist.id!)
             }
             self.navigationController?.pushViewController(eventsViewController, animated: true)
         }

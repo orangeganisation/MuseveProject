@@ -31,7 +31,7 @@
 		D1D78424221C30680094D64D /* SearchSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78422221C30680094D64D /* SearchSystem.storyboard */; };
 		D1D78427221C309B0094D64D /* EventsMap.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78425221C309B0094D64D /* EventsMap.storyboard */; };
 		D1DC177B221EF9D700178AF1 /* Events.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1DC177A221EF9D700178AF1 /* Events.storyboard */; };
-		D1DC177F221F3C7F00178AF1 /* customCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DC177E221F3C7F00178AF1 /* customCollectionView.swift */; };
+		D1DC177F221F3C7F00178AF1 /* CustomCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */; };
 		D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DC1780221F617900178AF1 /* EventsViewController.swift */; };
 		D1F799DE222DBB1100D0F497 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F799DD222DBB1100D0F497 /* Alerts.swift */; };
 /* End PBXBuildFile section */
@@ -68,8 +68,8 @@
 		D1D78423221C30680094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/ArtistsPresentetion/Storyboards/Base.lproj/SearchSystem.storyboard; sourceTree = "<group>"; };
 		D1D78426221C309B0094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/Base.lproj/EventsMap.storyboard; sourceTree = "<group>"; };
 		D1DC177A221EF9D700178AF1 /* Events.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Events.storyboard; sourceTree = "<group>"; };
-		D1DC177E221F3C7F00178AF1 /* customCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = customCollectionView.swift; sourceTree = "<group>"; };
-		D1DC1780221F617900178AF1 /* EventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EventsViewController.swift; path = ArtistsPresentetion/ViewControllers/EventsViewController.swift; sourceTree = SOURCE_ROOT; };
+		D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionView.swift; sourceTree = "<group>"; };
+		D1DC1780221F617900178AF1 /* EventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EventsViewController.swift; path = ArtistsPresentetion/ViewControllers/Events/Controllers/EventsViewController.swift; sourceTree = SOURCE_ROOT; };
 		D1F799DD222DBB1100D0F497 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,6 +84,105 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D19642F1224CF7B9001BF6CB /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				D19642FB224CF938001BF6CB /* Views */,
+				D19642FA224CF925001BF6CB /* Controllers */,
+				D1D78425221C309B0094D64D /* EventsMap.storyboard */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		D19642F2224CF7D7001BF6CB /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				D1B6DF5C221745F100A0C910 /* SearchViewController.swift */,
+				D1D78422221C30680094D64D /* SearchSystem.storyboard */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		D19642F3224CF7F0001BF6CB /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				D19642F8224CF8EE001BF6CB /* Controllers */,
+				D19642F9224CF902001BF6CB /* Views */,
+				D1D7841F221C301D0094D64D /* Favorites.storyboard */,
+			);
+			path = Favorites;
+			sourceTree = "<group>";
+		};
+		D19642F4224CF807001BF6CB /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				D19642FC224CF993001BF6CB /* Models */,
+				D19642F5224CF8BD001BF6CB /* Controllers */,
+				D19642F6224CF8CD001BF6CB /* Views */,
+				D1DC177A221EF9D700178AF1 /* Events.storyboard */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		D19642F5224CF8BD001BF6CB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D1D346CF2223816F00864784 /* DateViewController.swift */,
+				D1DC1780221F617900178AF1 /* EventsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D19642F6224CF8CD001BF6CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D19642F8224CF8EE001BF6CB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D19642F9224CF902001BF6CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
+				D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D19642FA224CF925001BF6CB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D1B6DF592217456000A0C910 /* MapViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D19642FB224CF938001BF6CB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D1B6DF572217450C00A0C910 /* CustomMapView.swift */,
+				D16946C6222339AE0059DD9F /* CustomPointAnnotation.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D19642FC224CF993001BF6CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D16851AB221FFD6100B2AD4F /* Event.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		D1AF6EF2221C79EE00FD8033 /* Internet */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,7 +215,6 @@
 				D1B6DF5B2217459400A0C910 /* ViewControllers */,
 				D1AF6EF2221C79EE00FD8033 /* Internet */,
 				D1B6DF61221746A100A0C910 /* Storyboards */,
-				D1B6DF602217467E00A0C910 /* Views */,
 				D1F799DC222DBADC00D0F497 /* Alerts */,
 				D1B6DF62221746E700A0C910 /* AdditionalFiles */,
 				D1B6DF632217471F00A0C910 /* Database */,
@@ -128,25 +226,12 @@
 		D1B6DF5B2217459400A0C910 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D1B6DF592217456000A0C910 /* MapViewController.swift */,
-				D1B6DF5C221745F100A0C910 /* SearchViewController.swift */,
-				D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */,
-				D1DC177E221F3C7F00178AF1 /* customCollectionView.swift */,
-				D1DC1780221F617900178AF1 /* EventsViewController.swift */,
-				D16946C6222339AE0059DD9F /* CustomPointAnnotation.swift */,
-				D1D346CF2223816F00864784 /* DateViewController.swift */,
+				D19642F4224CF807001BF6CB /* Events */,
+				D19642F3224CF7F0001BF6CB /* Favorites */,
+				D19642F2224CF7D7001BF6CB /* Search */,
+				D19642F1224CF7B9001BF6CB /* Map */,
 			);
 			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		D1B6DF602217467E00A0C910 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */,
-				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
-				D1B6DF572217450C00A0C910 /* CustomMapView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		D1B6DF61221746A100A0C910 /* Storyboards */ = {
@@ -154,10 +239,6 @@
 			children = (
 				D1B6DF4E22172BB800A0C910 /* LaunchScreen.storyboard */,
 				D1B6DF4622172BB700A0C910 /* Main.storyboard */,
-				D1D7841F221C301D0094D64D /* Favorites.storyboard */,
-				D1D78422221C30680094D64D /* SearchSystem.storyboard */,
-				D1D78425221C309B0094D64D /* EventsMap.storyboard */,
-				D1DC177A221EF9D700178AF1 /* Events.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -185,7 +266,6 @@
 			children = (
 				D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */,
 				D1B4E943221C4D1500BE0DF3 /* AppConstants.swift */,
-				D16851AB221FFD6100B2AD4F /* Event.swift */,
 				D196E333224CD453005C5DD1 /* DataStore.swift */,
 			);
 			path = Models;
@@ -293,7 +373,7 @@
 				D1B6DF5A2217456000A0C910 /* MapViewController.swift in Sources */,
 				D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */,
 				D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */,
-				D1DC177F221F3C7F00178AF1 /* customCollectionView.swift in Sources */,
+				D1DC177F221F3C7F00178AF1 /* CustomCollectionView.swift in Sources */,
 				D1F799DE222DBB1100D0F497 /* Alerts.swift in Sources */,
 				D1D346D02223816F00864784 /* DateViewController.swift in Sources */,
 			);

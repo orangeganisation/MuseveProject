@@ -13,7 +13,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
     // MARK: - Vars
     override var isSelected: Bool {
         didSet{
-            if DataStore.Favorites.multiplySelectionIsAllowed {
+            if DataStore.shared.multiplySelectionIsAllowed {
                 if isSelected {
                     self.checkedImage.isHidden = false
                     self.imageView.alpha = 0.5

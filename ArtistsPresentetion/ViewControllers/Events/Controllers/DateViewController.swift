@@ -40,13 +40,13 @@ class DateViewController: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let fromDate = dateFormatter.string(from: fromDatePicker.date)
         let toDate = dateFormatter.string(from: toDatePicker.date)
-        DataStore.Events.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
-        DataStore.Events.shouldUpdateEvents = true
+        DataStore.shared.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        DataStore.shared.shouldUpdateEvents = true
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func cancelAction(_ sender: UIButton) {
-        DataStore.Events.shouldUpdateEvents = false
+        DataStore.shared.shouldUpdateEvents = false
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }

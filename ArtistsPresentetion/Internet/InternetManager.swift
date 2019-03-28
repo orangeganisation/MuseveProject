@@ -58,8 +58,9 @@ class InternetDataManager {
                 if let url = components.url {
                     let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
                         self.sessionTaskIsLoading = false
-                        if searchText != DataStore.Search.currentSearchText && DataStore.Search.currentSearchText.count > 2 {
-                            self.getArtist(viewController: viewController, searchText: DataStore.Search.currentSearchText, completion: completion)
+                        let currentSearchText = DataStore.shared.currentSearchText
+                        if searchText != currentSearchText && currentSearchText.count > 2 {
+                            self.getArtist(viewController: viewController, searchText: currentSearchText, completion: completion)
                         } else {
                             if error != nil {
                                 completion(error, nil)
