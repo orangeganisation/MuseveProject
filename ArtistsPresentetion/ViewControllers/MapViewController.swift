@@ -14,13 +14,8 @@ import CoreData
 class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Vars
-    static let shared = MapViewController()
     var locationManager: CLLocationManager?
     var currentLocation: MKUserLocation?
-    var currentArtistId: String?
-    var currentArtistName: String?
-    var needSetCenterValue = true
-    var presentingEvents = [Event]()
     
     // MARK: - Outlets
     @IBOutlet weak var locationButton: UIButton!
@@ -69,16 +64,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
-        MapViewController.shared.presentingEvents.removeAll()
+        DataStore.Map.presentingEvents.removeAll()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if MapViewController.shared.presentingEvents.count > 1 {
+        if DataStore.Map.presentingEvents.count > 1 {
             myMapView.removeAnnotations(myMapView.annotations)
-        } else if MapViewController.shared.presentingEvents.count == 1 {
-            if MapViewController.shared.presentingEvents[0].getArtistID() != MapViewController.shared.currentArtistId {
-                MapViewController.shared.currentArtistId = MapViewController.shared.presentingEvents[0].getArtistID()
+        } else if DataStore.Map.presentingEvents.count == 1 {
+            if DataStore.Map.presentingEvents[0].getArtistID() != DataStore.Map.currentEventsArtistId {
+                DataStore.Map.currentEventsArtistId = DataStore.Map.presentingEvents[0].getArtistID()
                 myMapView.removeAnnotations(myMapView.annotations)
             }
         }
@@ -100,7 +95,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     // MARK: - MyTools
     func setMarkersForEvents(completion: (_ latitude: Double?,_ longtitude: Double?) -> Void) {
-        for event in MapViewController.shared.presentingEvents {
+        for event in DataStore.Map.presentingEvents {
             if let latitude = event.getVenue()?.getLatitude(), let longtitude = event.getVenue()?.getLongtitude() {
                 let mark = CustomPointAnnotation()
                 mark.title = event.getVenue()?.getName()
@@ -134,7 +129,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                     mark.lineUp = lineUpString
                 }
                 myMapView.addAnnotation(mark)
-                if MapViewController.shared.presentingEvents.count == 1 {
+                if DataStore.Map.presentingEvents.count == 1 {
                     completion(Double(latitude)!, Double(longtitude)!)
                 }
             }
@@ -147,8 +142,8 @@ extension MapViewController{
     func mapView(_ mapView: MKMapView, didUpdate
         userLocation: MKUserLocation) {
         currentLocation = userLocation
-        if MapViewController.shared.needSetCenterValue {
-            MapViewController.shared.needSetCenterValue = false
+        if DataStore.Map.needSetCenterMap {
+            DataStore.Map.needSetCenterMap = false
             if let userLocation = mapView.userLocation.location?.coordinate {
                 mapView.setCenter(userLocation, animated: true)
             }
@@ -167,7 +162,7 @@ extension MapViewController{
         if !annotation.isEqual(mapView.userLocation) {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
             annotationView.canShowCallout = true
-            if CoreDataManager.instance.objectIsInDataBase(objectName: MapViewController.shared.currentArtistName!, forEntity: "FavoriteArtist") {
+            if CoreDataManager.instance.objectIsInDataBase(objectName: DataStore.Map.currentEventsArtistName!, forEntity: "FavoriteArtist") {
                 annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
             } else {
                 annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)

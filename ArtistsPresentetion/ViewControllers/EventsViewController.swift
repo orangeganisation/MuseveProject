@@ -9,13 +9,9 @@
 import UIKit
 
 class EventsViewController: UIViewController, UITableViewDataSource {
-
+    
     // MARK: - Vars
-    static let shared = EventsViewController()
     var artist: (name: String, upcominIvents: Int)?
-    var eventsFilter: String?
-    var shouldUpdateEvents = false
-    var events = [Event]()
     
     // MARK: - Outlets
     @IBOutlet weak var haveNoEventsLabel: UILabel!
@@ -41,13 +37,13 @@ class EventsViewController: UIViewController, UITableViewDataSource {
         eventsFilterSegment.alpha = 1
         switch eventsFilterSegment.selectedSegmentIndex {
         case 0:
-            EventsViewController.shared.eventsFilter = "upcoming"
+            DataStore.Events.eventsFilter = "upcoming"
             loadEvents()
         case 1:
-            EventsViewController.shared.eventsFilter = "past"
+            DataStore.Events.eventsFilter = "past"
             loadEvents()
         default:
-            EventsViewController.shared.eventsFilter = "all"
+            DataStore.Events.eventsFilter = "all"
             loadEvents()
         }
     }
@@ -63,10 +59,10 @@ class EventsViewController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.view.layoutSubviews()
-        if EventsViewController.shared.shouldUpdateEvents {
+        if DataStore.Events.shouldUpdateEvents {
             loadEvents()
         } else {
-            if EventsViewController.shared.eventsFilter == "upcomimg" || EventsViewController.shared.eventsFilter == "past" || EventsViewController.shared.eventsFilter == "all" || EventsViewController.shared.eventsFilter == nil {
+            if DataStore.Events.eventsFilter == "upcomimg" || DataStore.Events.eventsFilter == "past" || DataStore.Events.eventsFilter == "all" || DataStore.Events.eventsFilter == nil {
                 eventsFilterSegment.alpha = 1.0
             }
         }
@@ -74,14 +70,14 @@ class EventsViewController: UIViewController, UITableViewDataSource {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        EventsViewController.shared.shouldUpdateEvents = false
+        DataStore.Events.shouldUpdateEvents = false
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        EventsViewController.shared.eventsFilter = nil
-        if EventsViewController.shared.artist!.upcominIvents == 0 {
-            EventsViewController.shared.eventsFilter = "all"
+        DataStore.Events.eventsFilter = nil
+        if artist!.upcominIvents == 0 {
+            DataStore.Events.eventsFilter = "all"
             eventsFilterSegment.selectedSegmentIndex = 2
         } else {
             eventsFilterSegment.selectedSegmentIndex = 0
@@ -97,9 +93,9 @@ class EventsViewController: UIViewController, UITableViewDataSource {
         haveNoEventsLabel.isHidden = true
         eventsTableView.isHidden = true
         loadingDataSpinner.startAnimating()
-        if let artistName = EventsViewController.shared.artist {
+        if let artistName = artist {
             if let named = artistName.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                InternetDataManager.shared.getEvents(forArtist: named, forDate: EventsViewController.shared.eventsFilter, viewController: self) { (error, artEvents) in
+                InternetDataManager.shared.getEvents(forArtist: named, forDate: DataStore.Events.eventsFilter, viewController: self) { (error, artEvents) in
                     DispatchQueue.main.async {
                         self.loadingDataSpinner.stopAnimating()
                     }
@@ -111,10 +107,10 @@ class EventsViewController: UIViewController, UITableViewDataSource {
                             self.haveNoEventsLabel.isHidden = false
                         }
                     } else if artEvents != nil, artEvents?.count != 0 {
-                        if EventsViewController.shared.eventsFilter != "upcoming", EventsViewController.shared.eventsFilter != nil {
-                            EventsViewController.shared.events = artEvents!.reversed()
+                        if DataStore.Events.eventsFilter != "upcoming", DataStore.Events.eventsFilter != nil {
+                            DataStore.Events.events = artEvents!.reversed()
                         } else {
-                            EventsViewController.shared.events = artEvents!
+                            DataStore.Events.events = artEvents!
                         }
                         DispatchQueue.main.async {
                             self.eventsTableView.isHidden = false
@@ -149,7 +145,7 @@ class EventsViewController: UIViewController, UITableViewDataSource {
 extension EventsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return EventsViewController.shared.events.count
+        return DataStore.Events.events.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -157,7 +153,7 @@ extension EventsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let eventUrl = EventsViewController.shared.events[indexPath.row].getUrl() {
+        if let eventUrl = DataStore.Events.events[indexPath.row].getUrl() {
             if let url = URL(string: eventUrl) {
                 InternetDataManager.openSafariPage(withUrl: url, byController: self)
             }
@@ -166,9 +162,9 @@ extension EventsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let action = UITableViewRowAction(style: .normal, title: NSLocalizedString("Show on map", comment: "")) { (rowAction, indexPath) in
-            MapViewController.shared.presentingEvents.append(EventsViewController.shared.events[indexPath.row])
-            MapViewController.shared.currentArtistName = EventsViewController.shared.artist?.name
-            MapViewController.shared.needSetCenterValue = false
+            DataStore.Map.presentingEvents.append(DataStore.Events.events[indexPath.row])
+            DataStore.Map.currentEventsArtistName = self.artist?.name
+            DataStore.Map.needSetCenterMap = false
             self.tabBarController?.selectedIndex = 2
         }
         action.backgroundColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)

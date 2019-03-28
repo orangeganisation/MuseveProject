@@ -20,12 +20,12 @@ class EventsTableViewCell: UITableViewCell {
     
     static func configuredCell(of tableView: UITableView, for indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventsTableViewCell
-        cell.cityLabel.text = EventsViewController.shared.events[indexPath.row].getVenue()?.getCity()
-        cell.countryLabel.text = EventsViewController.shared.events[indexPath.row].getVenue()?.getCountry()
-        cell.placeNameLabel.text = EventsViewController.shared.events[indexPath.row].getVenue()?.getName()
+        cell.cityLabel.text = DataStore.Events.events[indexPath.row].getVenue()?.getCity()
+        cell.countryLabel.text = DataStore.Events.events[indexPath.row].getVenue()?.getCountry()
+        cell.placeNameLabel.text = DataStore.Events.events[indexPath.row].getVenue()?.getName()
         var participants = ""
         var shouldEnter = true
-        if let lineUp = EventsViewController.shared.events[indexPath.row].getLineup() {
+        if let lineUp = DataStore.Events.events[indexPath.row].getLineup() {
             for participant in lineUp {
                 if shouldEnter {
                     participants.append(participant)
@@ -39,7 +39,7 @@ class EventsTableViewCell: UITableViewCell {
         let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
-        if let dateTime = EventsViewController.shared.events[indexPath.row].getDatetime() {
+        if let dateTime = DataStore.Events.events[indexPath.row].getDatetime() {
             let date = dateFormatter.date(from: dateTime)!
             let calendar = Calendar.current
             let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)

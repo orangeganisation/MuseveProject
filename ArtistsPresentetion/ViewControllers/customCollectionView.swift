@@ -13,7 +13,7 @@ class customCollectionView: UICollectionView {
     // MARK: - Vars
     override var allowsMultipleSelection: Bool {
         didSet {
-            FavoritesViewController.shared.multiplySelectionIsAllowed = allowsMultipleSelection
+            DataStore.Favorites.multiplySelectionIsAllowed = allowsMultipleSelection
         }
     }
 

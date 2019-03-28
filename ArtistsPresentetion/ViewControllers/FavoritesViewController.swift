@@ -12,18 +12,16 @@ import CoreData
 class FavoritesViewController: UIViewController, UICollectionViewDataSource {
     
     // MARK: - Vars
-    static let shared = FavoritesViewController()
     var isCellLayoutInNeed = true
     var removingList = [String]() {
         didSet {
-            if removingList.count != 0 && FavoritesViewController.shared.multiplySelectionIsAllowed {
+            if removingList.count != 0 && DataStore.Favorites.multiplySelectionIsAllowed {
                 navigationBarTitle.title = "\(NSLocalizedString("Selected artists:", comment: "")) \(removingList.count)"
-            } else if FavoritesViewController.shared.multiplySelectionIsAllowed {
+            } else if DataStore.Favorites.multiplySelectionIsAllowed {
                 navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
             }
         }
     }
-    var multiplySelectionIsAllowed = false
     var selectedArtistName = String()
     
     // MARK: - Outlets
@@ -63,9 +61,9 @@ class FavoritesViewController: UIViewController, UICollectionViewDataSource {
                         } catch {
                             print(error)
                         }
-                        if let currentArtist = SearchViewController.shared.currentArtist {
+                        if let currentArtist = DataStore.Search.currentFoundArtist {
                             if artistName == currentArtist.getName() {
-                                SearchViewController.shared.isInDataBase = false
+                                DataStore.Search.artistIsInDataBase = false
                             }
                         }
                     })
@@ -177,13 +175,13 @@ extension FavoritesViewController: UICollectionViewDelegate {
                 removingList.append(name)
             }
         } else {
+            let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
+            let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController") as! EventsViewController
             let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
             if let name = artist.name {
-                FavoritesViewController.shared.selectedArtistName = name
-                EventsViewController.shared.artist = (name, Int(artist.upcoming_events_count))
+                selectedArtistName = name
+                eventsViewController.artist = (name, Int(artist.upcoming_events_count))
             }
-            let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
-            let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController")
             self.navigationController?.pushViewController(eventsViewController, animated: true)
         }
     }
@@ -203,7 +201,7 @@ extension FavoritesViewController: UICollectionViewDelegate {
                 }
             }
         } else {
-            FavoritesViewController.shared.selectedArtistName = ""
+            selectedArtistName = ""
         }
     }
     
