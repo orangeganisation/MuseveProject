@@ -154,6 +154,22 @@ final class FavoritesViewController: UIViewController, UICollectionViewDataSourc
 // MARK: - Extension
 extension FavoritesViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        UIView.animate(withDuration: 0.3) {
+            if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
+                cell.transform = .init(scaleX: 0.95, y: 0.95)
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        UIView.animate(withDuration: 0.3) {
+            if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
+                cell.transform = .identity
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let sections = CoreDataManager.instance.fetchedResultsController.sections {
             return sections[section].numberOfObjects
