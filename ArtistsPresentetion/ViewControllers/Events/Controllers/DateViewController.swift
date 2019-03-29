@@ -8,27 +8,27 @@
 
 import UIKit
 
-class DateViewController: UIViewController {
+final class DateViewController: UIViewController {
 
     // MARK: - Outlets
-    @IBOutlet weak var fromDatePicker: UIDatePicker!
-    @IBOutlet weak var toDatePicker: UIDatePicker!
-    @IBOutlet weak var fromDateLabel: UILabel! {
+    @IBOutlet private weak var fromDatePicker: UIDatePicker!
+    @IBOutlet private weak var toDatePicker: UIDatePicker!
+    @IBOutlet private weak var fromDateLabel: UILabel! {
         didSet {
             fromDateLabel.text = NSLocalizedString("From:", comment: "")
         }
     }
-    @IBOutlet weak var toDateLabel: UILabel! {
+    @IBOutlet private weak var toDateLabel: UILabel! {
         didSet {
             toDateLabel.text = NSLocalizedString("To:", comment: "")
         }
     }
-    @IBOutlet weak var cancelButton: UIButton! {
+    @IBOutlet private weak var cancelButton: UIButton! {
         didSet {
             cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: .normal)
         }
     }
-    @IBOutlet weak var doneButton: UIButton! {
+    @IBOutlet private weak var doneButton: UIButton! {
         didSet {
             doneButton.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
         }

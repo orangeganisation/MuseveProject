@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class Alerts {
+final class Alerts {
     
     static func presentConnectionAlert(viewController: UIViewController){
         let alert = UIAlertController(title: NSLocalizedString("Internet Connection", comment: ""), message: NSLocalizedString("There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.", comment: ""), preferredStyle: .alert)

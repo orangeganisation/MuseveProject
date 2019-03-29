@@ -8,25 +8,25 @@
 
 import UIKit
 
-class EventsViewController: UIViewController, UITableViewDataSource {
+final class EventsViewController: UIViewController, UITableViewDataSource {
     
     // MARK: - Vars
-    var artist: (name: String, upcominIvents: Int, id: String)? {
+    private var artist: (name: String, upcominIvents: Int, id: String)? {
         return DataStore.shared.currentEventsArtist
     }
     
     // MARK: - Outlets
-    @IBOutlet weak var haveNoEventsLabel: UILabel!
-    @IBOutlet weak var eventsTableView: UITableView!
-    @IBOutlet weak var loadingDataSpinner: UIActivityIndicatorView!
-    @IBOutlet weak var eventsFilterSegment: UISegmentedControl! {
+    @IBOutlet private weak var haveNoEventsLabel: UILabel!
+    @IBOutlet private weak var eventsTableView: UITableView!
+    @IBOutlet private weak var loadingDataSpinner: UIActivityIndicatorView!
+    @IBOutlet private weak var eventsFilterSegment: UISegmentedControl! {
         didSet {
             for index in eventsFilterSegment.subviews.indices {
                 eventsFilterSegment.setTitle(NSLocalizedString(eventsFilterSegment.titleForSegment(at: index)!, comment: ""), forSegmentAt: index)
             }
         }
     }
-    @IBOutlet weak var navigationBar: UINavigationItem! {
+    @IBOutlet private weak var navigationBar: UINavigationItem! {
         didSet {
             navigationBar.title = NSLocalizedString(navigationBar.title!, comment: "")
         }
@@ -63,10 +63,8 @@ class EventsViewController: UIViewController, UITableViewDataSource {
         navigationController?.view.layoutSubviews()
         if DataStore.shared.shouldUpdateEvents {
             loadEvents()
-        } else {
-            if DataStore.shared.eventsFilter == "upcomimg" || DataStore.shared.eventsFilter == "past" || DataStore.shared.eventsFilter == "all" || DataStore.shared.eventsFilter == nil {
-                eventsFilterSegment.alpha = 1.0
-            }
+        } else if DataStore.shared.eventsFilter == "upcomimg" || DataStore.shared.eventsFilter == "past" || DataStore.shared.eventsFilter == "all" || DataStore.shared.eventsFilter == nil {
+            eventsFilterSegment.alpha = 1.0
         }
     }
     
@@ -95,47 +93,45 @@ class EventsViewController: UIViewController, UITableViewDataSource {
         haveNoEventsLabel.isHidden = true
         eventsTableView.isHidden = true
         loadingDataSpinner.startAnimating()
-        if let artistName = artist {
-            if let named = artistName.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                let eventsFilter = DataStore.shared.eventsFilter
-                InternetDataManager.shared.getEvents(forArtist: named, forDate: eventsFilter, viewController: self) { (error, artEvents) in
+        if let artistName = artist, let named = artistName.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
+            let eventsFilter = DataStore.shared.eventsFilter
+            InternetDataManager.shared.getEvents(forArtist: named, forDate: eventsFilter, viewController: self) { (error, artEvents) in
+                DispatchQueue.main.async {
+                    self.loadingDataSpinner.stopAnimating()
+                }
+                if error != nil {
                     DispatchQueue.main.async {
-                        self.loadingDataSpinner.stopAnimating()
+                        self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
+                        self.eventsTableView.isHidden = true
+                        Alerts.presentFailedDataLoadingAlert(viewController: self)
+                        self.haveNoEventsLabel.isHidden = false
                     }
-                    if error != nil {
-                        DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
-                            self.eventsTableView.isHidden = true
-                            Alerts.presentFailedDataLoadingAlert(viewController: self)
-                            self.haveNoEventsLabel.isHidden = false
-                        }
-                    } else if artEvents != nil, artEvents?.count != 0 {
-                        if eventsFilter != "upcoming", eventsFilter != nil {
-                            DataStore.shared.events = artEvents!.reversed()
-                        } else {
-                            DataStore.shared.events = artEvents!
-                        }
-                        DispatchQueue.main.async {
-                            self.eventsTableView.isHidden = false
-                            self.haveNoEventsLabel.isHidden = true
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.eventsTableView.alpha = 1.0
-                            })
-                            self.eventsTableView.reloadData()
-                        }
-                    } else if artEvents != nil {
-                        DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = NSLocalizedString("No events", comment: "")
-                            self.eventsTableView.isHidden = true
-                            self.haveNoEventsLabel.isHidden = false
-                        }
+                } else if artEvents != nil, artEvents?.count != 0 {
+                    if eventsFilter != "upcoming", eventsFilter != nil {
+                        DataStore.shared.events = artEvents!.reversed()
                     } else {
-                        DispatchQueue.main.async {
-                            self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
-                            self.eventsTableView.isHidden = true
-                            self.haveNoEventsLabel.isHidden = false
-                            Alerts.presentFailedDataLoadingAlert(viewController: self)
-                        }
+                        DataStore.shared.events = artEvents!
+                    }
+                    DispatchQueue.main.async {
+                        self.eventsTableView.isHidden = false
+                        self.haveNoEventsLabel.isHidden = true
+                        UIView.animate(withDuration: 0.5, animations: {
+                            self.eventsTableView.alpha = 1.0
+                        })
+                        self.eventsTableView.reloadData()
+                    }
+                } else if artEvents != nil {
+                    DispatchQueue.main.async {
+                        self.haveNoEventsLabel.text = NSLocalizedString("No events", comment: "")
+                        self.eventsTableView.isHidden = true
+                        self.haveNoEventsLabel.isHidden = false
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.haveNoEventsLabel.text = NSLocalizedString("Failed", comment: "")
+                        self.eventsTableView.isHidden = true
+                        self.haveNoEventsLabel.isHidden = false
+                        Alerts.presentFailedDataLoadingAlert(viewController: self)
                     }
                 }
             }

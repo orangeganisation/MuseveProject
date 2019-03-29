@@ -6,14 +6,14 @@
 //  Copyright © 2019 Андрей Романюк. All rights reserved.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
-class FavoritesViewController: UIViewController, UICollectionViewDataSource {
+final class FavoritesViewController: UIViewController, UICollectionViewDataSource {
     
     // MARK: - Vars
-    var isCellLayoutInNeed = true
-    var removingList = [String]() {
+    private var isCellLayoutInNeed = true
+    private var removingList = [String]() {
         didSet {
             let multiplySelectionIsAllowed = DataStore.shared.multiplySelectionIsAllowed
             if removingList.count != 0 && multiplySelectionIsAllowed {
@@ -23,19 +23,19 @@ class FavoritesViewController: UIViewController, UICollectionViewDataSource {
             }
         }
     }
-    var selectedArtistName = String()
+    private var selectedArtistName = String()
     
     // MARK: - Outlets
-    @IBOutlet weak var favoriteCollectionView: UICollectionView!
-    @IBOutlet weak var haveNoFavoritesLabel: UILabel!
-    @IBOutlet weak var editButton: UIBarButtonItem!
-    @IBOutlet weak var trashButton: UIBarButtonItem! {
+    @IBOutlet private weak var favoriteCollectionView: UICollectionView!
+    @IBOutlet private weak var haveNoFavoritesLabel: UILabel!
+    @IBOutlet private weak var editButton: UIBarButtonItem!
+    @IBOutlet private weak var trashButton: UIBarButtonItem! {
         didSet {
             trashButton.isEnabled = !removingList.isEmpty
         }
     }
-    @IBOutlet weak var cancelButton: UIBarButtonItem!
-    @IBOutlet weak var navigationBarTitle: UINavigationItem!
+    @IBOutlet private weak var cancelButton: UIBarButtonItem!
+    @IBOutlet private weak var navigationBarTitle: UINavigationItem!
     
     
     // MARK: - Actions
@@ -62,10 +62,8 @@ class FavoritesViewController: UIViewController, UICollectionViewDataSource {
                         } catch {
                             print(error)
                         }
-                        if let currentArtist = DataStore.shared.currentFoundArtist {
-                            if artistName == currentArtist.getName() {
-                                DataStore.shared.artistIsInDataBase = false
-                            }
+                        if let currentArtist = DataStore.shared.currentFoundArtist, artistName == currentArtist.getName() {
+                            DataStore.shared.artistIsInDataBase = false
                         }
                     })
                 }

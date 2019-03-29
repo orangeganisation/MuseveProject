@@ -6,28 +6,28 @@
 //  Copyright © 2019 Андрей Романюк. All rights reserved.
 //
 
-import UIKit
+import CoreData
 import CoreLocation
 import MapKit
-import CoreData
+import UIKit
 
-class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate {
+final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Vars
-    var locationManager: CLLocationManager?
-    var currentLocation: MKUserLocation?
+    private var locationManager: CLLocationManager?
+    private var currentLocation: MKUserLocation?
     
     // MARK: - Outlets
-    @IBOutlet weak var locationButton: UIButton!
-    @IBOutlet weak var myMapView: CustomMapView! {
+    @IBOutlet private weak var locationButton: UIButton!
+    @IBOutlet private weak var myMapView: CustomMapView! {
         didSet {
             myMapView.delegate = self
         }
     }
-    @IBOutlet weak var annotationView: UIStackView!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var lineupLabel: UILabel!
+    @IBOutlet private weak var annotationView: UIStackView!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var locationLabel: UILabel!
+    @IBOutlet private weak var lineupLabel: UILabel!
     
     
     // MARK: - MapActions
@@ -96,16 +96,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                     let date = dateFormatterGet.date(from: dateString)!
                     let calendar = Calendar.current
                     let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
-                    mark.date = "\(date.monthAsString()) \(components.day!), \(components.year!)"
+                    mark.setDate(date: "\(date.monthAsString()) \(components.day!), \(components.year!)")
                 }
-                mark.location = ""
+                mark.setLocation(location: "")
                 var noRegionAppend = ""
-                if event.getVenue()?.getRegion() != nil {
+                if event.getVenue()?.getRegion() != nil && event.getVenue()?.getRegion() != "" {
                     noRegionAppend = ", "
                 }
-                mark.location?.append("\(event.getVenue()?.getCountry() ?? ""), ")
-                mark.location?.append("\(event.getVenue()?.getRegion() ?? "")\(noRegionAppend)")
-                mark.location?.append("\(event.getVenue()?.getCity() ?? "")")
+                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getCountry() ?? ""), ")
+                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getRegion() ?? "")\(noRegionAppend)")
+                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getCity() ?? "")")
                 if let lineUp = event.getLineup() {
                     var lineUpString = String()
                     for participant in lineUp {
@@ -115,7 +115,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                             lineUpString.append("\(participant), ")
                         }
                     }
-                    mark.lineUp = lineUpString
+                    mark.setLineUp(lineUp: lineUpString)
                 }
                 myMapView.addAnnotation(mark)
                 if presentingEvents.count == 1 {
@@ -140,10 +140,8 @@ extension MapViewController{
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        if currentLocation != nil {
-            if let imageFilled = UIImage(named: "buttonEmpty.svg"){
-                locationButton.setImage(imageFilled, for: .normal)
-            }
+        if currentLocation != nil, let imageFilled = UIImage(named: "buttonEmpty.svg") {
+            locationButton.setImage(imageFilled, for: .normal)
         }
     }
     
@@ -163,20 +161,18 @@ extension MapViewController{
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let annotation = view.annotation as? CustomPointAnnotation {
-            if !annotation.isEqual(mapView.userLocation) {
-                let dateLabelText = dateLabel.text!
-                dateLabel.text!.removeSubrange(dateLabelText.index(dateLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-                let locationLabelText = locationLabel.text!
-                locationLabel.text!.removeSubrange(locationLabelText.index(locationLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-                let lineupLabelText = lineupLabel.text!
-                lineupLabel.text!.removeSubrange(lineupLabelText.index(lineupLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-                (annotationView.subviews[0] as! UILabel).text!.append(annotation.date ?? "no information")
-                (annotationView.subviews[1] as! UILabel).text!.append((annotation.location ?? "no information"))
-                (annotationView.subviews[2] as! UILabel).text!.append((annotation.lineUp ?? "no information"))
-                view.detailCalloutAccessoryView = annotationView
-                annotationView.isHidden = false
-            }
+        if let annotation = view.annotation as? CustomPointAnnotation, !annotation.isEqual(mapView.userLocation) {
+            let dateLabelText = dateLabel.text!
+            dateLabel.text!.removeSubrange(dateLabelText.index(dateLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
+            let locationLabelText = locationLabel.text!
+            locationLabel.text!.removeSubrange(locationLabelText.index(locationLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
+            let lineupLabelText = lineupLabel.text!
+            lineupLabel.text!.removeSubrange(lineupLabelText.index(lineupLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
+            (annotationView.subviews[0] as! UILabel).text!.append(annotation.getDate() ?? "no information")
+            (annotationView.subviews[1] as! UILabel).text!.append((annotation.getLocation() ?? "no information"))
+            (annotationView.subviews[2] as! UILabel).text!.append((annotation.getLineUp() ?? "no information"))
+            view.detailCalloutAccessoryView = annotationView
+            annotationView.isHidden = false
         }
     }
 }

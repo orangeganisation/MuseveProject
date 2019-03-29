@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
-import SystemConfiguration
 import SafariServices
+import SystemConfiguration
+import UIKit
 
-class InternetDataManager {
+final class InternetDataManager {
     
     private var sessionTaskIsLoading = false
     static let shared = InternetDataManager()
@@ -45,10 +45,10 @@ class InternetDataManager {
         viewController.present(safari, animated: true, completion: nil)
     }
     
-    func getArtist(viewController: UIViewController, searchText: String, completion: @escaping (_ error: Error?,_ artist: Artist?) -> Void) {
+    func getArtist(viewController: UIViewController, searchText: String, completion: @escaping (_ error: Error?, _ artist: Artist?) -> Void) {
         if !sessionTaskIsLoading {
             sessionTaskIsLoading = true
-            if self.isConnectedToNetwork(){
+            if self.isConnectedToNetwork() {
                 var components = URLComponents()
                 components.scheme = StringConstants.Urls.scheme
                 components.host = StringConstants.Urls.getArtistUrl
@@ -65,12 +65,10 @@ class InternetDataManager {
                             if error != nil {
                                 completion(error, nil)
                             } else {
-                                if let data = artistData{
-                                    if let artist = try? JSONDecoder().decode(Artist.self, from: data) {
-                                        completion(nil, artist)
-                                    } else {
-                                        completion(nil, nil)
-                                    }
+                            if let data = artistData, let artist = try? JSONDecoder().decode(Artist.self, from: data) {
+                                    completion(nil, artist)
+                                } else {
+                                    completion(nil, nil)
                                 }
                             }
                         }
@@ -83,7 +81,7 @@ class InternetDataManager {
         }
     }
     
-    func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?,_ events: [Event]?) -> Void) {
+    func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?, _ events: [Event]?) -> Void) {
         if self.isConnectedToNetwork() {
             var components = URLComponents()
             components.scheme = StringConstants.Urls.scheme

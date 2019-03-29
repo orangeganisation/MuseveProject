@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DataStore {
+final class DataStore {
     
     static var shared = DataStore()
     

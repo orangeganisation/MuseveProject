@@ -6,10 +6,10 @@
 //  Copyright © 2019 Андрей Романюк. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
-class CoreDataManager {
+final class CoreDataManager {
     
     // MARK: - Vars
     static let instance = CoreDataManager()
@@ -66,12 +66,10 @@ class CoreDataManager {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         do {
             let results = try persistentContainer.viewContext.fetch(fetchRequest)
-            for result in results as! [NSManagedObject] {
-                if (result.value(forKey: "name") as! String) == name {
-                    persistentContainer.viewContext.delete(result)
-                    CoreDataManager.instance.saveContext()
-                    completion()
-                }
+            for result in results as! [NSManagedObject] where (result.value(forKey: "name") as! String) == name {
+                persistentContainer.viewContext.delete(result)
+                CoreDataManager.instance.saveContext()
+                completion()
             }
         } catch {
             print(error)
@@ -86,10 +84,8 @@ class CoreDataManager {
                 managedObject.setValue(name, forKey: "name")
                 managedObject.setValue(id, forKey: "id")
                 managedObject.setValue(count, forKey: "upcoming_events_count")
-                if let imageUrl = URL(string: url) {
-                    if let data = try? Data(contentsOf: imageUrl) as NSData {
-                        managedObject.setValue(data, forKey: "image_data")
-                    }
+                if let imageUrl = URL(string: url), let data = try? Data(contentsOf: imageUrl) as NSData {
+                    managedObject.setValue(data, forKey: "image_data")
                 }
                 CoreDataManager.instance.saveContext()
             }

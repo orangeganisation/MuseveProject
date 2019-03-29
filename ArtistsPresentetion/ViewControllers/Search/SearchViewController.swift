@@ -6,15 +6,15 @@
 //  Copyright © 2019 Андрей Романюк. All rights reserved.
 //
 
-import UIKit
-import SafariServices
 import CoreData
+import SafariServices
+import UIKit
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
 
     // MARK: - Vars
-    let context = CoreDataManager.instance.persistentContainer.viewContext
-    var foundArtist: Artist? {
+    private let context = CoreDataManager.instance.persistentContainer.viewContext
+    private var foundArtist: Artist? {
         return DataStore.shared.currentFoundArtist
     }
     enum addAndRemoveButtonImage {
@@ -32,43 +32,41 @@ class SearchViewController: UIViewController {
         case removed
         var image: UIImage {
             switch self {
-                case .added: return UIImage(named: "removed.svg")!
-                case .removed: return UIImage(named: "added.svg")!
+                case .added: return UIImage(named: "added.svg")!
+                case .removed: return UIImage(named: "removed.svg")!
             }
         }
     }
     
     // MARK: - Outlets
-    @IBOutlet weak var searchBar: UISearchBar! {
+    @IBOutlet private weak var searchBar: UISearchBar! {
         didSet {
             searchBar.delegate = self
         }
     }
-    @IBOutlet weak var searchResultsLabel: UILabel!
-    @IBOutlet weak var searchSpinner: UIActivityIndicatorView!
-    @IBOutlet weak var presentationView: UIView!
-    @IBOutlet weak var artistImage: UIImageView! {
+    @IBOutlet private weak var searchResultsLabel: UILabel!
+    @IBOutlet private weak var searchSpinner: UIActivityIndicatorView!
+    @IBOutlet private weak var presentationView: UIView!
+    @IBOutlet private weak var artistImage: UIImageView! {
         didSet {
             artistImage.clipsToBounds = true
         }
     }
-    @IBOutlet weak var artistNameLabel: UILabel!
-    @IBOutlet weak var facebookButton: UIButton!
-    @IBOutlet weak var addAndRemoveButton: UIButton! {
+    @IBOutlet private weak var artistNameLabel: UILabel!
+    @IBOutlet private weak var facebookButton: UIButton!
+    @IBOutlet private weak var addAndRemoveButton: UIButton! {
         didSet {
             addAndRemoveButton.clipsToBounds = true
         }
     }
-    @IBOutlet weak var resultButton: UIButton!
-    @IBOutlet weak var resultLabel: UILabel!
-    @IBOutlet weak var resultView: UIView!
+    @IBOutlet private weak var resultButton: UIButton!
+    @IBOutlet private weak var resultLabel: UILabel!
+    @IBOutlet private weak var resultView: UIView!
     
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
-        if let artist = foundArtist, let facebook = artist.getFacebookPage(){
-            if let url = URL(string: facebook) {
-                InternetDataManager.openSafariPage(withUrl: url, byController: self)
-            }
+        if let artist = foundArtist, let facebook = artist.getFacebookPage(), let url = URL(string: facebook) {
+            InternetDataManager.openSafariPage(withUrl: url, byController: self)
         }
     }
     
@@ -83,7 +81,12 @@ class SearchViewController: UIViewController {
             }
         } else {
             if InternetDataManager.shared.isConnectedToNetwork(){
-                CoreDataManager.instance.addFavoriteArtist(withName: (foundArtist?.getName())!, withID: (foundArtist?.getID())!, withEventsCount: (foundArtist?.getUpcomingEventCount())!, withImageDataURL: (foundArtist?.getThumbUrl())!) {
+                CoreDataManager.instance.addFavoriteArtist(
+                withName: (foundArtist?.getName())!,
+                withID: (foundArtist?.getID())!,
+                withEventsCount: (foundArtist?.getUpcomingEventCount())!,
+                withImageDataURL: (foundArtist?.getThumbUrl())!
+                ) {
                     self.addAndRemoveButton.setImage(addAndRemoveButtonImage.remove.image, for: .normal)
                     self.resultButton.setImage(dbResultButtonImage.added.image, for: .normal)
                     resultLabel.text = StringConstants.Search.added
@@ -202,11 +205,9 @@ class SearchViewController: UIViewController {
                     }
                 } else if let gotArtist = artist {
                     DataStore.shared.currentFoundArtist = artist
-                    if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl) {
-                        if let image = UIImage(data: imageData) {
-                            DispatchQueue.main.async {
-                                self.artistImage.image = image
-                            }
+                    if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl), let image = UIImage(data: imageData) {
+                        DispatchQueue.main.async {
+                            self.artistImage.image = image
                         }
                     }
                     DispatchQueue.main.async {

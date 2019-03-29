@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomCollectionViewCell: UICollectionViewCell {
+final class CustomCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Vars
     override var isSelected: Bool {
@@ -26,14 +26,14 @@ class CustomCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Outlets
-    @IBOutlet weak var imageView: UIImageView! {
+    @IBOutlet private weak var imageView: UIImageView! {
         didSet {
             imageView.layer.cornerRadius = 10.0
             imageView.clipsToBounds = true
         }
     }
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var checkedImage: UIImageView! {
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var checkedImage: UIImageView! {
         didSet {
             checkedImage.image = checkedImage.image?.withRenderingMode( .alwaysTemplate)
             checkedImage.tintColor = #colorLiteral(red: 0.6219168305, green: 0.112661697, blue: 0.3066232204, alpha: 1)
@@ -43,10 +43,8 @@ class CustomCollectionViewCell: UICollectionViewCell {
     static func configuredCell(of collectionView: UICollectionView, for indexPath: IndexPath) -> UICollectionViewCell {
         let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "favoriteArtistCell", for: indexPath) as! CustomCollectionViewCell
-        if let data = artist.image_data {
-            if let image = UIImage(data: data){
-                cell.imageView.image = image
-            }
+        if let data = artist.image_data, let image = UIImage(data: data) {
+            cell.imageView.image = image
         }
         cell.nameLabel.text = artist.name
         return cell

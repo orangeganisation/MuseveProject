@@ -6,10 +6,10 @@
 //  Copyright © 2019 Андрей Романюк. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
-class CustomMapView: MKMapView {
+final class CustomMapView: MKMapView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
