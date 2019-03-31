@@ -32,7 +32,13 @@ final class CustomCollectionViewCell: UICollectionViewCell {
             imageView.clipsToBounds = true
         }
     }
-    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var nameLabel: UILabel! {
+        didSet {
+            nameLabel.clipsToBounds = true
+            nameLabel.layer.cornerRadius = 10
+            nameLabel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        }
+    }
     @IBOutlet private weak var checkedImage: UIImageView! {
         didSet {
             checkedImage.image = checkedImage.image?.withRenderingMode( .alwaysTemplate)
