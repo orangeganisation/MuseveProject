@@ -11,29 +11,24 @@ import UIKit
 
 final class Alerts {
     
-    static func presentConnectionAlert(viewController: UIViewController){
-        let alert = UIAlertController(title: NSLocalizedString("Internet Connection", comment: ""), message: NSLocalizedString("There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.", comment: ""), preferredStyle: .alert)
+    private static let dataLoadingFailed = NSLocalizedString("Failed to load data. Please, try again later.", comment: "")
+    private static let internetProblems = NSLocalizedString("There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.", comment: "")
+    static let settingsUrl = "App-Prefs:"
+    
+    static func presentConnectionAlert(viewController: UIViewController) {
+        let alert = UIAlertController(title: NSLocalizedString("Internet Connection", comment: ""), message: internetProblems, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
-            UIApplication.shared.open(URL(string: "App-Prefs:")!)
+            UIApplication.shared.open(URL(string: settingsUrl)!)
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController.present(alert, animated: true)
     }
     
     
-    static func presentFailedDataLoadingAlert(viewController: UIViewController){
-        let alert = UIAlertController(title: NSLocalizedString("Data Loading", comment: ""), message: StringConstants.AlertsStrings.dataLoadingFailed, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.ok, style: .cancel, handler: nil))
-        viewController.present(alert, animated: true, completion: nil)
-    }
-    
-    static func presentLocationServicesAlert(viewController: UIViewController) {
-        let alert = UIAlertController(title: NSLocalizedString("Location Services", comment: ""), message: StringConstants.AlertsStrings.locationFailed, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
-            UIApplication.shared.open(URL(string: "App-Prefs:")!)
-        }))
-        viewController.present(alert, animated: true, completion: nil)
+    static func presentFailedDataLoadingAlert(viewController: UIViewController) {
+        let alert = UIAlertController(title: NSLocalizedString("Data Loading", comment: ""), message: dataLoadingFailed, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.ok, style: .cancel))
+        viewController.present(alert, animated: true)
     }
     
 }

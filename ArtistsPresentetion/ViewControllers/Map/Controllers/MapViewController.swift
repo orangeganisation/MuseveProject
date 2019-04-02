@@ -11,11 +11,12 @@ import CoreLocation
 import MapKit
 import UIKit
 
-final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate {
+final class MapViewController: UIViewController {
     
     // MARK: - Vars
     private var locationManager: CLLocationManager?
     private var currentLocation: MKUserLocation?
+    private let dataStore = DataStore.shared
     
     // MARK: - Outlets
     @IBOutlet private weak var locationButton: UIButton!
@@ -31,7 +32,7 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
     
     
     // MARK: - MapActions
-    @IBAction func finduserLocation(_ sender: Any) {
+    @IBAction func showUserLocation(_ sender: UIButton) {
         if let location = currentLocation {
             let region = MKCoordinateRegion (
                 center: location.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
@@ -40,9 +41,16 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
                 locationButton.setImage(imageFilled, for: .normal)
             }
         } else {
-            Alerts.presentLocationServicesAlert(viewController: self)
+            let locationFailed = NSLocalizedString("Turn On Location Services to allow \"Museve\" to determine Your location:\nSettings->Privacy->Location Services", comment: "")
+            let alert = UIAlertController(title: NSLocalizedString("Location Services", comment: ""), message: locationFailed, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel))
+            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
+                UIApplication.shared.open(URL(string: Alerts.settingsUrl)!)
+            }))
+            present(alert, animated: true)
         }
     }
+    
     
     
     @IBAction func changeMapType(_ sender: UISegmentedControl) {
@@ -58,10 +66,6 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
     
     
     // MARK: - ViewController
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         myMapView.removeAnnotations(myMapView.annotations)
@@ -88,24 +92,22 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
             if let latitude = event.getVenue()?.getLatitude(), let longtitude = event.getVenue()?.getLongtitude() {
                 let mark = CustomPointAnnotation()
                 mark.title = event.getVenue()?.getName()
-                mark.subtitle = event.getDescription() ?? "There is no description"
-                mark.coordinate = CLLocationCoordinate2D(latitude: Double(latitude)!, longitude: Double(longtitude)!)
-                let dateFormatterGet = DateFormatter()
-                dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                if let dateString = event.getDatetime() {
-                    let date = dateFormatterGet.date(from: dateString)!
-                    let calendar = Calendar.current
-                    let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
-                    mark.setDate(date: "\(date.monthAsString()) \(components.day!), \(components.year!)")
+                if let latitude = Double(latitude), let longtitude = Double(longtitude) {
+                    mark.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longtitude)
+                }
+                if let eventDate = event.getDatetime() {
+                    mark.setDate(date: eventDate)
                 }
                 mark.setLocation(location: "")
                 var noRegionAppend = ""
-                if event.getVenue()?.getRegion() != nil && event.getVenue()?.getRegion() != "" {
-                    noRegionAppend = ", "
+                if let eventVenue = event.getVenue() {
+                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getCountry() ?? ""), ")
+                    if let eventRegion = event.getVenue()?.getRegion() , !eventRegion.isEmpty {
+                        noRegionAppend = ", "
+                    }
+                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getRegion() ?? "")\(noRegionAppend)")
+                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getCity() ?? "")")
                 }
-                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getCountry() ?? ""), ")
-                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getRegion() ?? "")\(noRegionAppend)")
-                mark.setLocation(location: (mark.getLocation() ?? "") + "\(event.getVenue()?.getCity() ?? "")")
                 if let lineUp = event.getLineup() {
                     var lineUpString = String()
                     for participant in lineUp {
@@ -118,8 +120,14 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
                     mark.setLineUp(lineUp: lineUpString)
                 }
                 myMapView.addAnnotation(mark)
-                if presentingEvents.count == 1 {
-                    completion(Double(latitude)!, Double(longtitude)!)
+                if dataStore.needSetCenterMap {
+                    DataStore.shared.needSetCenterMap = false
+                    if let latitudeCoordinates = presentingEvents.last?.getVenue()?.getLatitude(),
+                        let lastLatitude = Double(latitudeCoordinates),
+                        let longtitudeCoordinates = presentingEvents.last?.getVenue()?.getLongtitude(),
+                        let lastLongtitude = Double(longtitudeCoordinates) {
+                        completion(lastLatitude, lastLongtitude)
+                    }
                 }
             }
         }
@@ -127,11 +135,11 @@ final class MapViewController: UIViewController, MKMapViewDelegate, UIPopoverPre
 }
 
 // MARK: - MapViewControllerExtension
-extension MapViewController{
+extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate
         userLocation: MKUserLocation) {
         currentLocation = userLocation
-        if DataStore.shared.needSetCenterMap {
+        if dataStore.needSetCenterMap {
             DataStore.shared.needSetCenterMap = false
             if let userLocation = mapView.userLocation.location?.coordinate {
                 mapView.setCenter(userLocation, animated: true)
@@ -149,7 +157,8 @@ extension MapViewController{
         if !annotation.isEqual(mapView.userLocation) {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
             annotationView.canShowCallout = true
-            if CoreDataManager.instance.objectIsInDataBase(objectName: (DataStore.shared.currentEventsArtist?.name)!, forEntity: "FavoriteArtist") {
+            let name = dataStore.presentingOnMapArtist.getName()
+            if CoreDataManager.instance.objectIsInDataBase(objectName: name, forEntity: StringConstants.Favorites.entity) {
                 annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
             } else {
                 annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)
@@ -162,15 +171,17 @@ extension MapViewController{
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation as? CustomPointAnnotation, !annotation.isEqual(mapView.userLocation) {
-            let dateLabelText = dateLabel.text!
-            dateLabel.text!.removeSubrange(dateLabelText.index(dateLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-            let locationLabelText = locationLabel.text!
-            locationLabel.text!.removeSubrange(locationLabelText.index(locationLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-            let lineupLabelText = lineupLabel.text!
-            lineupLabel.text!.removeSubrange(lineupLabelText.index(lineupLabelText.firstIndex(of: ":")!, offsetBy: 2)...)
-            (annotationView.subviews[0] as! UILabel).text!.append(annotation.getDate() ?? "no information")
-            (annotationView.subviews[1] as! UILabel).text!.append((annotation.getLocation() ?? "no information"))
-            (annotationView.subviews[2] as! UILabel).text!.append((annotation.getLineUp() ?? "no information"))
+            if let dateLabelText = dateLabel.text, let dateIndex = dateLabelText.firstIndex(of: ":"),
+                let locationLabelText = locationLabel.text, let locationIndex = locationLabelText.firstIndex(of: ":"),
+                let lineupLabelText = lineupLabel.text, let lineUpIndex = lineupLabelText.firstIndex(of: ":") {
+                dateLabel.text?.removeSubrange(dateLabelText.index(dateIndex, offsetBy: 2)...)
+                locationLabel.text?.removeSubrange(locationLabelText.index(locationIndex, offsetBy: 2)...)
+                lineupLabel.text?.removeSubrange(lineupLabelText.index(lineUpIndex, offsetBy: 2)...)
+            }
+            let noInfo = NSLocalizedString("no information", comment: "")
+            (annotationView.subviews[0] as? UILabel)?.text?.append(annotation.getDate() ?? noInfo)
+            (annotationView.subviews[1] as? UILabel)?.text?.append((annotation.getLocation() ?? noInfo))
+            (annotationView.subviews[2] as? UILabel)?.text?.append((annotation.getLineUp() ?? noInfo))
             view.detailCalloutAccessoryView = annotationView
             annotationView.isHidden = false
         }

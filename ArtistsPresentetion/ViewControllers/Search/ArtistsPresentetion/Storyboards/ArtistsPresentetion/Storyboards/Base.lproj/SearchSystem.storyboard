@@ -27,7 +27,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABk-ap-Py2">
                                 <rect key="frame" x="157" y="321.5" width="61" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="textColor" red="0.91677902918781728" green="0.91677902918781728" blue="0.91677902918781728" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Wl6-8N-0gl">
@@ -37,25 +37,23 @@
                             <view hidden="YES" alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rio-lK-gAT">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="07g-AG-1Nc">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="07g-AG-1Nc">
                                         <rect key="frame" x="15" y="10" width="345" height="345"/>
                                         <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="250" constant="400" id="YGu-ZA-oNx"/>
                                             <constraint firstAttribute="width" secondItem="07g-AG-1Nc" secondAttribute="height" multiplier="1:1" id="nGM-FJ-69g"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="15"/>
-                                        </userDefinedRuntimeAttributes>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="artist's name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Bo-5w-odk">
-                                        <rect key="frame" x="135.5" y="363" width="104" height="20.5"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="artist's name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Bo-5w-odk">
+                                        <rect key="frame" x="15" y="355" width="345" height="20.5"/>
+                                        <color key="backgroundColor" red="0.14580052569923871" green="0.14945512419023377" blue="0.16940546761914554" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                        <color key="textColor" red="0.76426905389999999" green="0.65781307219999996" blue="0.70588761570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="textColor" red="0.97453997461928932" green="0.97453997461928932" blue="0.97453997461928932" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Ush-i1-s2h">
-                                        <rect key="frame" x="16" y="399.5" width="343" height="187.5"/>
+                                        <rect key="frame" x="16" y="391.5" width="343" height="195.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="999" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1El-fO-u3K">
                                                 <rect key="frame" x="0.0" y="0.0" width="71" height="71"/>
@@ -117,7 +115,7 @@
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </stackView>
                                     <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n65-DW-OxQ">
-                                        <rect key="frame" x="148.5" y="283" width="78" height="50"/>
+                                        <rect key="frame" x="148.5" y="275" width="78" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLs-AC-e0Z">
                                                 <rect key="frame" x="3" y="26" width="72" height="24"/>
@@ -154,9 +152,10 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="0.02" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="4Bo-5w-odk" firstAttribute="centerX" secondItem="Rio-lK-gAT" secondAttribute="centerX" id="2Jo-8T-8Km"/>
+                                    <constraint firstItem="4Bo-5w-odk" firstAttribute="width" secondItem="07g-AG-1Nc" secondAttribute="width" id="3aG-wA-2P6"/>
                                     <constraint firstItem="Ush-i1-s2h" firstAttribute="top" secondItem="4Bo-5w-odk" secondAttribute="bottom" constant="16" id="9tK-Zd-DmW"/>
                                     <constraint firstItem="07g-AG-1Nc" firstAttribute="top" secondItem="Rio-lK-gAT" secondAttribute="top" constant="10" id="F4q-AS-H2c"/>
-                                    <constraint firstItem="4Bo-5w-odk" firstAttribute="top" secondItem="07g-AG-1Nc" secondAttribute="bottom" constant="8" id="Gnt-2b-ILK"/>
+                                    <constraint firstItem="4Bo-5w-odk" firstAttribute="top" secondItem="07g-AG-1Nc" secondAttribute="bottom" id="Gnt-2b-ILK"/>
                                     <constraint firstAttribute="bottom" secondItem="Ush-i1-s2h" secondAttribute="bottom" constant="16" id="hPR-6l-HsJ"/>
                                     <constraint firstItem="07g-AG-1Nc" firstAttribute="leading" secondItem="Rio-lK-gAT" secondAttribute="leading" constant="15" id="iNc-Hr-KQy"/>
                                     <constraint firstItem="Ush-i1-s2h" firstAttribute="leading" secondItem="Rio-lK-gAT" secondAttribute="leading" constant="16" id="pCr-lI-coS"/>

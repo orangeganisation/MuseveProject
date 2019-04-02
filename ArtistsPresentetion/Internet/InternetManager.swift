@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SafariServices
 import SystemConfiguration
 import UIKit
 
@@ -15,6 +14,9 @@ final class InternetDataManager {
     
     private var sessionTaskIsLoading = false
     static let shared = InternetDataManager()
+    private let scheme = "https"
+    private let getArtistUrl = "rest.bandsintown.com"
+    private let path = "/artists/"
     
     public func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
@@ -39,71 +41,28 @@ final class InternetDataManager {
         return (isReachable && !needsConnection)
     }
     
-    static func openSafariPage(withUrl url: URL, byController viewController: UIViewController) {
-        let safari = SFSafariViewController(url: url)
-        safari.preferredBarTintColor = #colorLiteral(red: 0.1660079956, green: 0.1598443687, blue: 0.1949053109, alpha: 1)
-        viewController.present(safari, animated: true, completion: nil)
-    }
-    
-    func getArtist(viewController: UIViewController, searchText: String, completion: @escaping (_ error: Error?, _ artist: Artist?) -> Void) {
+    func getArtist(searchText: String, completion: @escaping (_ error: Error?, _ artist: Artist?) -> Void) {
         if !sessionTaskIsLoading {
             sessionTaskIsLoading = true
-            if self.isConnectedToNetwork() {
-                var components = URLComponents()
-                components.scheme = StringConstants.Urls.scheme
-                components.host = StringConstants.Urls.getArtistUrl
-                components.path = StringConstants.Urls.path + searchText
-                let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
-                components.queryItems = [appID]
-                if let url = components.url {
-                    let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
-                        self.sessionTaskIsLoading = false
-                        let currentSearchText = DataStore.shared.currentSearchText
-                        if searchText != currentSearchText && currentSearchText.count > 2 {
-                            self.getArtist(viewController: viewController, searchText: currentSearchText, completion: completion)
-                        } else {
-                            if error != nil {
-                                completion(error, nil)
-                            } else {
-                            if let data = artistData, let artist = try? JSONDecoder().decode(Artist.self, from: data) {
-                                    completion(nil, artist)
-                                } else {
-                                    completion(nil, nil)
-                                }
-                            }
-                        }
-                    }
-                    task.resume()
-                }
-            } else {
-                Alerts.presentConnectionAlert(viewController: viewController)
-            }
-        }
-    }
-    
-    func getEvents(forArtist name: String, forDate date: String?, viewController: UIViewController, completion: @escaping (_ error: Error?, _ events: [Event]?) -> Void) {
-        if self.isConnectedToNetwork() {
             var components = URLComponents()
-            components.scheme = StringConstants.Urls.scheme
-            components.host = StringConstants.Urls.getArtistUrl
-            components.path = StringConstants.Urls.path + name + "/events"
+            components.scheme = scheme
+            components.host = getArtistUrl
+            components.path = path + searchText
             let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
             components.queryItems = [appID]
-            if let sortingDate = date {
-               let sortingItem = URLQueryItem(name: "date", value: sortingDate)
-                components.queryItems?.append(sortingItem)
-            }
             if let url = components.url {
-                let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                    if error != nil {
-                        completion(error, nil)
+                let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
+                    self.sessionTaskIsLoading = false
+                    let currentSearchText = DataStore.shared.currentSearchText
+                    if searchText != currentSearchText && currentSearchText.count > 2 {
+                        self.getArtist(searchText: currentSearchText, completion: completion)
                     } else {
-                        if let eventsData = data {
-                            do {
-                                let events = try JSONDecoder().decode([Event].self, from: eventsData)
-                                completion(nil, events)
-                            } catch {
-                                print(error)
+                        if error != nil {
+                            completion(error, nil)
+                        } else {
+                            if let data = artistData, let artist = try? JSONDecoder().decode(Artist.self, from: data) {
+                                completion(nil, artist)
+                            } else {
                                 completion(nil, nil)
                             }
                         }
@@ -111,8 +70,33 @@ final class InternetDataManager {
                 }
                 task.resume()
             }
-        } else {
-            Alerts.presentConnectionAlert(viewController: viewController)
+        }
+    }
+    
+    func getEvents(forArtist name: String, completion: @escaping (_ error: Error?, _ events: [Event]?) -> Void) {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = getArtistUrl
+        components.path = path + name + "/events"
+        let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
+        components.queryItems = [appID]
+        if let sortingDate = DataStore.shared.eventsFilter {
+            let sortingItem = URLQueryItem(name: "date", value: sortingDate)
+            components.queryItems?.append(sortingItem)
+        }
+        if let url = components.url {
+            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                if error != nil {
+                    completion(error, nil)
+                } else {
+                    if let eventsData = data, let events = try? JSONDecoder().decode([Event].self, from: eventsData) {
+                        completion(nil, events)
+                    } else {
+                        completion(nil, nil)
+                    }
+                }
+            }
+            task.resume()
         }
     }
 }

@@ -18,35 +18,23 @@ final class EventsTableViewCell: UITableViewCell {
     @IBOutlet private weak var cityLabel: UILabel!
     @IBOutlet private weak var placeNameLabel: UILabel!
     
-    static func configuredCell(of tableView: UITableView, for indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventsTableViewCell
-        let event = DataStore.shared.events[indexPath.row]
+    static func configuredCell(from cell: EventsTableViewCell, for indexPath: IndexPath) -> UITableViewCell {
+        let event = DataStore.shared.loadedEvents[indexPath.row]
         let venue = event.getVenue()
         cell.cityLabel.text = venue?.getCity()
         cell.countryLabel.text = venue?.getCountry()
         cell.placeNameLabel.text = venue?.getName()
-        var participants = ""
-        var shouldEnter = true
-        if let lineUp = event.getLineup() {
-            for participant in lineUp {
-                if shouldEnter {
-                    participants.append(participant)
-                    shouldEnter = false
-                } else {
-                    participants.append("\n\(participant)")
-                }
-            }
-        }
-        cell.participantsLabel.text = participants
+        cell.participantsLabel.text = event.getParticipants()
         let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
-        if let dateTime = event.getDatetime() {
-            let date = dateFormatter.date(from: dateTime)!
+        if let dateTime = event.getDatetime(), let date = dateFormatter.date(from: dateTime) {
             let calendar = Calendar.current
             let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
-            cell.dayLabel.text = String(components.day!)
-            cell.yearLabel.text = String(components.year!)
+            if let day = components.day, let year = components.year {
+                cell.dayLabel.text = String(day)
+                cell.yearLabel.text = String(year)
+            }
             cell.monthLabel.text = date.monthAsString()
         }
         return cell

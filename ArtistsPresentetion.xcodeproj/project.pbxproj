@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D10CA96E2252C64800F60CA0 /* ExtensionDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */; };
 		D1247C49222D94A00002D5FB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D1247C4B222D94A00002D5FB /* Localizable.strings */; };
 		D16851AC221FFD6100B2AD4F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AB221FFD6100B2AD4F /* Event.swift */; };
 		D16851AE222087EF00B2AD4F /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDate.swift; sourceTree = "<group>"; };
 		D1247C4A222D94A00002D5FB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; usesTabs = 0; };
 		D16851AB221FFD6100B2AD4F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 			children = (
 				D1B6DF4C22172BB800A0C910 /* Assets.xcassets */,
 				D1247C4B222D94A00002D5FB /* Localizable.strings */,
+				D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */,
 			);
 			path = AdditionalFiles;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 				D1B6DF4322172BB700A0C910 /* AppDelegate.swift in Sources */,
 				D1B6DF5F2217461100A0C910 /* FavoritesViewController.swift in Sources */,
 				D16851AC221FFD6100B2AD4F /* Event.swift in Sources */,
+				D10CA96E2252C64800F60CA0 /* ExtensionDate.swift in Sources */,
 				D1B6DF5A2217456000A0C910 /* MapViewController.swift in Sources */,
 				D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */,
 				D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */,

@@ -13,14 +13,14 @@ final class CoreDataManager {
     
     // MARK: - Vars
     static let instance = CoreDataManager()
+    var artistIsInDataBase = false
     
-    lazy var fetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchedResultsController
-        }() as NSFetchedResultsController<NSFetchRequestResult>
+        return NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        }()
     
     // MARK: - CoreDataManager
     lazy var persistentContainer: NSPersistentContainer = {
@@ -49,10 +49,11 @@ final class CoreDataManager {
     func objectIsInDataBase(objectName: String, forEntity entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         do {
-            let results = try persistentContainer.viewContext.fetch(fetchRequest)
-            for result in results as! [NSManagedObject] {
-                if (result.value(forKey: "name") as! String) == objectName {
-                    return true
+            if let results = try persistentContainer.viewContext.fetch(fetchRequest) as? [NSManagedObject] {
+                for result in results {
+                    if let resultName = result.value(forKey: "name") as? String, resultName == objectName {
+                        return true
+                    }
                 }
             }
         } catch {
@@ -66,10 +67,12 @@ final class CoreDataManager {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         do {
             let results = try persistentContainer.viewContext.fetch(fetchRequest)
-            for result in results as! [NSManagedObject] where (result.value(forKey: "name") as! String) == name {
-                persistentContainer.viewContext.delete(result)
-                CoreDataManager.instance.saveContext()
-                completion()
+            for result in results as! [NSManagedObject] {
+                if let resultName = result.value(forKey: "name") as? String, resultName == name {
+                    persistentContainer.viewContext.delete(result)
+                    CoreDataManager.instance.saveContext()
+                    completion()
+                }
             }
         } catch {
             print(error)

@@ -41,18 +41,16 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     }
     @IBOutlet private weak var checkedImage: UIImageView! {
         didSet {
-            checkedImage.image = checkedImage.image?.withRenderingMode( .alwaysTemplate)
             checkedImage.tintColor = #colorLiteral(red: 0.6219168305, green: 0.112661697, blue: 0.3066232204, alpha: 1)
         }
     }
     
-    static func configuredCell(of collectionView: UICollectionView, for indexPath: IndexPath) -> UICollectionViewCell {
-        let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as! FavoriteArtist
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "favoriteArtistCell", for: indexPath) as! CustomCollectionViewCell
-        if let data = artist.image_data, let image = UIImage(data: data) {
+    static func configuredCell(from cell: CustomCollectionViewCell, for indexPath: IndexPath) -> UICollectionViewCell {
+        let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as? FavoriteArtist
+        if let data = artist?.image_data, let image = UIImage(data: data) {
             cell.imageView.image = image
         }
-        cell.nameLabel.text = artist.name
+        cell.nameLabel.text = artist?.name
         return cell
     }
 }

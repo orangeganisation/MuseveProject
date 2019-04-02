@@ -21,43 +21,63 @@ struct Event: Codable {
     private var offers: [Offer]?
     
     func getID() -> String? {
-        return self.id
+        return id
     }
     func getArtistID() -> String? {
-        return self.artistID
+        return artistID
     }
-    func getUrl() -> String? {
-        return self.url
+    func getUrl() -> URL? {
+        if let url = url {
+            return URL(string: url)
+        } else {
+            return nil
+        }
     }
     func getOnSaleDatetime() -> String? {
-        return self.onSaleDatetime
+        return onSaleDatetime
     }
     func getDatetime() -> String? {
-        return self.datetime
+        return datetime
     }
     func getDescription() -> String? {
-        return self.description
+        return description
     }
     func getVenue() -> VenueData? {
-        return self.situation
+        return situation
     }
     func getLineup() -> [String]? {
-        return self.lineUp
+        return lineUp
     }
     func getOffers() -> [Offer]? {
-        return self.offers
+        return offers
+    }
+    
+    func getParticipants() -> String {
+        var participants = ""
+        var shouldEnter = true
+        if let lineUp = lineUp {
+            for participant in lineUp {
+                if shouldEnter {
+                    participants.append(participant)
+                    shouldEnter = false
+                } else {
+                    participants.append("\n\(participant)")
+                }
+            }
+        }
+        return participants
     }
     
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case id
         case artistID = "artist_id"
-        case url = "url"
+        case url
         case onSaleDatetime = "on_sale_datetime"
-        case datetime = "datetime"
-        case description = "discription"
+        case datetime
+        case description
         case situation = "venue"
         case lineUp = "lineup"
-        case offers = "offers"
+        case offers
     }
 }
 
@@ -71,22 +91,22 @@ struct VenueData: Codable {
     private var longitude: String?
     
     func getCountry() -> String? {
-        return self.country
+        return country
     }
     func getCity() -> String? {
-        return self.city
+        return city
     }
     func getLatitude() -> String? {
-        return self.latitude
+        return latitude
     }
     func getName() -> String? {
-        return self.name
+        return name
     }
     func getRegion() -> String? {
-        return self.region
+        return region
     }
     func getLongtitude() -> String? {
-        return self.longitude
+        return longitude
     }
 }
 
@@ -97,12 +117,12 @@ struct Offer: Codable {
     private var status: String?
     
     func getType() -> String? {
-        return self.type
+        return type
     }
     func getUrl() -> String? {
-        return self.url
+        return url
     }
     func getStatus() -> String? {
-        return self.status
+        return status
     }
 }

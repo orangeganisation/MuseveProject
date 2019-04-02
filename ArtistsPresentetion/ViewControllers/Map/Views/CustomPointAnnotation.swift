@@ -27,7 +27,13 @@ final class CustomPointAnnotation: MKPointAnnotation {
     }
     
     func setDate(date: String) {
-        self.date = date
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        if let settingDate = dateFormatterGet.date(from: date) {
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day, .hour], from: settingDate)
+            self.date = "\(settingDate.monthAsString()) \(components.day!), \(components.year!)"
+        }
     }
     
     func setLocation(location: String) {
