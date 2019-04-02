@@ -45,7 +45,7 @@ final class MapViewController: UIViewController {
             let alert = UIAlertController(title: NSLocalizedString("Location Services", comment: ""), message: locationFailed, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel))
             alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
-                UIApplication.shared.open(URL(string: Alerts.settingsUrl)!)
+                if let url = URL(string: Alerts.settingsUrl) { UIApplication.shared.open(url) }
             }))
             present(alert, animated: true)
         }

@@ -19,7 +19,7 @@ final class Alerts {
         let alert = UIAlertController(title: NSLocalizedString("Internet Connection", comment: ""), message: internetProblems, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
-            UIApplication.shared.open(URL(string: settingsUrl)!)
+            if let url = URL(string: settingsUrl) { UIApplication.shared.open(url) }
         }))
         viewController.present(alert, animated: true)
     }

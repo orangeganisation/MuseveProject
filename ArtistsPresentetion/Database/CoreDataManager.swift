@@ -66,12 +66,13 @@ final class CoreDataManager {
     func deleteObject(withName name: String, forEntity entity: String, completion: ()-> Void) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         do {
-            let results = try persistentContainer.viewContext.fetch(fetchRequest)
-            for result in results as! [NSManagedObject] {
-                if let resultName = result.value(forKey: "name") as? String, resultName == name {
-                    persistentContainer.viewContext.delete(result)
-                    CoreDataManager.instance.saveContext()
-                    completion()
+            if let results = try persistentContainer.viewContext.fetch(fetchRequest) as? [NSManagedObject] {
+                for result in results {
+                    if let resultName = result.value(forKey: "name") as? String, resultName == name {
+                        persistentContainer.viewContext.delete(result)
+                        CoreDataManager.instance.saveContext()
+                        completion()
+                    }
                 }
             }
         } catch {

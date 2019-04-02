@@ -21,13 +21,17 @@ final class EventsViewController: UIViewController {
     @IBOutlet private weak var eventsFilterSegment: UISegmentedControl! {
         didSet {
             for index in eventsFilterSegment.subviews.indices {
-                eventsFilterSegment.setTitle(NSLocalizedString(eventsFilterSegment.titleForSegment(at: index)!, comment: ""), forSegmentAt: index)
+                if let title = eventsFilterSegment.titleForSegment(at: index) {
+                    eventsFilterSegment.setTitle(NSLocalizedString(title, comment: ""), forSegmentAt: index)
+                }
             }
         }
     }
     @IBOutlet private weak var navigationBar: UINavigationItem! {
         didSet {
-            navigationBar.title = NSLocalizedString(navigationBar.title!, comment: "")
+            if let title = navigationBar.title {
+                navigationBar.title = NSLocalizedString(title, comment: "")
+            }
         }
     }
     
