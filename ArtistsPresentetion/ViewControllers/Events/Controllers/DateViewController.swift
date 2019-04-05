@@ -10,6 +10,9 @@ import UIKit
 
 final class DateViewController: UIViewController {
 
+    // MARK: - Vars & Lets
+    private let dataStore = DataStore.shared
+    
     // MARK: - Outlets
     @IBOutlet private weak var fromDatePicker: UIDatePicker!
     @IBOutlet private weak var toDatePicker: UIDatePicker!
@@ -20,22 +23,22 @@ final class DateViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func doneAction(_ sender: UIButton) {
-        DataStore.shared.setEventsFilterDate(fromDate: fromDatePicker.date, toDate: toDatePicker.date)
-        DataStore.shared.shouldUpdateEvents = true
+        dataStore.setEventsFilterDate(fromDate: fromDatePicker.date, toDate: toDatePicker.date)
+        dataStore.shouldUpdateEvents = true
         dismiss(animated: true)
     }
     
     @IBAction func cancelAction(_ sender: UIButton) {
-        DataStore.shared.shouldUpdateEvents = false
+        dataStore.shouldUpdateEvents = false
         dismiss(animated: true)
     }
     
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        fromDateLabel.text = NSLocalizedString("From:", comment: "")
-        toDateLabel.text = NSLocalizedString("To:", comment: "")
-        cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: .normal)
-        doneButton.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
+        fromDateLabel.text = "From:".localized()
+        toDateLabel.text = "To:".localized()
+        cancelButton.setTitle(StringConstant.cancel, for: .normal)
+        doneButton.setTitle("Done".localized(), for: .normal)
     }
 }

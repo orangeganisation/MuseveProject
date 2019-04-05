@@ -11,38 +11,33 @@ import UIKit
 
 final class FavoritesViewController: UIViewController {
     
-    // MARK: - Vars
+    // MARK: - Vars & Lets
+    private let coreDataInstance = CoreDataManager.instance
+    private let dataStore = DataStore.shared
     private var removingList = [String]() {
         didSet {
-            let multiplySelectionIsAllowed = DataStore.shared.multiplySelectionIsAllowed
-            if removingList.count != 0 && multiplySelectionIsAllowed {
-                navigationBarTitle.title = "\(NSLocalizedString("Selected artists:", comment: "")) \(removingList.count)"
-            } else if multiplySelectionIsAllowed {
-                navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
-            }
+            navigationBarTitle.title = !removingList.isEmpty ?  "\("Selected artists:".localized()) \(removingList.count)" : "Select artists".localized()
         }
     }
-    private var selectedArtistName = String()
     private var numberOfFavoriteArtists: Int {
-        if let sections = CoreDataManager.instance.fetchedResultsController.sections {
-            return sections[0].numberOfObjects
+        if let section = coreDataInstance.fetchedResultsController.sections?.first {
+            return section.numberOfObjects
         } else {
             return 0
         }
     }
-    private let coreDataInstance = CoreDataManager.instance
     
     // MARK: - Outlets
     @IBOutlet private weak var favoriteCollectionView: UICollectionView!
     @IBOutlet private weak var haveNoFavoritesLabel: UILabel!
     @IBOutlet private weak var editButton: UIBarButtonItem!
+    @IBOutlet private weak var cancelButton: UIBarButtonItem!
+    @IBOutlet private weak var navigationBarTitle: UINavigationItem!
     @IBOutlet private weak var trashButton: UIBarButtonItem! {
         didSet {
             trashButton.isEnabled = !removingList.isEmpty
         }
     }
-    @IBOutlet private weak var cancelButton: UIBarButtonItem!
-    @IBOutlet private weak var navigationBarTitle: UINavigationItem!
     
     
     // MARK: - Actions
@@ -51,52 +46,40 @@ final class FavoritesViewController: UIViewController {
         navigationItem.setRightBarButton(editButton, animated: true)
         deselectAllArtists()
         favoriteCollectionView.allowsMultipleSelection = false
-        navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
+        navigationBarTitle.title = "Favorites".localized()
     }
     
     @IBAction func trashAction(_ sender: UIBarButtonItem) {
         if favoriteCollectionView.indexPathsForSelectedItems != nil {
-            var removingArtistString = NSLocalizedString("artist", comment: "")
-            if removingList.count > 1 && !(2...4).contains((removingList.count % 10)) {
-                removingArtistString = NSLocalizedString("artists", comment: "")
-            }
-            let alert = UIAlertController(title: NSLocalizedString("Removing", comment: ""), message: "\(NSLocalizedString("Remove", comment: "")) \(removingList.count) \(removingArtistString)?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Remove", comment: ""), style: .destructive, handler: { (action) in
+            let removingArtistString = removingList.count == 1 ? "artist".localized() : "artists".localized()
+            let alert = UIAlertController(title: "Removing".localized(), message: "\("Remove".localized()) \(removingList.count) \(removingArtistString)?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Remove".localized(), style: .destructive, handler: { (action) in
                 for artistName in self.removingList {
-                    CoreDataManager.instance.deleteObject(withName: artistName, forEntity: StringConstants.Favorites.entity, completion: {
+                    self.coreDataInstance.deleteObject(withName: artistName, forEntity: StringConstant.favoriteArtistEntity, completion: {
                         do {
                             try self.coreDataInstance.fetchedResultsController.performFetch()
                         } catch {
                             print(error)
                         }
-                        if let currentArtist = DataStore.shared.currentFoundArtist, artistName == currentArtist.getName() {
-                            CoreDataManager.instance.artistIsInDataBase = false
+                        if let currentArtist = self.dataStore.currentFoundArtist, artistName == currentArtist.name {
+                            self.coreDataInstance.artistIsInDataBase = false
                         }
                     })
                 }
                 if let selectedIndeces = self.favoriteCollectionView.indexPathsForSelectedItems {
                     self.deselectAllArtists()
                     self.favoriteCollectionView.deleteItems(at: selectedIndeces)
-                    CoreDataManager.instance.saveContext()
+                    self.coreDataInstance.saveContext()
                 }
-                self.trashButton.isEnabled = false
-                self.navigationItem.leftBarButtonItem = nil
-                self.navigationItem.setRightBarButton(self.editButton, animated: true)
-                self.navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
-                self.favoriteCollectionView.allowsMultipleSelection = false
-                if self.numberOfFavoriteArtists == 0 {
-                    self.editButton.isEnabled = false
-                    self.haveNoFavoritesLabel.isHidden = false
-                    self.favoriteCollectionView.isHidden = true
-                }
+                self.configureAfterRemovingFavorites()
             }))
-            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel))
+            alert.addAction(UIAlertAction(title: StringConstant.cancel, style: .cancel))
             present(alert, animated: true)
         }
     }
     
     @IBAction func editAction(_ sender: UIBarButtonItem) {
-        navigationBarTitle.title = NSLocalizedString("Select artists", comment: "")
+        navigationBarTitle.title = "Select artists".localized()
         navigationItem.setLeftBarButton(cancelButton, animated: true)
         navigationItem.setRightBarButton(trashButton, animated: true)
         favoriteCollectionView.allowsMultipleSelection = true
@@ -105,12 +88,6 @@ final class FavoritesViewController: UIViewController {
     // MARK: - ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        let width = (view.frame.size.width - 6.0) / 2.0
-        let height = width + width / 10
-        if let layout = favoriteCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.itemSize.width = width
-            layout.itemSize.height = height
-        }
         navigationItem.setRightBarButton(editButton, animated: true)
     }
     
@@ -119,14 +96,14 @@ final class FavoritesViewController: UIViewController {
         navigationItem.setLeftBarButton(nil, animated: true)
         navigationItem.setRightBarButton(editButton, animated: true)
         deselectAllArtists()
-        navigationBarTitle.title = NSLocalizedString("Favorites", comment: "")
+        navigationBarTitle.title = "Favorites".localized()
         favoriteCollectionView.allowsMultipleSelection = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         do {
-            try CoreDataManager.instance.fetchedResultsController.performFetch()
+            try coreDataInstance.fetchedResultsController.performFetch()
             favoriteCollectionView.reloadData()
         } catch {
             print(error)
@@ -149,6 +126,19 @@ final class FavoritesViewController: UIViewController {
     }
     
     // MARK: - MyTools
+    func configureAfterRemovingFavorites() {
+        trashButton.isEnabled = false
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.setRightBarButton(self.editButton, animated: true)
+        navigationBarTitle.title = "Favorites".localized()
+        favoriteCollectionView.allowsMultipleSelection = false
+        if numberOfFavoriteArtists == 0 {
+            editButton.isEnabled = false
+            haveNoFavoritesLabel.isHidden = false
+            favoriteCollectionView.isHidden = true
+        }
+    }
+    
     func deselectAllArtists(){
         if let indeces = favoriteCollectionView.indexPathsForSelectedItems {
             for index in indeces {
@@ -160,26 +150,34 @@ final class FavoritesViewController: UIViewController {
 }
 
 // MARK: - Extension
+extension FavoritesViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return numberOfFavoriteArtists
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "favoriteArtistCell", for: indexPath) as? CustomCollectionViewCell else { return UICollectionViewCell() }
+        let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as? FavoriteArtist
+        cell.configureCell(byData: artist)
+        return cell
+    }
+}
+
 extension FavoritesViewController: UICollectionViewDelegate {
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        UIView.animate(withDuration: 0.3) {
-            if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
-                cell.transform = .init(scaleX: 0.95, y: 0.95)
-            }
+        if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
+            cell.focusCell(withTransform: .init(scaleX: 0.95, y: FloatConstant.cellScale))
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        UIView.animate(withDuration: 0.3) {
-            if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
-                cell.transform = .identity
-            }
+        if let cell = collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell {
+            cell.focusCell(withTransform: .identity)
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return numberOfFavoriteArtists
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -190,13 +188,12 @@ extension FavoritesViewController: UICollectionViewDelegate {
             }
         } else {
             let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
-            if let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController") as? EventsViewController {
+            if let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: StringConstant.eventsViewController) as? EventsViewController {
                 if let artist = coreDataInstance.fetchedResultsController.object(at: indexPath) as? FavoriteArtist,
                     let name = artist.name, let id = artist.id {
-                    selectedArtistName = name
-                    DataStore.shared.presentingOnMapArtist.setName(name: name)
-                    DataStore.shared.presentingOnMapArtist.setUpcomingEventsCount(count: Int(artist.upcoming_events_count))
-                    DataStore.shared.presentingOnMapArtist.setId(id: id)
+                    dataStore.presentingOnMapArtist.name = name
+                    dataStore.presentingOnMapArtist.upcomingEventsCount = Int(artist.upcomingEventsCount)
+                    dataStore.presentingOnMapArtist.id = id
                 }
                 navigationController?.pushViewController(eventsViewController, animated: true)
             }
@@ -216,15 +213,14 @@ extension FavoritesViewController: UICollectionViewDelegate {
                     index += 1
                 }
             }
-        } else {
-            selectedArtistName = ""
         }
     }
 }
 
-extension FavoritesViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "favoriteArtistCell", for: indexPath) as? CustomCollectionViewCell else { return UICollectionViewCell() }
-        return CustomCollectionViewCell.configuredCell(from: cell, for: indexPath)
+extension FavoritesViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidthAndHeight = (view.frame.size.width - 18) / 2.0
+        return CGSize(width: cellWidthAndHeight, height: cellWidthAndHeight)
     }
 }

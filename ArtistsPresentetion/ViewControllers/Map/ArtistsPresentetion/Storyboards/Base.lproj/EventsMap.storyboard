@@ -63,8 +63,8 @@
                                     <action selector="showUserLocation:" destination="z2g-HB-YlE" eventType="touchUpInside" id="nON-Y4-4Em"/>
                                 </connections>
                             </button>
-                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="uTT-v6-iVo">
-                                <rect key="frame" x="150.5" y="332" width="74.5" height="67.5"/>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="uTT-v6-iVo">
+                                <rect key="frame" x="150.5" y="300" width="74.5" height="67.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JwL-m4-VL0">
                                         <rect key="frame" x="0.0" y="0.0" width="45" height="20.5"/>
@@ -97,7 +97,7 @@
                             <constraint firstItem="S5L-ru-DvF" firstAttribute="top" secondItem="N7U-dq-jQa" secondAttribute="bottom" id="Qqx-qN-khZ"/>
                             <constraint firstItem="N7U-dq-jQa" firstAttribute="trailing" secondItem="c83-R4-SZJ" secondAttribute="trailing" id="bUJ-rB-Y1t"/>
                             <constraint firstItem="S5L-ru-DvF" firstAttribute="leading" secondItem="c83-R4-SZJ" secondAttribute="leading" id="cJt-PF-QE3"/>
-                            <constraint firstItem="uTT-v6-iVo" firstAttribute="centerY" secondItem="5W6-F2-2ko" secondAttribute="centerY" constant="32.25" id="gWo-jn-3Me"/>
+                            <constraint firstItem="uTT-v6-iVo" firstAttribute="centerY" secondItem="5W6-F2-2ko" secondAttribute="centerY" id="gWo-jn-3Me"/>
                             <constraint firstItem="N7U-dq-jQa" firstAttribute="top" secondItem="wk6-k8-GPi" secondAttribute="bottom" id="nDw-WO-eEl"/>
                             <constraint firstItem="wk6-k8-GPi" firstAttribute="top" secondItem="5W6-F2-2ko" secondAttribute="top" id="q27-4g-U48"/>
                             <constraint firstAttribute="trailing" secondItem="wk6-k8-GPi" secondAttribute="trailing" id="qfz-JH-mIB"/>
@@ -108,7 +108,6 @@
                         <viewLayoutGuide key="safeArea" id="c83-R4-SZJ"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="tabBarMapIcon" id="I1Y-hg-0VR"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="annotationView" destination="uTT-v6-iVo" id="hjK-iY-3rH"/>
                         <outlet property="dateLabel" destination="JwL-m4-VL0" id="DZJ-6e-eX5"/>

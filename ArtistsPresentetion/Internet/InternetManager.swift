@@ -12,8 +12,9 @@ import UIKit
 
 final class InternetDataManager {
     
-    private var sessionTaskIsLoading = false
     static let shared = InternetDataManager()
+    private let dataStore = DataStore.shared
+    private var sessionTaskIsLoading = false
     private let scheme = "https"
     private let getArtistUrl = "rest.bandsintown.com"
     private let path = "/artists/"
@@ -48,12 +49,12 @@ final class InternetDataManager {
             components.scheme = scheme
             components.host = getArtistUrl
             components.path = path + searchText
-            let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
+            let appID = URLQueryItem(name: "app_id", value: StringConstant.appName)
             components.queryItems = [appID]
             if let url = components.url {
                 let task = URLSession.shared.dataTask(with: url) {(artistData, response, error) in
                     self.sessionTaskIsLoading = false
-                    let currentSearchText = DataStore.shared.currentSearchText
+                    let currentSearchText = self.dataStore.currentSearchText
                     if searchText != currentSearchText && currentSearchText.count > 2 {
                         self.getArtist(searchText: currentSearchText, completion: completion)
                     } else {
@@ -78,9 +79,9 @@ final class InternetDataManager {
         components.scheme = scheme
         components.host = getArtistUrl
         components.path = path + name + "/events"
-        let appID = URLQueryItem(name: "app_id", value: StringConstants.App.appName)
+        let appID = URLQueryItem(name: "app_id", value: StringConstant.appName)
         components.queryItems = [appID]
-        if let sortingDate = DataStore.shared.eventsFilter {
+        if let sortingDate = dataStore.eventsFilter {
             let sortingItem = URLQueryItem(name: "date", value: sortingDate)
             components.queryItems?.append(sortingItem)
         }

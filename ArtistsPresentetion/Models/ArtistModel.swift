@@ -10,57 +10,47 @@ import Foundation
 
 struct Artist: Codable {
     
-    private var id = String()
-    private var name = String()
-    private var thumbURL = String()
-    private var mbID = String()
+    var id = ""
+    var name = ""
+    private var url = ""
+    private var thumbURL: String?
+    var mbID = ""
     private var facebookProfileURL: String?
-    private var imageURL = String()
-    private var trackerCount = Int()
-    private var upcomingEventsCount = Int()
-    private var url = String()
+    private var imageURL = ""
+    var trackerCount = 0
+    var upcomingEventsCount = 0
     
-    func getName() -> String {
-        return name
+    func getUrl() -> URL? {
+        return URL(string: url)
     }
-    mutating func setName(name: String) {
-        self.name = name
-    }
-    func getImageUrl() -> String {
-        return imageURL
-    }
-    func getThumbUrl() -> String {
-        return thumbURL
-    }
-    func getFacebookUrl() -> URL? {
-        if let facebookProfileURL = facebookProfileURL {
-            return URL(string: facebookProfileURL)
+    
+    func getThumbUrl() -> URL? {
+        if let thumbUrl = thumbURL {
+            return URL(string: thumbUrl)
         } else {
             return nil
         }
     }
-    func getUpcomingEventCount() -> Int {
-        return upcomingEventsCount
+    
+    func getFacebookUrl() -> URL? {
+        if let facebookProfileUrl = facebookProfileURL {
+            return URL(string: facebookProfileUrl)
+        } else {
+            return nil
+        }
     }
-    mutating func setUpcomingEventsCount(count: Int) {
-        self.upcomingEventsCount = count
-    }
-    func getID() -> String {
-        return id
-    }
-    mutating func setId(id: String) {
-        self.id = id
+    
+    func getImageUrl() -> URL? {
+        return URL(string: imageURL)
     }
     
     enum CodingKeys: String, CodingKey {
+        case id, name, url
         case thumbURL = "thumb_url"
         case mbID = "mbid"
-        case name
         case facebookProfileURL = "facebook_page_url"
         case imageURL = "image_url"
         case trackerCount = "tracker_count"
         case upcomingEventsCount = "upcoming_event_count"
-        case id
-        case url
     }
 }

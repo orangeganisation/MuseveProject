@@ -12,41 +12,53 @@ import UIKit
 
 final class SearchViewController: UIViewController {
 
-    // MARK: - Vars
-    private let context = CoreDataManager.instance.persistentContainer.viewContext
-    private var foundArtist: Artist? {
-        return DataStore.shared.currentFoundArtist
-    }
-    enum addAndRemoveButtonImage {
+    // MARK: - Enums
+    enum AddButtonImage {
         case add
         case remove
+        
         var image: UIImage {
             switch self {
-                case .add: return UIImage(named: "addButton.svg")!
-                case .remove: return UIImage(named: "remove.svg")!
+            case .add: return UIImage(named: "addButton.svg")!
+            case .remove: return UIImage(named: "remove.svg")!
             }
         }
     }
-    enum dbResultButtonImage {
+    enum SaveButtonImage {
         case added
         case removed
+        
         var image: UIImage {
             switch self {
-                case .added: return UIImage(named: "added.svg")!
-                case .removed: return UIImage(named: "removed.svg")!
+            case .added: return UIImage(named: "added.svg")!
+            case .removed: return UIImage(named: "removed.svg")!
             }
         }
     }
     
+    // MARK: - Vars & Lets
+    private let internetDataManager = InternetDataManager.shared
+    private let dataStore = DataStore.shared
+    private let coreDataInstance = CoreDataManager.instance
+    private let context = CoreDataManager.instance.persistentContainer.viewContext
+    private var foundArtist: Artist? {
+        return dataStore.currentFoundArtist
+    }
+    
     // MARK: - Outlets
+    @IBOutlet private weak var searchResultsLabel: UILabel!
+    @IBOutlet private weak var searchSpinner: UIActivityIndicatorView!
+    @IBOutlet private weak var presentationView: UIView!
+    @IBOutlet private weak var facebookButton: UIButton!
+    @IBOutlet private weak var addAndRemoveButton: UIButton!
+    @IBOutlet private weak var resultButton: UIButton!
+    @IBOutlet private weak var resultLabel: UILabel!
+    @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var searchBar: UISearchBar! {
         didSet {
             searchBar.delegate = self
         }
     }
-    @IBOutlet private weak var searchResultsLabel: UILabel!
-    @IBOutlet private weak var searchSpinner: UIActivityIndicatorView!
-    @IBOutlet private weak var presentationView: UIView!
     @IBOutlet private weak var artistImage: UIImageView! {
         didSet {
             artistImage.layer.cornerRadius = 15
@@ -59,106 +71,96 @@ final class SearchViewController: UIViewController {
             artistNameLabel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         }
     }
-    @IBOutlet private weak var facebookButton: UIButton!
-    @IBOutlet private weak var addAndRemoveButton: UIButton! {
-        didSet {
-            addAndRemoveButton.clipsToBounds = true
-        }
-    }
-    @IBOutlet private weak var resultButton: UIButton!
-    @IBOutlet private weak var resultLabel: UILabel!
-    @IBOutlet private weak var resultView: UIView!
     
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
         if let artist = foundArtist, let facebookUrl = artist.getFacebookUrl() {
-            EventsViewController.openSafariPage(withUrl: facebookUrl, byController: self)
+            SafariManager.openPageInBrowser(withUrl: facebookUrl)
         }
     }
     
     @IBAction func addToFavorites(_ sender: UIButton) {
-        if let artistName = artistNameLabel.text, CoreDataManager.instance.artistIsInDataBase {
-            CoreDataManager.instance.deleteObject(withName:artistName, forEntity: StringConstants.Favorites.entity) {
-                self.addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
-                CoreDataManager.instance.artistIsInDataBase = false
-                self.resultButton.setImage(dbResultButtonImage.removed.image, for: .normal)
-                resultLabel.text = StringConstants.Search.removed
+        if let artistName = artistNameLabel.text, coreDataInstance.artistIsInDataBase {
+            coreDataInstance.deleteObject(withName:artistName, forEntity: StringConstant.favoriteArtistEntity) {
+                addAndRemoveButton.setImage(AddButtonImage.add.image, for: .normal)
+                coreDataInstance.artistIsInDataBase = false
+                resultButton.setImage(SaveButtonImage.removed.image, for: .normal)
+                resultLabel.text = StringConstant.removed
                 animateResult()
             }
         } else {
-            if InternetDataManager.shared.isConnectedToNetwork() {
-                if let name = foundArtist?.getName(), let id = foundArtist?.getID(), let eventsCount = foundArtist?.getUpcomingEventCount(), let imageUrl = foundArtist?.getImageUrl() {
-                    CoreDataManager.instance.addFavoriteArtist(
+            if internetDataManager.isConnectedToNetwork() {
+                if let name = foundArtist?.name, let id = foundArtist?.id, let eventsCount = foundArtist?.upcomingEventsCount, let imageUrl = foundArtist?.getImageUrl() {
+                    coreDataInstance.addFavoriteArtist(
                         withName: name,
                         withID: id,
                         withEventsCount: eventsCount,
                         withImageDataURL: imageUrl
                     ) {
-                        self.addAndRemoveButton.setImage(addAndRemoveButtonImage.remove.image, for: .normal)
-                        self.resultButton.setImage(dbResultButtonImage.added.image, for: .normal)
-                        resultLabel.text = StringConstants.Search.added
+                        addAndRemoveButton.setImage(AddButtonImage.remove.image, for: .normal)
+                        resultButton.setImage(SaveButtonImage.added.image, for: .normal)
+                        resultLabel.text = StringConstant.added
                         animateResult()
-                        CoreDataManager.instance.artistIsInDataBase = true
+                        coreDataInstance.artistIsInDataBase = true
                     }
                 }
             } else {
-                Alerts.presentConnectionAlert(viewController: self)
+                Alerts.presentConnectionAlert()
             }
         }
     }
     
     @IBAction func showEvents(_ sender: UIButton) {
-        if InternetDataManager.shared.isConnectedToNetwork() {
+        if internetDataManager.isConnectedToNetwork() {
             let eventsStoryboard = UIStoryboard(name: "Events", bundle: nil)
-            if let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: "viewController") as? EventsViewController,
-                let name = foundArtist?.getName(),
-                let id = foundArtist?.getID(),
-                let eventsCount = foundArtist?.getUpcomingEventCount() {
-                DataStore.shared.presentingOnMapArtist.setName(name: name)
-                DataStore.shared.presentingOnMapArtist.setUpcomingEventsCount(count: eventsCount)
-                DataStore.shared.presentingOnMapArtist.setId(id: id)
+            if let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: StringConstant.eventsViewController) as? EventsViewController,
+                let name = foundArtist?.name,
+                let id = foundArtist?.id,
+                let eventsCount = foundArtist?.upcomingEventsCount {
+                dataStore.presentingOnMapArtist.name = name
+                dataStore.presentingOnMapArtist.upcomingEventsCount = eventsCount
+                dataStore.presentingOnMapArtist.id = id
                 navigationController?.pushViewController(eventsViewController, animated: true)
             }
         } else {
-            Alerts.presentConnectionAlert(viewController: self)
+            Alerts.presentConnectionAlert()
         }
     }
     
     @IBAction func presentEventsOnMap(_ sender: UIButton) {
-        DataStore.shared.needSetCenterMap = false
-        if InternetDataManager.shared.isConnectedToNetwork() {
-            if let name = foundArtist?.getName() {
-                InternetDataManager.shared.getEvents(forArtist: name) { (error, events) in
+        dataStore.needSetCenterMap = false
+        if internetDataManager.isConnectedToNetwork() {
+            if let name = foundArtist?.name {
+                internetDataManager.getEvents(forArtist: name) { (error, events) in
                     if error != nil {
-                        Alerts.presentFailedDataLoadingAlert(viewController: self)
+                        Alerts.presentFailedDataLoadingAlert()
                     } else if let events = events, events.count != 0,
-                        let id = self.foundArtist?.getID(),
-                        let eventsCount = self.foundArtist?.getUpcomingEventCount() {
-                        DataStore.shared.presentingOnMapArtist.setName(name: name)
-                        DataStore.shared.presentingOnMapArtist.setUpcomingEventsCount(count: eventsCount)
-                        DataStore.shared.presentingOnMapArtist.setId(id: id)
+                        let id = self.foundArtist?.id,
+                        let eventsCount = self.foundArtist?.upcomingEventsCount {
+                        self.dataStore.presentingOnMapArtist.name = name
+                        self.dataStore.presentingOnMapArtist.upcomingEventsCount = eventsCount
+                        self.dataStore.presentingOnMapArtist.id = id
                         DispatchQueue.main.async {
-                            DataStore.shared.needSetCenterMap = false
-                            DataStore.shared.presentingEvents = events
-                            self.tabBarController?.selectedIndex = 2
+                            self.dataStore.needSetCenterMap = false
+                            self.dataStore.presentingEvents = events
+                            (self.tabBarController as? MainTabBarViewController)?.switchToMapController()
                         }
                     } else if events != nil {
                         DispatchQueue.main.async {
-                            let alert = UIAlertController(title: StringConstants.ArtistEvents.events, message: StringConstants.ArtistEvents.noEvents, preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            let alert = UIAlertController(title: StringConstant.events, message: StringConstant.noEvents, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: StringConstant.ok, style: .default, handler: nil))
                             self.present(alert, animated: true, completion: nil)
                         }
                     } else {
-                        Alerts.presentFailedDataLoadingAlert(viewController: self)
+                        Alerts.presentFailedDataLoadingAlert()
                     }
                 }
             }
         } else {
-            Alerts.presentConnectionAlert(viewController: self)
+            Alerts.presentConnectionAlert()
         }
     }
-    
-    
+
     // MARK: - Search Bar & Keyboard
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
@@ -170,16 +172,16 @@ final class SearchViewController: UIViewController {
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.titleView = searchBar
+        navigationController?.view.backgroundColor = #colorLiteral(red: 0.1660079956, green: 0.1598443687, blue: 0.1949053109, alpha: 1)
+        navigationItem.titleView = searchBar
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if !CoreDataManager.instance.artistIsInDataBase {
-            self.addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
+        if !coreDataInstance.artistIsInDataBase {
+            self.addAndRemoveButton.setImage(AddButtonImage.add.image, for: .normal)
         }
         navigationController?.view.layoutSubviews()
-
     }
 
     //MARK: - Gestures
@@ -192,6 +194,12 @@ final class SearchViewController: UIViewController {
     @IBAction func swipeGesture(_ sender: UISwipeGestureRecognizer) {
         if searchBar.isFirstResponder {
             searchBar.resignFirstResponder()
+        }
+    }
+    
+    @IBAction func showKeyboard(_ sender: UISwipeGestureRecognizer) {
+        if !searchBar.isFirstResponder {
+            searchBar.becomeFirstResponder()
         }
     }
     
@@ -209,74 +217,70 @@ final class SearchViewController: UIViewController {
         presentationView.isHidden = false
         searchResultsLabel.isHidden = true
         if let artistName = artistNameLabel.text {
-            CoreDataManager.instance.artistIsInDataBase = CoreDataManager.instance.objectIsInDataBase(objectName: artistName, forEntity: StringConstants.Favorites.entity)
+            coreDataInstance.artistIsInDataBase = coreDataInstance.objectIsInDataBase(objectName: artistName, forEntity: StringConstant.favoriteArtistEntity)
         }
-        if CoreDataManager.instance.artistIsInDataBase {
-            addAndRemoveButton.setImage(addAndRemoveButtonImage.remove.image, for: .normal)
-        } else {
-            addAndRemoveButton.setImage(addAndRemoveButtonImage.add.image, for: .normal)
-        }
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0.0, options: .allowUserInteraction, animations: {
+        coreDataInstance.artistIsInDataBase ? addAndRemoveButton.setImage(AddButtonImage.remove.image, for: .normal) : addAndRemoveButton.setImage(AddButtonImage.add.image, for: .normal)
+        UIView.animate(withDuration: 0.5) {
             self.presentationView.alpha = 1.0
-        })
+        }
     }
     
     func searchAndPresentArtist() {
         hidePresentationView()
-        if InternetDataManager.shared.isConnectedToNetwork() {
-            InternetDataManager.shared.getArtist(searchText: DataStore.shared.currentSearchText) { (error, artist) in
-                if DataStore.shared.currentSearchText.count > 2 {
+        if internetDataManager.isConnectedToNetwork() {
+            internetDataManager.getArtist(searchText: dataStore.currentSearchText) { (error, artist) in
+                if self.dataStore.currentSearchText.count > IntConstant.minSearchCharactersCount {
                     if error != nil {
                         DispatchQueue.main.async {
-                            Alerts.presentFailedDataLoadingAlert(viewController: self)
+                            Alerts.presentFailedDataLoadingAlert()
                             self.searchSpinner.stopAnimating()
                         }
-                    } else if let gotArtist = artist {
-                        DataStore.shared.currentFoundArtist = artist
-                        if let imageUrl = URL(string: gotArtist.getImageUrl()), let imageData = try? Data(contentsOf: imageUrl), let image = UIImage(data: imageData) {
+                    } else if let foundArtist = artist {
+                        self.dataStore.currentFoundArtist = artist
+                        if let imageUrl = foundArtist.getImageUrl(), let imageData = try? Data(contentsOf: imageUrl), let image = UIImage(data: imageData) {
                             DispatchQueue.main.async {
                                 self.artistImage.image = image
                             }
                         }
                         DispatchQueue.main.async {
-                            if (gotArtist.getFacebookUrl()) != nil {
+                            if (foundArtist.getFacebookUrl()) != nil {
                                 self.facebookButton.isEnabled = true
                             } else {
                                 self.facebookButton.isEnabled = false
                             }
-                            self.artistNameLabel.text = gotArtist.getName()
+                            self.artistNameLabel.text = foundArtist.name
                             self.configureAndShowPresentationView()
                         }
                         
                     } else {
                         DispatchQueue.main.async {
                             self.searchSpinner.stopAnimating()
-                            self.searchResultsLabel.text = StringConstants.Search.noResults
+                            self.searchResultsLabel.text = StringConstant.noResults
                             self.searchResultsLabel.isHidden = false
                         }
                     }
                 }
             }
         } else {
-            Alerts.presentConnectionAlert(viewController: self)
+            Alerts.presentConnectionAlert()
         }
     }
     
     func animateResult() {
-        self.resultView.isHidden = false
+        resultView.isUserInteractionEnabled = true
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4, delay: 0.0, options: .allowUserInteraction, animations: {
             self.resultView.alpha = 1.0
         }) { (position) in
             UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.4, delay: 1.0, options: .allowUserInteraction, animations: {
                 self.resultView.alpha = 0.0
             }) { (position) in
-                self.resultView.isHidden = true
+                self.resultView.isUserInteractionEnabled = false
             }
         }
     }
     
     func showResultLabel() {
-        DataStore.shared.currentFoundArtist = nil
+        dataStore.resetCurrentFoundArtist()
         presentationView.isHidden = true
         presentationView.alpha = 0.0
         searchSpinner.stopAnimating()
@@ -289,22 +293,22 @@ final class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count == 0 {
+        if searchText.isEmpty {
             showResultLabel()
-            searchResultsLabel.text = StringConstants.Search.search
-        } else if (1..<3).contains(searchText.count) {
-            showResultLabel()
-            searchResultsLabel.text = StringConstants.Search.enterName
-            if !InternetDataManager.shared.isConnectedToNetwork() {
-                Alerts.presentConnectionAlert(viewController: self)
-            }
-            DataStore.shared.currentSearchText = searchText
-        } else {
+            searchResultsLabel.text = StringConstant.search
+        } else if searchText.count > IntConstant.minSearchCharactersCount {
             searchSpinner.startAnimating()
-            if DataStore.shared.currentSearchText != searchText {
-                DataStore.shared.currentSearchText = searchText
+            if dataStore.currentSearchText != searchText {
+                dataStore.currentSearchText = searchText
                 searchAndPresentArtist()
             }
+        } else {
+            showResultLabel()
+            searchResultsLabel.text = StringConstant.enterName
+            if !internetDataManager.isConnectedToNetwork() {
+                Alerts.presentConnectionAlert()
+            }
+            dataStore.currentSearchText = searchText
         }
     }
 }

@@ -7,28 +7,37 @@
 //
 
 import Foundation
+import UIKit
 
-enum StringConstants {
-    enum App {
-        static let appName = "Museve"
-    }
-    enum AlertsStrings {
-        static let cancel = NSLocalizedString("Cancel", comment: "")
-        static let settings = NSLocalizedString("Settings", comment: "")
-        static let ok = "Ok"
-    }
-    enum Search {
-        static let noResults = NSLocalizedString("No results", comment: "")
-        static let search = NSLocalizedString("Search", comment: "")
-        static let enterName = NSLocalizedString("Enter name", comment: "")
-        static let added = NSLocalizedString("Added", comment: "")
-        static let removed = NSLocalizedString("Removed", comment: "")
-    }
-    enum ArtistEvents {
-        static let events = NSLocalizedString("Events", comment: "")
-        static let noEvents = NSLocalizedString("This artist has no events", comment: "")
-    }
-    enum Favorites {
-        static let entity = "FavoriteArtist"
-    }
+enum IntConstant {
+    // MARK: - Map
+    static let minSearchCharactersCount = 2
+    static let regionScale = 2000
+}
+
+enum FloatConstant {
+    static let cellScale: CGFloat = 0.95
+}
+
+enum StringConstant {
+    // MARK: - Application
+    static let appName = "Museve"
+    // MARK: - Alerts
+    static let cancel = "Cancel".localized()
+    static let settings = "Settings".localized()
+    static let ok = "Ok"
+    // MARK: - Search
+    static let noResults = "No results".localized()
+    static let search = "Search".localized()
+    static let enterName = "Enter name".localized()
+    static let added = "Added".localized()
+    static let removed = "Removed".localized()
+    // MARK: - Events
+    static let events = "Events".localized()
+    static let noEvents = "This artist has no upcoming events".localized()
+    // MARK: - Database Entity
+    static let favoriteArtistEntity = "FavoriteArtist"
+    // MARK: - ViewControllers
+    static let dateViewController = "datePickerViewController"
+    static let eventsViewController = "viewController"
 }

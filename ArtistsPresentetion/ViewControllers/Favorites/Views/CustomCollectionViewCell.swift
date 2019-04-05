@@ -15,42 +15,33 @@ final class CustomCollectionViewCell: UICollectionViewCell {
         didSet{
             if DataStore.shared.multiplySelectionIsAllowed {
                 if isSelected {
-                    self.checkedImage.isHidden = false
-                    self.imageView.alpha = 0.5
+                    checkedImage.isHidden = false
+                    imageView.alpha = 0.5
                 } else {
-                    self.checkedImage.isHidden = true
-                    self.imageView.alpha = 1
+                    checkedImage.isHidden = true
+                    imageView.alpha = 1
                 }
             }
         }
     }
     
     // MARK: - Outlets
-    @IBOutlet private weak var imageView: UIImageView! {
-        didSet {
-            imageView.layer.cornerRadius = 10.0
-            imageView.clipsToBounds = true
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var checkedImage: UIImageView!
+    
+    // MARK: - Methods
+    func configureCell(byData artist: FavoriteArtist?) {
+        layer.cornerRadius = 10
+        if let data = artist?.imageData, let image = UIImage(data: data) {
+            imageView.image = image
         }
-    }
-    @IBOutlet private weak var nameLabel: UILabel! {
-        didSet {
-            nameLabel.clipsToBounds = true
-            nameLabel.layer.cornerRadius = 10
-            nameLabel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        }
-    }
-    @IBOutlet private weak var checkedImage: UIImageView! {
-        didSet {
-            checkedImage.tintColor = #colorLiteral(red: 0.6219168305, green: 0.112661697, blue: 0.3066232204, alpha: 1)
-        }
+        nameLabel.text = artist?.name
     }
     
-    static func configuredCell(from cell: CustomCollectionViewCell, for indexPath: IndexPath) -> UICollectionViewCell {
-        let artist = CoreDataManager.instance.fetchedResultsController.object(at: indexPath) as? FavoriteArtist
-        if let data = artist?.image_data, let image = UIImage(data: data) {
-            cell.imageView.image = image
+    func focusCell(withTransform transform: CGAffineTransform) {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = transform
         }
-        cell.nameLabel.text = artist?.name
-        return cell
     }
 }

@@ -10,119 +10,53 @@ import Foundation
 
 struct Event: Codable {
     
-    private var id: String?
-    private var artistID: String?
-    private var url: String?
-    private var onSaleDatetime: String?
-    private var datetime: String?
-    private var description: String?
-    private var situation: VenueData?
-    private var lineUp: [String]?
-    private var offers: [Offer]?
+    let id: String
+    private let url: String
+    let datetime: String
+    let description: String?
+    let offers: [Offer]?
+    let artistID: String
+    let onSaleDatetime: String?
+    let situation: VenueData?
+    let lineUp: [String]?
     
-    func getID() -> String? {
-        return id
-    }
-    func getArtistID() -> String? {
-        return artistID
-    }
     func getUrl() -> URL? {
-        if let url = url {
-            return URL(string: url)
-        } else {
-            return nil
-        }
-    }
-    func getOnSaleDatetime() -> String? {
-        return onSaleDatetime
-    }
-    func getDatetime() -> String? {
-        return datetime
-    }
-    func getDescription() -> String? {
-        return description
-    }
-    func getVenue() -> VenueData? {
-        return situation
-    }
-    func getLineup() -> [String]? {
-        return lineUp
-    }
-    func getOffers() -> [Offer]? {
-        return offers
+        return URL(string: url)
     }
     
-    func getParticipants() -> String {
-        var participants = ""
-        var shouldEnter = true
-        if let lineUp = lineUp {
-            for participant in lineUp {
-                if shouldEnter {
-                    participants.append(participant)
-                    shouldEnter = false
-                } else {
-                    participants.append("\n\(participant)")
-                }
-            }
-        }
-        return participants
+    func getParticipants() -> String? {
+        return lineUp?.joined(separator: "\n")
     }
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, url, datetime, description, offers
         case artistID = "artist_id"
-        case url
         case onSaleDatetime = "on_sale_datetime"
-        case datetime
-        case description
         case situation = "venue"
         case lineUp = "lineup"
-        case offers
     }
 }
 
 struct VenueData: Codable {
     
-    private var country: String?
-    private var city: String?
-    private var latitude: String?
-    private var name: String?
-    private var region: String?
-    private var longitude: String?
-    
-    func getCountry() -> String? {
-        return country
-    }
-    func getCity() -> String? {
-        return city
-    }
-    func getLatitude() -> String? {
-        return latitude
-    }
-    func getName() -> String? {
-        return name
-    }
-    func getRegion() -> String? {
-        return region
-    }
-    func getLongtitude() -> String? {
-        return longitude
-    }
+    let country: String
+    let city: String
+    let latitude: String?
+    let name: String
+    let region: String?
+    let longitude: String?
 }
 
 struct Offer: Codable {
     
-    private var type: String?
-    private var url: String?
-    private var status: String?
+    let type: String?
+    private let url: String?
+    let status: String?
     
-    func getType() -> String? {
-        return type
-    }
-    func getUrl() -> String? {
-        return url
-    }
-    func getStatus() -> String? {
-        return status
+    func getUrl() -> URL? {
+        if let url = url {
+            return URL(string: url)
+        }
+        return nil
     }
 }

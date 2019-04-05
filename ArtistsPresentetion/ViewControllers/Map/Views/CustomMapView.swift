@@ -13,7 +13,7 @@ final class CustomMapView: MKMapView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if let compassView = self.subviews.filter({ $0.isKind(of: NSClassFromString("MKCompassView")!) }).first {
+        if let subviewClass = NSClassFromString("MKCompassView"), let compassView = self.subviews.filter({ $0.isKind(of: subviewClass) }).first {
             compassView.frame.origin.y += CGFloat(45.0)
             compassView.frame.origin.x -= CGFloat(2.0)
         }

@@ -14,7 +14,7 @@ final class DataStore {
     
     // MARK: - Search
     var currentFoundArtist: Artist?
-    var currentSearchText = String()
+    var currentSearchText = ""
     
     // MARK: - Map
     var presentingOnMapArtist = Artist()
@@ -31,16 +31,19 @@ final class DataStore {
     
     // MARK: - My tools
     func settingPresentingEvents(withEdittedRow index: Int) {
-        let presentingEvents = DataStore.shared.presentingEvents
-        if presentingEvents.first?.getArtistID() != DataStore.shared.loadedEvents[index].getArtistID() {
-            DataStore.shared.presentingEvents.removeAll()
+        if presentingEvents.first?.artistID != loadedEvents[index].artistID {
+            presentingEvents.removeAll()
         }
-        DataStore.shared.presentingEvents.append(DataStore.shared.loadedEvents[index])
-        DataStore.shared.needSetCenterMap = true
+        presentingEvents.append(loadedEvents[index])
+        needSetCenterMap = true
+    }
+    
+    func resetCurrentFoundArtist() {
+        currentFoundArtist = nil
     }
     
     func resetEventsFilter() {
-        DataStore.shared.eventsFilter = nil
+        eventsFilter = nil
     }
     
     func setEventsFilterDate(fromDate: Date, toDate: Date) {
@@ -48,17 +51,10 @@ final class DataStore {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let fromDate = dateFormatter.string(from: fromDate)
         let toDate = dateFormatter.string(from: toDate)
-        DataStore.shared.eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
     }
     
     func isEventsFilterSettedBySegment() -> Bool {
-        if DataStore.shared.eventsFilter == "upcomimg" ||
-            DataStore.shared.eventsFilter == "past" ||
-            DataStore.shared.eventsFilter == "all" ||
-            DataStore.shared.eventsFilter == nil {
-            return true
-        } else {
-            return false
-        }
+        return eventsFilter == "upcomimg" || eventsFilter == "past" || eventsFilter == "all" || eventsFilter == nil ? true : false
     }
 }

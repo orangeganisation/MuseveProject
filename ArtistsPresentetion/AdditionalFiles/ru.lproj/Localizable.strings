@@ -10,19 +10,19 @@
 "Settings" = "Настройки";
 "Internet Connection" = "Интернет Соединение";
 
-"There is a problem with internet connection. Please, turn ON cellular or connect to WiFi." = "Проблема с интернет соединением. Пожалуйста, включите мобильный трафик или подключитесь к WiFi";
+"Problem with internet connection" = "Проблема с интернет соединением. Пожалуйста, включите мобильный трафик или подключитесь к WiFi";
 
 "Data Loading" = "Загрузка Данных";
 
-"Turn On Location Services to allow \"Museve\" to determine Your location:\nSettings->Privacy->Location Services" = "Включите Службы Геолокации, чтобы позволить \"Museve\" определить Ваше местоположение:\nНастройки->Конфеденциальность->Службы Геолокации";
+"Turn On Location Services" = "Включите Службы Геолокации, чтобы позволить \"Museve\" определить Ваше местоположение:\nНастройки->Конфеденциальность->Службы Геолокации";
 
-"Failed to load data. Please, try again later." = "Ошибка при загрузке данных. Пожалуйста, повторите позже.";
+"Failed to load data" = "Ошибка при загрузке данных. Пожалуйста, повторите позже.";
 
 "No results" = "Нет результатов";
 "Enter name" = "Введите имя";
 "Search" = "Поиск";
 "Events" = "События";
-"This artist has no events" = "У этого артиста нет событий";
+"This artist has no upcoming events" = "У этого артиста нет предстоящих событий";
 "Added" = "Добавлено";
 "Removed" = "Удалено";
 "Select artists" = "Выберите артистов";
@@ -40,6 +40,8 @@
 "Show on map" = "Показать на карте";
 "From:" = "Начальная дата:";
 "To:" = "Конечная дата:";
-"Cancel" = "Отменить";
 "Done" = "Применить";
 "no information" = "нет информации";
+"Date: " = "Дата: ";
+"Location: " = "Место: ";
+"Line-up: " = "Участники: ";

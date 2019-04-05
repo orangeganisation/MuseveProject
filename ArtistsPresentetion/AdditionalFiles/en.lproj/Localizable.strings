@@ -1,0 +1,47 @@
+/* 
+  Localizable.strings
+  ArtistsPresentetion
+
+  Created by Андрей Романюк on 3/2/19.
+  Copyright © 2019 Андрей Романюк. All rights reserved.
+*/
+"Location Services" = "Location Services";
+"Cancel" = "Cancel";
+"Settings" = "Settings";
+"Internet Connection" = "Internet Connection";
+
+"Problem with internet connection" = "There is a problem with internet connection. Please, turn ON cellular or connect to WiFi.";
+
+"Data Loading" = "Data Loading";
+
+"Turn On Location Services" = "Turn On Location Services to allow \"Museve\" to determine Your location:\nSettings->Privacy->Location Services";
+
+"Failed to load data" = "Failed to load data. Please, try again later.";
+
+"No results" = "No results";
+"Enter name" = "Enter name";
+"Search" = "Search";
+"Events" = "Events";
+"This artist has no upcoming events" = "This artist has no upcoming events";
+"Added" = "Added";
+"Removed" = "Removed";
+"Select artists" = "Select artists";
+"Favorites" = "Favorites";
+"Remove" = "Remove";
+"Removing" = "Removing";
+"artist" = "artist";
+"artists" = "artists";
+"Selected artists:" = "Selected artists:";
+"No events" = "No events";
+"Failed" = "Failed";
+"Upcoming" = "Upcoming";
+"All" = "All";
+"Past" = "Past";
+"Show on map" = "Show on map";
+"From:" = "From:";
+"To:" = "To:";
+"Done" = "Done";
+"no information" = "no information";
+"Date: " = "Date: ";
+"Location: " = "Location: ";
+"Line-up: " = "Line-up: ";

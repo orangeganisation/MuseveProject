@@ -13,41 +13,38 @@ import UIKit
 
 final class MapViewController: UIViewController {
     
-    // MARK: - Vars
+    // MARK: - Vars & Lets
     private var locationManager: CLLocationManager?
     private var currentLocation: MKUserLocation?
     private let dataStore = DataStore.shared
+    private let coreDataInstance = CoreDataManager.instance
     
     // MARK: - Outlets
     @IBOutlet private weak var locationButton: UIButton!
+    @IBOutlet private weak var annotationView: UIStackView!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var locationLabel: UILabel!
+    @IBOutlet private weak var lineupLabel: UILabel!
     @IBOutlet private weak var myMapView: CustomMapView! {
         didSet {
             myMapView.delegate = self
         }
     }
-    @IBOutlet private weak var annotationView: UIStackView!
-    @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var locationLabel: UILabel!
-    @IBOutlet private weak var lineupLabel: UILabel!
     
     
     // MARK: - MapActions
     @IBAction func showUserLocation(_ sender: UIButton) {
         if let location = currentLocation {
-            let region = MKCoordinateRegion (
-                center: location.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
-            myMapView.setRegion(region, animated: true)
             if let imageFilled = UIImage(named: "buttonFilled.svg") {
                 locationButton.setImage(imageFilled, for: .normal)
             }
+            let region = MKCoordinateRegion (
+                center: location.coordinate,
+                latitudinalMeters: CLLocationDistance(IntConstant.regionScale),
+                longitudinalMeters: CLLocationDistance(IntConstant.regionScale))
+            myMapView.setRegion(region, animated: true)
         } else {
-            let locationFailed = NSLocalizedString("Turn On Location Services to allow \"Museve\" to determine Your location:\nSettings->Privacy->Location Services", comment: "")
-            let alert = UIAlertController(title: NSLocalizedString("Location Services", comment: ""), message: locationFailed, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.cancel, style: .cancel))
-            alert.addAction(UIAlertAction(title: StringConstants.AlertsStrings.settings, style: .default, handler: { (action) in
-                if let url = URL(string: Alerts.settingsUrl) { UIApplication.shared.open(url) }
-            }))
-            present(alert, animated: true)
+            presentLocationFailedAlert()
         }
     }
     
@@ -78,7 +75,10 @@ final class MapViewController: UIViewController {
         setMarkersForEvents { (latitude, longtitude) in
             if let latitude = latitude, let longtitude = longtitude {
                 let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longtitude)
-                let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 2000, longitudinalMeters: 2000)
+                let region = MKCoordinateRegion(
+                    center: coordinates,
+                    latitudinalMeters: CLLocationDistance(IntConstant.regionScale),
+                    longitudinalMeters: CLLocationDistance(IntConstant.regionScale))
                 myMapView.setRegion(region, animated: true)
             }
         }
@@ -86,45 +86,44 @@ final class MapViewController: UIViewController {
     
     
     // MARK: - MyTools
+    func presentLocationFailedAlert() {
+        let locationFailed = "Turn On Location Services".localized()
+        let alert = UIAlertController(title: "Location Services".localized(), message: locationFailed, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: StringConstant.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: StringConstant.settings, style: .default, handler: { (action) in
+            if let url = URL(string: Alerts.settingsUrl) { UIApplication.shared.open(url) }
+        }))
+        present(alert, animated: true)
+    }
+    
     func setMarkersForEvents(completion: (_ latitude: Double?,_ longtitude: Double?) -> Void) {
-        let presentingEvents = DataStore.shared.presentingEvents
+        let presentingEvents = dataStore.presentingEvents
         for event in presentingEvents {
-            if let latitude = event.getVenue()?.getLatitude(), let longtitude = event.getVenue()?.getLongtitude() {
+            if let latitude = event.situation?.latitude, let longtitude = event.situation?.longitude {
                 let mark = CustomPointAnnotation()
-                mark.title = event.getVenue()?.getName()
+                mark.title = event.situation?.name
                 if let latitude = Double(latitude), let longtitude = Double(longtitude) {
                     mark.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longtitude)
                 }
-                if let eventDate = event.getDatetime() {
-                    mark.setDate(date: eventDate)
-                }
-                mark.setLocation(location: "")
-                var noRegionAppend = ""
-                if let eventVenue = event.getVenue() {
-                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getCountry() ?? ""), ")
-                    if let eventRegion = event.getVenue()?.getRegion() , !eventRegion.isEmpty {
-                        noRegionAppend = ", "
+                mark.setDate(date: event.datetime)
+                if let eventVenue = event.situation {
+                    var locationData = [String]()
+                    locationData.append(eventVenue.country)
+                    if let region = eventVenue.region, !region.isEmpty {
+                        locationData.append(region)
                     }
-                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getRegion() ?? "")\(noRegionAppend)")
-                    mark.setLocation(location: (mark.getLocation() ?? "") + "\(eventVenue.getCity() ?? "")")
+                    locationData.append(eventVenue.city)
+                    mark.location = locationData.joined(separator: ", ")
                 }
-                if let lineUp = event.getLineup() {
-                    var lineUpString = String()
-                    for participant in lineUp {
-                        if participant == lineUp.last {
-                            lineUpString.append(participant)
-                        } else {
-                            lineUpString.append("\(participant), ")
-                        }
-                    }
-                    mark.setLineUp(lineUp: lineUpString)
+                if let lineUp = event.lineUp {
+                    mark.lineUp = lineUp.joined(separator: ", ")
                 }
                 myMapView.addAnnotation(mark)
                 if dataStore.needSetCenterMap {
-                    DataStore.shared.needSetCenterMap = false
-                    if let latitudeCoordinates = presentingEvents.last?.getVenue()?.getLatitude(),
+                    dataStore.needSetCenterMap = false
+                    if let latitudeCoordinates = presentingEvents.last?.situation?.latitude,
                         let lastLatitude = Double(latitudeCoordinates),
-                        let longtitudeCoordinates = presentingEvents.last?.getVenue()?.getLongtitude(),
+                        let longtitudeCoordinates = presentingEvents.last?.situation?.longitude,
                         let lastLongtitude = Double(longtitudeCoordinates) {
                         completion(lastLatitude, lastLongtitude)
                     }
@@ -140,7 +139,7 @@ extension MapViewController: MKMapViewDelegate {
         userLocation: MKUserLocation) {
         currentLocation = userLocation
         if dataStore.needSetCenterMap {
-            DataStore.shared.needSetCenterMap = false
+            dataStore.needSetCenterMap = false
             if let userLocation = mapView.userLocation.location?.coordinate {
                 mapView.setCenter(userLocation, animated: true)
             }
@@ -148,7 +147,7 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        if currentLocation != nil, let imageFilled = UIImage(named: "buttonEmpty.svg") {
+        if currentLocation != nil, let imageFilled = UIImage(named: "buttonEmpty.svg"), !animated {
             locationButton.setImage(imageFilled, for: .normal)
         }
     }
@@ -157,12 +156,8 @@ extension MapViewController: MKMapViewDelegate {
         if !annotation.isEqual(mapView.userLocation) {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
             annotationView.canShowCallout = true
-            let name = dataStore.presentingOnMapArtist.getName()
-            if CoreDataManager.instance.objectIsInDataBase(objectName: name, forEntity: StringConstants.Favorites.entity) {
-                annotationView.markerTintColor = #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1)
-            } else {
-                annotationView.markerTintColor = #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)
-            }
+            let name = dataStore.presentingOnMapArtist.name
+            annotationView.markerTintColor = coreDataInstance.objectIsInDataBase(objectName: name, forEntity: StringConstant.favoriteArtistEntity) ? #colorLiteral(red: 0.6600925326, green: 0.2217625678, blue: 0.3476891518, alpha: 1) : #colorLiteral(red: 0.1531656981, green: 0.1525758207, blue: 0.1700873673, alpha: 1)
             return annotationView
         } else {
             return nil
@@ -171,17 +166,10 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation as? CustomPointAnnotation, !annotation.isEqual(mapView.userLocation) {
-            if let dateLabelText = dateLabel.text, let dateIndex = dateLabelText.firstIndex(of: ":"),
-                let locationLabelText = locationLabel.text, let locationIndex = locationLabelText.firstIndex(of: ":"),
-                let lineupLabelText = lineupLabel.text, let lineUpIndex = lineupLabelText.firstIndex(of: ":") {
-                dateLabel.text?.removeSubrange(dateLabelText.index(dateIndex, offsetBy: 2)...)
-                locationLabel.text?.removeSubrange(locationLabelText.index(locationIndex, offsetBy: 2)...)
-                lineupLabel.text?.removeSubrange(lineupLabelText.index(lineUpIndex, offsetBy: 2)...)
-            }
-            let noInfo = NSLocalizedString("no information", comment: "")
-            (annotationView.subviews[0] as? UILabel)?.text?.append(annotation.getDate() ?? noInfo)
-            (annotationView.subviews[1] as? UILabel)?.text?.append((annotation.getLocation() ?? noInfo))
-            (annotationView.subviews[2] as? UILabel)?.text?.append((annotation.getLineUp() ?? noInfo))
+            let noInfo = "no information".localized()
+            dateLabel?.text = "Date: ".localized() + (annotation.date ?? noInfo)
+            locationLabel?.text = "Location: ".localized() + (annotation.location ?? noInfo)
+            lineupLabel?.text = "Line-up: ".localized() + (annotation.lineUp ?? noInfo)
             view.detailCalloutAccessoryView = annotationView
             annotationView.isHidden = false
         }

@@ -16,7 +16,7 @@ final class CoreDataManager {
     var artistIsInDataBase = false
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FavoriteArtist")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: StringConstant.favoriteArtistEntity)
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         return NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
@@ -24,7 +24,7 @@ final class CoreDataManager {
     
     // MARK: - CoreDataManager
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "ArtistsPresentetion")
+        let container = NSPersistentContainer(name: "ArtistPresentation")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -80,16 +80,16 @@ final class CoreDataManager {
         }
     }
     
-    func addFavoriteArtist(withName name: String, withID id: String, withEventsCount count: Int, withImageDataURL url: String, completion: () -> Void) {
-        if let entityDescription = NSEntityDescription.entity(forEntityName: "FavoriteArtist", in: persistentContainer.viewContext) {
+    func addFavoriteArtist(withName name: String, withID id: String, withEventsCount count: Int, withImageDataURL url: URL, completion: () -> Void) {
+        if let entityDescription = NSEntityDescription.entity(forEntityName: StringConstant.favoriteArtistEntity, in: persistentContainer.viewContext) {
             completion()
             DispatchQueue.global(qos: .userInteractive).async {
                 let managedObject = NSManagedObject(entity: entityDescription, insertInto: self.persistentContainer.viewContext)
                 managedObject.setValue(name, forKey: "name")
                 managedObject.setValue(id, forKey: "id")
-                managedObject.setValue(count, forKey: "upcoming_events_count")
-                if let imageUrl = URL(string: url), let data = try? Data(contentsOf: imageUrl) as NSData {
-                    managedObject.setValue(data, forKey: "image_data")
+                managedObject.setValue(count, forKey: "upcomingEventsCount")
+                if let data = try? Data(contentsOf: url) as NSData {
+                    managedObject.setValue(data, forKey: "imageData")
                 }
                 CoreDataManager.instance.saveContext()
             }
