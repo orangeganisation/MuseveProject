@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D107BFC422565E04006CED3A /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D107BFC322565E04006CED3A /* MainTabBarViewController.swift */; };
 		D10CA96E2252C64800F60CA0 /* ExtensionDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */; };
+		D11513132257873900B837A2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D11513122257873900B837A2 /* Info.plist */; };
 		D1247C49222D94A00002D5FB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D1247C4B222D94A00002D5FB /* Localizable.strings */; };
 		D16851AC221FFD6100B2AD4F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AB221FFD6100B2AD4F /* Event.swift */; };
 		D16851AE222087EF00B2AD4F /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		D107BFC322565E04006CED3A /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDate.swift; sourceTree = "<group>"; };
+		D11513122257873900B837A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ArtistsPresentetion/Info.plist; sourceTree = "<group>"; };
 		D1247C4A222D94A00002D5FB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; usesTabs = 0; };
 		D16851AB221FFD6100B2AD4F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
@@ -52,7 +54,6 @@
 		D1978A1F2256189F00F0335C /* ArtistPresentation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ArtistPresentation.xcdatamodel; sourceTree = "<group>"; };
 		D1978A232256230A00F0335C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D1978A242256231C00F0335C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D1978A28225624AC00F0335C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D19B55022255285500DD64A1 /* SafariManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariManager.swift; sourceTree = "<group>"; };
 		D19B5504225531DF00DD64A1 /* ExtensionString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionString.swift; sourceTree = "<group>"; };
 		D19B550622553D2B00DD64A1 /* DateTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeFormatter.swift; sourceTree = "<group>"; };
@@ -214,7 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				D1B6DF4122172BB700A0C910 /* ArtistsPresentetion */,
-				D1978A28225624AC00F0335C /* Info.plist */,
+				D11513122257873900B837A2 /* Info.plist */,
 				D1B6DF4022172BB700A0C910 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -363,6 +364,7 @@
 			files = (
 				D1B6DF5022172BB800A0C910 /* LaunchScreen.storyboard in Resources */,
 				D1D78424221C30680094D64D /* SearchSystem.storyboard in Resources */,
+				D11513132257873900B837A2 /* Info.plist in Resources */,
 				D1DC177B221EF9D700178AF1 /* Events.storyboard in Resources */,
 				D1B6DF4D22172BB800A0C910 /* Assets.xcassets in Resources */,
 				D1B6DF4822172BB700A0C910 /* Main.storyboard in Resources */,
