@@ -10,6 +10,17 @@ import Foundation
 
 final class DataStore {
     
+    enum EventsFilter {
+        case none
+        case upcoming
+        case past
+        case all
+        case date(fromDate: Date, toDate: Date)
+        
+        init(){
+            self = .none
+        }
+    }
     static var shared = DataStore()
     
     // MARK: - Search
@@ -21,12 +32,9 @@ final class DataStore {
     var needSetCenterMap = true
     var presentingEvents = [Event]()
 
-    // MARK: - Favorites
-    var multiplySelectionIsAllowed = false
-    
     // MARK: - Events
     var loadedEvents = [Event]()
-    var eventsFilter: String?
+    var eventsFilter = EventsFilter()
     var shouldUpdateEvents = false
     
     // MARK: - My tools
@@ -43,18 +51,29 @@ final class DataStore {
     }
     
     func resetEventsFilter() {
-        eventsFilter = nil
+        eventsFilter = .none
     }
-    
-    func setEventsFilterDate(fromDate: Date, toDate: Date) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let fromDate = dateFormatter.string(from: fromDate)
-        let toDate = dateFormatter.string(from: toDate)
-        eventsFilter = (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+
+    func getFilterDate() -> String? {
+        switch eventsFilter {
+        case .all: return "all"
+        case .past: return "past"
+        case .upcoming: return "upcoming"
+        case .date(fromDate: let fromDate, toDate: let toDate):
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let fromDate = dateFormatter.string(from: fromDate)
+            let toDate = dateFormatter.string(from: toDate)
+            return (fromDate + "," + toDate).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        default:
+            return nil
+        }
     }
     
     func isEventsFilterSettedBySegment() -> Bool {
-        return eventsFilter == "upcomimg" || eventsFilter == "past" || eventsFilter == "all" || eventsFilter == nil ? true : false
+        switch eventsFilter {
+        case .all, .past, .upcoming, .none: return true
+        default: return false
+        }
     }
 }

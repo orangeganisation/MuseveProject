@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D107BFC422565E04006CED3A /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D107BFC322565E04006CED3A /* MainTabBarViewController.swift */; };
 		D10CA96E2252C64800F60CA0 /* ExtensionDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */; };
-		D11513132257873900B837A2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D11513122257873900B837A2 /* Info.plist */; };
 		D1247C49222D94A00002D5FB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D1247C4B222D94A00002D5FB /* Localizable.strings */; };
 		D16851AC221FFD6100B2AD4F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AB221FFD6100B2AD4F /* Event.swift */; };
 		D16851AE222087EF00B2AD4F /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */; };
@@ -37,7 +36,6 @@
 		D1D78424221C30680094D64D /* SearchSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78422221C30680094D64D /* SearchSystem.storyboard */; };
 		D1D78427221C309B0094D64D /* EventsMap.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1D78425221C309B0094D64D /* EventsMap.storyboard */; };
 		D1DC177B221EF9D700178AF1 /* Events.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1DC177A221EF9D700178AF1 /* Events.storyboard */; };
-		D1DC177F221F3C7F00178AF1 /* CustomCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */; };
 		D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DC1780221F617900178AF1 /* EventsViewController.swift */; };
 		D1F799DE222DBB1100D0F497 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F799DD222DBB1100D0F497 /* Alerts.swift */; };
 /* End PBXBuildFile section */
@@ -45,7 +43,6 @@
 /* Begin PBXFileReference section */
 		D107BFC322565E04006CED3A /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		D10CA96D2252C64800F60CA0 /* ExtensionDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDate.swift; sourceTree = "<group>"; };
-		D11513122257873900B837A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ArtistsPresentetion/Info.plist; sourceTree = "<group>"; };
 		D1247C4A222D94A00002D5FB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; usesTabs = 0; };
 		D16851AB221FFD6100B2AD4F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
@@ -72,13 +69,13 @@
 		D1B6DF5C221745F100A0C910 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		D1C94A4A221ACC3F000B9236 /* ArtistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistModel.swift; sourceTree = "<group>"; };
+		D1CD4935225A3B8E00954E46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1CEE8CE221DD43200634BF9 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		D1D346CF2223816F00864784 /* DateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateViewController.swift; sourceTree = "<group>"; };
 		D1D78420221C301D0094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/Base.lproj/Favorites.storyboard; sourceTree = "<group>"; };
 		D1D78423221C30680094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/ArtistsPresentetion/Storyboards/Base.lproj/SearchSystem.storyboard; sourceTree = "<group>"; };
 		D1D78426221C309B0094D64D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = ArtistsPresentetion/Storyboards/Base.lproj/EventsMap.storyboard; sourceTree = "<group>"; };
 		D1DC177A221EF9D700178AF1 /* Events.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Events.storyboard; sourceTree = "<group>"; };
-		D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionView.swift; sourceTree = "<group>"; };
 		D1DC1780221F617900178AF1 /* EventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EventsViewController.swift; path = ArtistsPresentetion/ViewControllers/Events/Controllers/EventsViewController.swift; sourceTree = SOURCE_ROOT; };
 		D1F799DD222DBB1100D0F497 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,8 +122,8 @@
 		D19642F3224CF7F0001BF6CB /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
+				D1BD9300225BCEA300D8FCB1 /* Cells */,
 				D19642F8224CF8EE001BF6CB /* Controllers */,
-				D19642F9224CF902001BF6CB /* Views */,
 				D1D7841F221C301D0094D64D /* Favorites.storyboard */,
 			);
 			path = Favorites;
@@ -137,7 +134,7 @@
 			children = (
 				D19642FC224CF993001BF6CB /* Models */,
 				D19642F5224CF8BD001BF6CB /* Controllers */,
-				D19642F6224CF8CD001BF6CB /* Views */,
+				D19642F6224CF8CD001BF6CB /* Cells */,
 				D1DC177A221EF9D700178AF1 /* Events.storyboard */,
 			);
 			path = Events;
@@ -152,12 +149,12 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		D19642F6224CF8CD001BF6CB /* Views */ = {
+		D19642F6224CF8CD001BF6CB /* Cells */ = {
 			isa = PBXGroup;
 			children = (
 				D16851AD222087EF00B2AD4F /* EventsTableViewCell.swift */,
 			);
-			path = Views;
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		D19642F8224CF8EE001BF6CB /* Controllers */ = {
@@ -166,15 +163,6 @@
 				D1B6DF5E2217461100A0C910 /* FavoritesViewController.swift */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		D19642F9224CF902001BF6CB /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
-				D1DC177E221F3C7F00178AF1 /* CustomCollectionView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		D19642FA224CF925001BF6CB /* Controllers */ = {
@@ -215,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				D1B6DF4122172BB700A0C910 /* ArtistsPresentetion */,
-				D11513122257873900B837A2 /* Info.plist */,
 				D1B6DF4022172BB700A0C910 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -239,6 +226,7 @@
 				D1F799DC222DBADC00D0F497 /* Alerts */,
 				D1B6DF62221746E700A0C910 /* AdditionalFiles */,
 				D1B6DF632217471F00A0C910 /* Database */,
+				D1CD4935225A3B8E00954E46 /* Info.plist */,
 			);
 			path = ArtistsPresentetion;
 			sourceTree = "<group>";
@@ -282,6 +270,14 @@
 				D1978A1E2256189F00F0335C /* ArtistPresentation.xcdatamodeld */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		D1BD9300225BCEA300D8FCB1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				D1AF6044221DC39B00404808 /* CustomCollectionViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		D1C94A49221ACC1D000B9236 /* Models */ = {
@@ -364,7 +360,6 @@
 			files = (
 				D1B6DF5022172BB800A0C910 /* LaunchScreen.storyboard in Resources */,
 				D1D78424221C30680094D64D /* SearchSystem.storyboard in Resources */,
-				D11513132257873900B837A2 /* Info.plist in Resources */,
 				D1DC177B221EF9D700178AF1 /* Events.storyboard in Resources */,
 				D1B6DF4D22172BB800A0C910 /* Assets.xcassets in Resources */,
 				D1B6DF4822172BB700A0C910 /* Main.storyboard in Resources */,
@@ -400,7 +395,6 @@
 				D1B6DF5A2217456000A0C910 /* MapViewController.swift in Sources */,
 				D1DC1781221F617900178AF1 /* EventsViewController.swift in Sources */,
 				D1CEE8CF221DD43200634BF9 /* CoreDataManager.swift in Sources */,
-				D1DC177F221F3C7F00178AF1 /* CustomCollectionView.swift in Sources */,
 				D19B5505225531DF00DD64A1 /* ExtensionString.swift in Sources */,
 				D1F799DE222DBB1100D0F497 /* Alerts.swift in Sources */,
 				D19B55032255285500DD64A1 /* SafariManager.swift in Sources */,

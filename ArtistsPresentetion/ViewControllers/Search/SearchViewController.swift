@@ -72,6 +72,21 @@ final class SearchViewController: UIViewController {
         }
     }
     
+    // MARK: - View Controller
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.view.backgroundColor = #colorLiteral(red: 0.1660079956, green: 0.1598443687, blue: 0.1949053109, alpha: 1)
+        navigationItem.titleView = searchBar
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        if !coreDataInstance.artistIsInDataBase {
+            self.addAndRemoveButton.setImage(AddButtonImage.add.image, for: .normal)
+        }
+        navigationController?.view.layoutSubviews()
+    }
+    
     // MARK: - Actions
     @IBAction func loadFacebookPage(_ sender: UIButton) {
         if let artist = foundArtist, let facebookUrl = artist.getFacebookUrl() {
@@ -166,22 +181,6 @@ final class SearchViewController: UIViewController {
         searchBar.resignFirstResponder()
         searchSpinner.startAnimating()
         searchAndPresentArtist()
-    }
-    
-    
-    // MARK: - View Controller
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationController?.view.backgroundColor = #colorLiteral(red: 0.1660079956, green: 0.1598443687, blue: 0.1949053109, alpha: 1)
-        navigationItem.titleView = searchBar
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        if !coreDataInstance.artistIsInDataBase {
-            self.addAndRemoveButton.setImage(AddButtonImage.add.image, for: .normal)
-        }
-        navigationController?.view.layoutSubviews()
     }
 
     //MARK: - Gestures

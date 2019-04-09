@@ -13,13 +13,15 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     // MARK: - Vars
     override var isSelected: Bool {
         didSet{
-            if DataStore.shared.multiplySelectionIsAllowed {
-                if isSelected {
-                    checkedImage.isHidden = false
-                    imageView.alpha = 0.5
-                } else {
-                    checkedImage.isHidden = true
-                    imageView.alpha = 1
+            if let collectionView = self.superview as? UICollectionView {
+                if collectionView.allowsMultipleSelection {
+                    if isSelected {
+                        checkedImage.isHidden = false
+                        imageView.alpha = 0.5
+                    } else {
+                        checkedImage.isHidden = true
+                        imageView.alpha = 1
+                    }
                 }
             }
         }
@@ -30,9 +32,13 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var checkedImage: UIImageView!
     
+    // MARK: - View Methods
+    override func awakeFromNib() {
+        layer.cornerRadius = 10
+    }
+    
     // MARK: - Methods
     func configureCell(byData artist: FavoriteArtist?) {
-        layer.cornerRadius = 10
         if let data = artist?.imageData, let image = UIImage(data: data) {
             imageView.image = image
         }

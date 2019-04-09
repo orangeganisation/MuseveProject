@@ -23,7 +23,7 @@ final class DateViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func doneAction(_ sender: UIButton) {
-        dataStore.setEventsFilterDate(fromDate: fromDatePicker.date, toDate: toDatePicker.date)
+        dataStore.eventsFilter = .date(fromDate: fromDatePicker.date, toDate: toDatePicker.date)
         dataStore.shouldUpdateEvents = true
         dismiss(animated: true)
     }

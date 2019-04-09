@@ -81,7 +81,7 @@ final class InternetDataManager {
         components.path = path + name + "/events"
         let appID = URLQueryItem(name: "app_id", value: StringConstant.appName)
         components.queryItems = [appID]
-        if let sortingDate = dataStore.eventsFilter {
+        if let sortingDate = dataStore.getFilterDate() {
             let sortingItem = URLQueryItem(name: "date", value: sortingDate)
             components.queryItems?.append(sortingItem)
         }

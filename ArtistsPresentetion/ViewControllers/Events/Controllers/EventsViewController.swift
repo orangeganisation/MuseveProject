@@ -41,9 +41,9 @@ final class EventsViewController: UIViewController {
     @IBAction func changeFilterInSegment(_ sender: UISegmentedControl) {
         eventsFilterSegment.alpha = 1
         switch eventsFilterSegment.selectedSegmentIndex {
-        case 0: dataStore.eventsFilter = "upcoming"
-        case 1: dataStore.eventsFilter = "past"
-        default: dataStore.eventsFilter = "all"
+        case 0: dataStore.eventsFilter = .upcoming
+        case 1: dataStore.eventsFilter = .past
+        default: dataStore.eventsFilter = .all
         }
         loadEvents()
     }
@@ -76,7 +76,7 @@ final class EventsViewController: UIViewController {
         super.viewDidLoad()
         dataStore.resetEventsFilter()
         if dataStore.presentingOnMapArtist.upcomingEventsCount == 0 {
-            dataStore.eventsFilter = "all"
+            dataStore.eventsFilter = .all
             eventsFilterSegment.selectedSegmentIndex = 2
         } else {
             eventsFilterSegment.selectedSegmentIndex = 0
@@ -126,7 +126,10 @@ final class EventsViewController: UIViewController {
                             Alerts.presentFailedDataLoadingAlert()
                         }
                     } else if let artEvents = artEvents, artEvents.count != 0 {
-                        self.dataStore.loadedEvents = eventsFilter != "upcoming" && eventsFilter != nil ? artEvents.reversed() : artEvents
+                        switch eventsFilter {
+                        case .upcoming, .none: self.dataStore.loadedEvents = artEvents
+                        default: self.dataStore.loadedEvents = artEvents.reversed()
+                        }
                         self.presentEvents()
                     } else if artEvents != nil {
                         DispatchQueue.main.async {
