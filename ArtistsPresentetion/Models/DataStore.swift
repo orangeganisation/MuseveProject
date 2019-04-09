@@ -46,6 +46,12 @@ final class DataStore {
         needSetCenterMap = true
     }
     
+    func setPresentingOnMapArtist(name: String, id: String, upcomingEventsCount: Int) {
+        presentingOnMapArtist.name = name
+        presentingOnMapArtist.id = id
+        presentingOnMapArtist.upcomingEventsCount = upcomingEventsCount
+    }
+    
     func resetCurrentFoundArtist() {
         currentFoundArtist = nil
     }

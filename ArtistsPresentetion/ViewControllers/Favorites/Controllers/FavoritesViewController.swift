@@ -191,9 +191,7 @@ extension FavoritesViewController: UICollectionViewDelegate {
             if let eventsViewController = eventsStoryboard.instantiateViewController(withIdentifier: StringConstant.eventsViewController) as? EventsViewController {
                 if let artist = coreDataInstance.fetchedResultsController.object(at: indexPath) as? FavoriteArtist,
                     let name = artist.name, let id = artist.id {
-                    dataStore.presentingOnMapArtist.name = name
-                    dataStore.presentingOnMapArtist.upcomingEventsCount = Int(artist.upcomingEventsCount)
-                    dataStore.presentingOnMapArtist.id = id
+                    dataStore.setPresentingOnMapArtist(name: name, id: id, upcomingEventsCount: Int(artist.upcomingEventsCount))
                 }
                 navigationController?.pushViewController(eventsViewController, animated: true)
             }

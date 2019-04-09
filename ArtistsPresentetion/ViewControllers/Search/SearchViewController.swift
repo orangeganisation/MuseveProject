@@ -132,9 +132,7 @@ final class SearchViewController: UIViewController {
                 let name = foundArtist?.name,
                 let id = foundArtist?.id,
                 let eventsCount = foundArtist?.upcomingEventsCount {
-                dataStore.presentingOnMapArtist.name = name
-                dataStore.presentingOnMapArtist.upcomingEventsCount = eventsCount
-                dataStore.presentingOnMapArtist.id = id
+                dataStore.setPresentingOnMapArtist(name: name, id: id, upcomingEventsCount: eventsCount)
                 navigationController?.pushViewController(eventsViewController, animated: true)
             }
         } else {
@@ -152,9 +150,7 @@ final class SearchViewController: UIViewController {
                     } else if let events = events, events.count != 0,
                         let id = self.foundArtist?.id,
                         let eventsCount = self.foundArtist?.upcomingEventsCount {
-                        self.dataStore.presentingOnMapArtist.name = name
-                        self.dataStore.presentingOnMapArtist.upcomingEventsCount = eventsCount
-                        self.dataStore.presentingOnMapArtist.id = id
+                        self.dataStore.setPresentingOnMapArtist(name: name, id: id, upcomingEventsCount: eventsCount)
                         DispatchQueue.main.async {
                             self.dataStore.needSetCenterMap = false
                             self.dataStore.presentingEvents = events
